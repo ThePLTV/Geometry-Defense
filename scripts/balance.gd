@@ -1,7 +1,7 @@
 class_name Balance
 extends RefCounted
 
-const KINDS = ["Minigun", "Laser", "Rocket", "Shockwave"]
+const KINDS = ["Minigun","Laser","Rocket","Shockwave"]
 static var cfg: Dictionary = {}
 
 static func load_config() -> void:
@@ -12,43 +12,53 @@ static func tower(kind: String) -> Dictionary:
 	load_config()
 	return cfg.towers[kind]
 
-static func rounded5(value: float) -> int:
-	return int(floor(value / 5.0 + 0.5)) * 5
+static func level(t: Dictionary) -> int:
+	return clampi(int(t.get("level",1)),1,10)
 
-static func upgrade_cost(kind: String, level: int) -> int:
-	return rounded5(tower(kind).price * cfg.upgrade_base * pow(cfg.upgrade_growth, level - 1))
+static func upgrade_cost(kind: String, target_level: int) -> int:
+	return maxi(1,int(round(tower(kind).upgrade*pow(cfg.upgrade_growth,maxi(0,target_level-2)))))
 
 static func ultimate_cost(kind: String) -> int:
-	return rounded5(tower(kind).price * cfg.ultimate_price)
+	return int(round(tower(kind).price*cfg.ultimate_price))
 
 static func damage(t: Dictionary) -> float:
-	return tower(t.kind).damage * pow(cfg.damage_growth, t.d) * (2.0 if t.mega else 1.0)
+	var data := tower(t.kind)
+	return data.damage*pow(data.damage_growth,level(t)-1)*(2.0 if t.mega else 1.0)
 
 static func rate(t: Dictionary) -> float:
-	return tower(t.kind).rate * pow(cfg.rate_growth, t.s)
+	var data := tower(t.kind)
+	return data.rate*(1.0+data.rate_growth*(level(t)-1))
 
 static func reach(t: Dictionary) -> float:
-	return tower(t.kind).range + cfg.range_step * floor(float(t.d + t.s) / 5.0)
+	var data := tower(t.kind)
+	var value: float = data.range+data.range_growth*(level(t)-1)
+	if t.kind == "Laser" and t.ultimate:
+		value *= 2.0
+	if t.mega:
+		value *= cfg.mega_range_multiplier
+	return value
+
+static func volley(t: Dictionary) -> int:
+	return level(t) if t.kind == "Rocket" else 1
 
 static func hp_multiplier(wave: int) -> float:
 	load_config()
-	# Piecewise products, O(number of tiers), with an overflow guard.
 	var logarithm := 0.0
 	var previous := 1
 	for tier in cfg.hp_tiers:
-		var count: int = maxi(0, mini(wave, int(tier[0])) - previous)
-		logarithm += count * log(1.0 + float(tier[1]))
+		var count := maxi(0,mini(wave,int(tier[0]))-previous)
+		logarithm += count*log(1.0+float(tier[1]))
 		previous = int(tier[0])
-	return exp(minf(logarithm, 200.0))
+	return exp(minf(logarithm,200.0))
 
 static func reward_growth(wave: int) -> float:
-	return 1.0 + 0.025 * (wave - 1) if wave <= 40 else 2.0 + 0.012 * (wave - 41)
+	load_config()
+	return 1.0+cfg.reward_growth_per_wave*(wave-1)
 
 static func boss(wave: int) -> Dictionary:
-	var index: int = (int(wave / 5.0) - 1) % 4
 	return [
-		{"color":"82c99c", "name":"Зелёный", "immune":"Laser"},
-		{"color":"eceff1", "name":"Белый", "immune":"Minigun"},
-		{"color":"e57e78", "name":"Красный", "immune":"Rocket"},
-		{"color":"79a9dc", "name":"Синий", "immune":"Shockwave"}
-	][index]
+		{"color":"58ed66","name":"Зелёный","immune":"Laser"},
+		{"color":"f4f6f8","name":"Белый","immune":"Minigun"},
+		{"color":"f04749","name":"Красный","immune":"Rocket"},
+		{"color":"39b4f6","name":"Синий","immune":"Shockwave"}
+	][(int(wave/5.0)-1)%4]

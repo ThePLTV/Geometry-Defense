@@ -2,7 +2,7 @@ extends SceneTree
 
 var strategy := "mixed"
 var seeds := 30
-var maximum_wave := 200
+var maximum_wave := 20
 var first_wave := 1
 var report_path := ""
 
@@ -50,61 +50,33 @@ func choose_cell(s: Simulation, kind: String) -> Vector2i:
 			best = cell
 	return best
 
+func dps(t: Dictionary) -> float:
+	return Balance.damage(t)*Balance.rate(t)*Balance.volley(t)*(1.8 if t.kind in ["Laser","Rocket","Shockwave"] else 1.0)
+
 func buy(s: Simulation) -> void:
-	# Deterministic, deliberately modest policy. No money is added in campaigns.
 	var sequence := order()
-	var target_count: int = mini(18,3 + int(s.next_wave/3.0))
-	var attempts := 0
-	while attempts < 120:
-		attempts += 1
+	for attempt in 60:
 		var choice: Dictionary = {}
-		var best_value := 0.0
-		# Compare upgrade efficiency to adding coverage; ultimates get a fixed bonus.
+		var best := 0.0
 		for t in s.towers:
-			if t.mega:
+			if not t.job.is_empty() or t.mega or t.level>=10:
 				continue
-			for branch in ["d","s"]:
-				if t[branch] >= 10:
-					continue
-				var cost := Balance.upgrade_cost(t.kind,int(t[branch])+1)
-				var value: float = Balance.damage(t)*Balance.rate(t)*(Balance.cfg.damage_growth-1.0 if branch == "d" else Balance.cfg.rate_growth-1.0)/cost
-				if t.kind in ["Rocket","Shockwave"]:
-					value *= 1.7
-				if cost <= s.credits and value > best_value:
-					best_value = value
-					choice = {"action":branch,"tower":t,"cost":cost}
-			if not t.ultimate and t.d >= 5 and t.s >= 5:
-				var cost := Balance.ultimate_cost(t.kind)
-				var value: float = Balance.damage(t)*Balance.rate(t)*0.8/cost
-				if cost <= s.credits and value > best_value:
-					best_value = value
-					choice = {"action":"ultimate","tower":t,"cost":cost}
+			var cost := Balance.upgrade_cost(t.kind,t.level+1)
+			var next: Dictionary = t.duplicate(); next.level += 1
+			var value := (dps(next)-dps(t))/cost
+			if cost<=s.credits and value>best:
+				best=value; choice={"type":"upgrade","id":t.id}
 		var kind: String = sequence[s.towers.size()%sequence.size()]
 		var price := int(Balance.tower(kind).price)
-		if s.towers.size() < target_count and price <= s.credits:
-			var value: float = Balance.tower(kind).damage * Balance.tower(kind).rate / price
-			if kind in ["Rocket","Shockwave"]:
-				value *= 1.7
-			# The first towers provide essential coverage; late towers get base DPS.
-			if s.towers.size() < 3:
-				value *= 1.8
-			if value >= best_value:
-				var cell := choose_cell(s,kind)
-				if cell.x != 999:
-					choice = {"action":"build","cell":cell,"kind":kind}
-		if choice.is_empty():
-			break
-		match choice.action:
-			"build": s.build(choice.cell,choice.kind)
-			"ultimate": s.buy_ultimate(choice.tower.id)
-			_: s.upgrade(choice.tower.id,choice.action)
-	# Merge when possible, but only after creating substantial coverage.
-	if s.towers.size() >= 12:
-		for a in s.towers.duplicate():
-			for b in s.towers.duplicate():
-				if s.can_merge(a,b):
-					s.merge(a.id,b.id)
-					return
+		var base := {"kind":kind,"level":1,"ultimate":false,"mega":false}
+		var value := dps(base)/price*(1.4 if s.towers.size()<3 else .75)
+		if s.towers.size()<14 and price<=s.credits and value>=best:
+			var cell := choose_cell(s,kind)
+			if cell.x!=999:
+				choice={"type":"build","cell":cell,"kind":kind}
+		if choice.is_empty(): break
+		if choice.type=="build": s.build(choice.cell,choice.kind)
+		else: s.upgrade(choice.id)
 
 func run() -> void:
 	var started := Time.get_ticks_msec()
@@ -123,11 +95,13 @@ func run() -> void:
 		var band_rows: Array = []
 		while s.next_wave <= maximum_wave and not s.defeated:
 			buy(s)
+			for tick in 120:
+				s.step(.025)
 			var wave := s.next_wave
 			s.start_wave()
 			var ticks := 0
 			while s.active and ticks < 20000:
-				s.step(.05)
+				s.step(.025)
 				ticks += 1
 			if s.active:
 				timed_out = true
