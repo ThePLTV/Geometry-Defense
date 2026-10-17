@@ -1,0 +1,7 @@
+{
+  "version": "0.3.0",
+  "source_fingerprint_sha256": "e5c7fa8196d7f8e1db819322e4c6074bc1000a53a46d6919a1ab9acb7bc771fd",
+  "source_base_commit": "a83279afc0864655a0e17073328e959856371713",
+  "balance": "B1.2-provisional-03",
+  "build": "patch03-final"
+}

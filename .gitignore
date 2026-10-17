@@ -7,3 +7,7 @@ export_credentials.cfg
 *.log
 work/
 tools/windows/toolchain.json
+
+/android/build/
+/android/.build_version
+/tests/patch03-*.json

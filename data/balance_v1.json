@@ -1,0 +1,146 @@
+{
+  "status": "PROVISIONAL_SIMULATION_CANDIDATE",
+  "revision": 3,
+  "starting_credits": 65,
+  "base_hp": 10,
+  "sell_ratio": 0.7,
+  "fixed_step": 0.025,
+  "upgrade_seconds": 3.0,
+  "merge_seconds": 5.0,
+  "upgrade_growth": 1.32,
+  "mega_range_multiplier": 1.15,
+  "bullet_speed": 15.0,
+  "ricochet_damage": 0.7,
+  "mega_ricochet_damage": 0.9,
+  "rocket_speed": 6.0,
+  "mini_speed": 9.0,
+  "rocket_steering": 5.5,
+  "rocket_radius": 0.65,
+  "mini_radius": 0.22,
+  "mini_damage": 0.22,
+  "mini_search": 2.5,
+  "mini_count": 3,
+  "mega_mini_count": 5,
+  "wave_speed": 4.0,
+  "shock_push": 0.24,
+  "mega_shock_push": 0.36,
+  "reverse_period": 2.5,
+  "mega_reverse_period": 2.0,
+  "boss_push_factor": 0.25,
+  "push_limit_per_second": 0.65,
+  "push_max_speed_fraction": 0.65,
+  "max_projectiles": 768,
+  "max_effects": 220,
+  "enemy_hit_radius": 0.22,
+  "laser_line_width": 0.045,
+  "laser_line_width_per_level": 0.004,
+  "hp_bar_seconds": 1.0,
+  "spawn_interval": 1.15,
+  "spawn_clearance": 0.72,
+  "split_children": 2,
+  "boss_speed": 0.75,
+  "wave_count_start": 8,
+  "wave_count_step": 1,
+  "wave_count_max": 30,
+  "towers": {
+    "Minigun": {
+      "price": 30,
+      "damage": 2.6,
+      "damage_growth": 1.22,
+      "rate": 6.0,
+      "rate_growth": 0.18,
+      "range": 1.25,
+      "range_growth": 0.3055555555555556,
+      "color": "f4f6f8",
+      "name": "Миниган",
+      "ultimate_cost": 180
+    },
+    "Laser": {
+      "price": 55,
+      "damage": 14.0,
+      "damage_growth": 1.28,
+      "rate": 1.0,
+      "rate_growth": 0.0,
+      "range": 2.5,
+      "range_growth": 0.0,
+      "color": "58ed66",
+      "name": "Лазер",
+      "ultimate_cost": 280
+    },
+    "Rocket": {
+      "price": 50,
+      "damage": 10.0,
+      "damage_growth": 1.16,
+      "rate": 0.62,
+      "rate_growth": 0.0,
+      "range": 1.75,
+      "range_growth": 0.3611111111111111,
+      "color": "f04749",
+      "name": "Ракета",
+      "ultimate_cost": 250
+    },
+    "Shockwave": {
+      "price": 45,
+      "damage": 8.0,
+      "damage_growth": 1.24,
+      "rate": 0.9,
+      "rate_growth": 0.0,
+      "range": 1.25,
+      "range_growth": 0.075,
+      "color": "39b4f6",
+      "name": "Ударная волна",
+      "ultimate_cost": 230
+    }
+  },
+  "enemies": {
+    "normal": {
+      "speed": 1.0,
+      "color": "ffb533",
+      "shape": "square",
+      "radius": 18
+    },
+    "fast": {
+      "speed": 1.45,
+      "color": "e9dc57",
+      "shape": "triangle",
+      "radius": 17
+    },
+    "split": {
+      "speed": 0.9,
+      "color": "ba73f5",
+      "shape": "circle",
+      "radius": 20
+    },
+    "child": {
+      "speed": 1.15,
+      "color": "ba73f5",
+      "shape": "circle",
+      "radius": 11
+    }
+  },
+  "balance_id": "B1.0-calibration-03",
+  "upgrade_price_fraction": 0.45,
+  "base_enemy_speed": 1.0,
+  "wave_formula": {
+    "base_hp": 28,
+    "hp_growth": 1.055,
+    "triangle_hp": 0.7,
+    "parent_hp": 1.2,
+    "child_hp": 0.35,
+    "boss_hp": 7.5,
+    "reward_base": 2,
+    "reward_growth": 1.024,
+    "parent_reward": 0.75,
+    "child_reward": 0.2,
+    "boss_reward": [
+      18,
+      0.95,
+      0.032
+    ],
+    "completion_bonus": [
+      4,
+      0.6,
+      0.018
+    ]
+  }
+}

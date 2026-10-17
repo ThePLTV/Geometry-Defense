@@ -1,5 +1,7 @@
 extends Control
 
+var debug_enabled:=true
+var error_logger: EngineErrorLogger
 var music: AudioStreamPlayer
 var music_volume := .55
 var footer: VBoxContainer
@@ -41,6 +43,8 @@ var preferred_wave_mode := 0
 
 func _ready() -> void:
 	Balance.load_config()
+	error_logger=EngineErrorLogger.new()
+	OS.add_logger(error_logger)
 	load_preferences()
 	get_tree().auto_accept_quit = false
 	RenderingServer.set_default_clear_color(Color("1b2025"))
@@ -55,6 +59,7 @@ func load_preferences() -> void:
 		if not speed_values.has(preferred_speed):
 			preferred_speed = 1
 		preferred_wave_mode = clampi(int(preferences.get_value("game","wave_mode",0)),0,2)
+		debug_enabled=bool(preferences.get_value("diagnostics","enabled",true))
 		sound_enabled = bool(preferences.get_value("audio","enabled",true))
 		music_volume = clampf(float(preferences.get_value("audio","volume",.55)),0,1)
 		slot = clampi(int(preferences.get_value("game","last_slot",1)),1,5)
@@ -66,6 +71,7 @@ func save_preferences() -> void:
 	preferences.set_value("game","last_slot",slot)
 	preferences.set_value("audio","enabled",sound_enabled)
 	preferences.set_value("audio","volume",music_volume)
+	preferences.set_value("diagnostics","enabled",debug_enabled)
 	preferences.save(SaveStore.directory.path_join("preferences.cfg"))
 
 func make_theme() -> Theme:
@@ -182,7 +188,7 @@ func show_menu() -> void:
 	body.add_child(button("Как играть",show_help))
 	body.add_child(button("Настройки",show_settings))
 	spacer(body,24,true)
-	var version := label("v0.2.0  ·  Android 16  ·  офлайн",19,"7d8b96")
+	var version := label("v0.3.0  ·  Android 16  ·  офлайн",19,"7d8b96")
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(version)
 
@@ -219,7 +225,9 @@ func confirm_new_slot(index: int) -> void:
 
 func new_game(index: int) -> void:
 	slot = index
+	if sim!=null:sim.diagnostics.close()
 	sim = Simulation.new(int(Time.get_unix_time_from_system())+index)
+	setup_diagnostics()
 	speed = preferred_speed
 	wave_mode = preferred_wave_mode
 	timer_remaining = 1.2 if wave_mode == 1 else 5.0
@@ -259,7 +267,9 @@ func load_game(index: int, checkpoint_only: bool = false) -> void:
 		box.add_child(button("Закрыть",close_sheet))
 		return
 	slot = index
+	if sim!=null:sim.diagnostics.close()
 	sim = candidate
+	setup_diagnostics()
 	speed = int(state.get("speed",1))
 	if not speed_values.has(speed):
 		speed = 1
@@ -278,6 +288,7 @@ func show_game() -> void:
 	clear_screen()
 	game_visible = true
 	var top := HBoxContainer.new()
+	top.custom_minimum_size.y=44
 	body.add_child(top)
 	hud_hp = label("",26,"a8c8b4")
 	hud_wave = label("",28)
@@ -288,6 +299,7 @@ func show_game() -> void:
 	hud_wave.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hud_credits.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	status_label = label("",19,"9dabb6")
+	status_label.custom_minimum_size.y=42
 	body.add_child(status_label)
 	board = GameBoard.new()
 	board.sim = sim
@@ -297,9 +309,13 @@ func show_game() -> void:
 	board.tower_hold_started.connect(show_details)
 	board.tower_hold_ended.connect(hide_details)
 	body.add_child(board)
+	var footer_slot:=Control.new()
+	footer_slot.custom_minimum_size.y=200
+	body.add_child(footer_slot)
 	footer = VBoxContainer.new()
+	footer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	footer.add_theme_constant_override("separation",6)
-	body.add_child(footer)
+	footer_slot.add_child(footer)
 	action_signature = ""
 	refresh_actions(true)
 	toast_label = label("Тап — выбор · удержание — характеристики",19,"afc0cd")
@@ -343,8 +359,13 @@ func format_number(value: int) -> String:
 	return "%.1fM" % (value/1000000.0) if value >= 1000000 else "%.1fK" % (value/1000.0) if value >= 10000 else str(value)
 
 func _process(delta: float) -> void:
+	if sim!=null:
+		for error in error_logger.drain():sim.diagnostics.issue("ENGINE_ERROR",sim.time,error,error.get("stack",[]))
 	if not game_visible or sim == null:
 		return
+	sim.diagnostics.frame(speed)
+	if paused:
+		for t in sim.towers:sim.diagnostics.idle(t,"PAUSED",delta,sim.time)
 	if not paused and not sim.defeated:
 		accumulator += minf(delta,.25)*speed
 		var steps := 0
@@ -395,11 +416,13 @@ func start_wave() -> void:
 
 func toggle_pause() -> void:
 	paused = not paused
+	sim.diagnostics.action("pause" if paused else "resume",sim.time,{"speed":speed})
 	save_session()
 	update_hud()
 
 func cycle_speed() -> void:
 	speed = speed_values[(speed_values.find(speed)+1)%speed_values.size()]
+	sim.diagnostics.action("speed",sim.time,{"speed":speed})
 	update_hud()
 
 func open_sheet(height: float) -> VBoxContainer:
@@ -445,6 +468,7 @@ func select_cell(cell: Vector2i) -> void:
 		return
 	selected = cell
 	board.selected = cell
+	sim.diagnostics.action("tower_select",sim.time,{"cell":cell,"tower_id":sim.tower_at(cell).get("id",-1)})
 	var t := sim.tower_at(cell)
 	if merge_source >= 0:
 		if not t.is_empty() and t.id != merge_source:
@@ -492,6 +516,8 @@ func show_game_menu() -> void:
 	box.add_child(button("Маршрут: %s" % ("показан" if board.show_route else "скрыт"),func() -> void: board.show_route = not board.show_route; close_sheet()))
 	box.add_child(button("Координаты клеток / отладка",func() -> void: board.debug_grid = not board.debug_grid; close_sheet()))
 	add_audio_controls(box)
+	box.add_child(button("Диагностика",show_diagnostics))
+	box.add_child(button("Каталог башен",show_catalog))
 	box.add_child(button("Статистика",show_statistics))
 	box.add_child(button("Отменить выбор слияния",func() -> void:
 		merge_source = -1
@@ -520,7 +546,7 @@ func show_statistics() -> void:
 	box.add_child(button("Закрыть",close_sheet))
 
 func format_composition(composition: Dictionary) -> String:
-	var names := {"normal":"обычные","fast":"быстрые","heavy":"тяжёлые","armored":"броня","split":"делящиеся","boss":"босс"}
+	var names := {"normal":"обычные","fast":"быстрые","split":"делящиеся","child":"малые круги","boss":"босс"}
 	var parts: PackedStringArray = []
 	for kind in composition:
 		parts.append("%s: %d" % [names.get(kind,kind),composition[kind]])
@@ -543,7 +569,7 @@ func show_help() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(scroll)
-	var text := label("Враги идут от красного входа к фиолетовой базе по кратчайшему открытому пути.\n\nСтройте на чёрных клетках. Башня перекрывает свою клетку: маршрут перестроится. Полностью закрыть проход или замуровать врага нельзя.\n\nМиниган — быстрый одиночный огонь.\nЛазер — точный дальний луч.\nРакета — взрыв по площади.\nУдарная волна — импульс вокруг башни.\n\nТап по башне: действия снизу. Удержание: характеристики. Единый уровень 1–10. Улучшение и установка ульты занимают 3 игровые секунды. Ульта покупается отдельно на 10-м уровне. Слияние двух соседних башен одного класса с установленными ультами занимает 5 секунд. Пока идёт установка, башня не стреляет.\n\nБашни сами выбирают ближайшего к ним врага. У каждого пятого босса иммунитет к одному классу:\n5 — зелёный, Лазер;\n10 — белый, Миниган;\n15 — красный, Ракета;\n20 — синий, Ударная волна.\nЗатем цикл повторяется.\n\nБаза: 10 HP. Каждый прошедший враг снимает 1 HP. Продажа возвращает 70% вложений.\n\nНа паузе можно строить, улучшать, продавать и сливать. Скорости: ×1, ×2, ×3, ×5.\n\nПосле каждой волны игра автоматически сохраняется в выбранный слот. При поражении можно вернуться к чекпоинту. Ручное сохранение — между волнами.\n\nВся игра работает офлайн. Баланс первой версии ещё будет уточняться по тестам.",24,"bdc9d3")
+	var text := label("Враги идут от красного входа к фиолетовой базе по кратчайшему открытому пути.\n\nСтройте на чёрных клетках. Башня перекрывает свою клетку: маршрут перестроится. Полностью закрыть проход или замуровать врага нельзя.\n\nМиниган — быстрый одиночный огонь.\nЛазер — пробивающий луч через всех на линии.\nРакета — взрыв по площади.\nУдарная волна — импульс вокруг башни.\n\nТап по башне: действия снизу. Удержание: характеристики. Единый уровень 1–10. Улучшение и установка ульты занимают 3 игровые секунды. Ульта покупается отдельно на 10-м уровне. Слияние двух соседних башен одного класса с установленными ультами занимает 5 секунд. Пока идёт установка, башня не стреляет.\n\nБашни сами выбирают ближайшего к ним врага. У каждого пятого босса иммунитет к одному классу:\n5 — белый, Миниган;\n10 — зелёный, Лазер;\n15 — красный, Ракета;\n20 — синий, Ударная волна.\nЗатем цикл повторяется.\n\nБаза: 10 HP. Каждый прошедший враг снимает 1 HP. Продажа возвращает 70% вложений.\n\nНа паузе можно строить, улучшать, продавать и сливать. Скорости: ×1, ×2, ×3, ×5.\n\nПосле каждой волны игра автоматически сохраняется в выбранный слот. При поражении можно вернуться к чекпоинту. Ручное сохранение — между волнами.\n\nВся игра работает офлайн. Баланс B1 provisional: 100 волн, 3 типа врагов и 4 босса. Диагностика и экспорт отчёта доступны в игровом меню.",24,"bdc9d3")
 	text.custom_minimum_size.x = 630
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(text)
@@ -757,11 +783,65 @@ func save_session() -> void:
 	state.wave_mode = wave_mode
 	state.paused = paused
 	state.timer_remaining = timer_remaining
+	sim.diagnostics.emit("save",sim.time,{"active":sim.active,"slot":slot,"schema":3})
 	var error := SaveStore.save_session(slot,state)
 	if not error.is_empty():
 		toast(error)
 
 func _exit_tree() -> void:
+	if error_logger!=null:OS.remove_logger(error_logger)
+	if sim!=null:sim.diagnostics.close()
 	if is_instance_valid(music):
 		music.stop()
 		music.stream = null
+
+func setup_diagnostics() -> void:
+	sim.diagnostics.enabled=debug_enabled
+	sim.diagnostics.attach(SaveStore.directory.path_join("diagnostics"))
+	error_logger.directory=SaveStore.directory.path_join("diagnostics") if debug_enabled else ""
+	sim.diagnostics.metadata.config_sha256=FileAccess.get_sha256("res://data/balance.json")
+
+func show_diagnostics() -> void:
+	var box:=open_sheet(780)
+	box.add_child(label("Диагностика",34))
+	box.add_child(label("Отчёт содержит события боя, причины простоя, урон, баланс и ошибки. Личные данные и сохранения в архив не входят.",22,"a8bac8"))
+	var toggle:=CheckButton.new()
+	toggle.text="Записывать диагностику"
+	toggle.button_pressed=debug_enabled
+	toggle.toggled.connect(func(value: bool) -> void:
+		debug_enabled=value;sim.diagnostics.enabled=value;save_preferences()
+		error_logger.directory=SaveStore.directory.path_join("diagnostics") if value else ""
+	)
+	box.add_child(toggle)
+	var rings:=CheckButton.new()
+	rings.text="Радиусы 1R…5R и расстояние до цели"
+	rings.button_pressed=board.diagnostic_rings
+	rings.toggled.connect(func(value: bool) -> void:board.diagnostic_rings=value)
+	box.add_child(rings)
+	box.add_child(label("Событий: %d · предупреждений: %d\nБаланс %s · seed %s"%[sim.diagnostics.sequence,sim.diagnostics.warnings.size(),Balance.cfg.balance_id,str(sim.rng.seed)],22))
+	box.add_child(button("Экспорт отчёта",export_diagnostics,true))
+	box.add_child(button("Каталог башен",show_catalog))
+	box.add_child(button("Закрыть",close_sheet))
+
+func export_diagnostics() -> void:
+	var path:=sim.diagnostics.export_zip(sim)
+	if path.is_empty():
+		toast("Не удалось создать архив отчёта")
+		return
+	if OS.get_name()=="Android":
+		if Engine.has_singleton("ReportShare"):
+			var error: String=Engine.get_singleton("ReportShare").shareReport(path)
+			toast("Выберите, куда отправить ZIP" if error.is_empty() else error)
+		else:toast("Модуль экспорта Android недоступен")
+	else:
+		OS.shell_show_in_file_manager(path)
+		toast("ZIP отчёта создан: "+path)
+
+func show_catalog() -> void:
+	var box:=open_sheet(940)
+	box.add_child(label("Каталог башен",32))
+	box.add_child(label("Уровни 1 · 5 · 10 · MEGA",21,"a9bac6"))
+	var catalog:=TowerCatalog.new()
+	catalog.custom_minimum_size=Vector2(580,620)
+	box.add_child(catalog)
+	box.add_child(button("Закрыть",close_sheet))
