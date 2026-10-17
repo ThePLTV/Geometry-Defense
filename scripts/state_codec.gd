@@ -37,10 +37,11 @@ static func decode(value):
 
 static func capture(s, include_wave: bool) -> Dictionary:
 	return {"schema":3,"map_schema":2,"credits":s.credits,"base_hp":s.base_hp,"next_wave":s.next_wave,
+		"diagnostic_match_id":s.diagnostics.metadata.match_id,"diagnostic_actions":encode(s.diagnostics.actions),
 		"next_id":s.next_id,"towers":encode(s.towers),"tower_history":encode(s.tower_history.values()),
 		"history":encode(s.history),"merges":encode(s.merges),"rng_state":str(s.rng.state),"rng_seed":str(s.rng.seed),
 		"total_earned":s.total_earned,"total_spent":s.total_spent,"total_kills":s.total_kills,"total_damage":s.total_damage,
-		"time":s.time,"wave_time":s.wave_time,"active":s.active if include_wave else false,
+		"wave_reward_paid":s.wave_reward_paid,"balance_id":Balance.cfg.balance_id,"time":s.time,"wave_time":s.wave_time,"active":s.active if include_wave else false,
 		"enemies":encode(s.enemies) if include_wave else [],"projectiles":encode(s.projectiles) if include_wave else [],
 		"spawn_queue":s.spawn_queue.duplicate() if include_wave else [],"spawn_timer":s.spawn_timer,
 		"spawn_interval":s.spawn_interval,"wave_stats":encode(s.wave_stats)}
@@ -136,6 +137,9 @@ static func restore(s, raw: Dictionary) -> bool:
 			return false
 	var live: Array = data.get("enemies",[])
 	for e in live:
+		if e.get("kind","") in ["heavy","armored"]:
+			e.kind="normal";e.color=Balance.cfg.enemies.normal.color
+		if e.get("kind","") in ["split","child"]:e.color=Balance.cfg.enemies.split.color
 		if not has_keys(e,["id","kind","hp","max_hp","speed","reward","cell","next","progress","trail","pos","dead","immune","color","pushes","last_hit"]): return false
 		if e.cell is not Vector2i or e.next is not Vector2i or not grid.distances.has(e.cell) or not grid.distances.has(e.next):
 			return false
@@ -166,6 +170,9 @@ static func restore(s, raw: Dictionary) -> bool:
 	s.next_id = int(data.next_id)
 	s.rng.seed = int(data.rng_seed)
 	s.rng.state = int(data.rng_state)
+	s.diagnostics.metadata.seed=str(s.rng.seed)
+	s.diagnostics.metadata.match_id=str(data.get("diagnostic_match_id",s.diagnostics.metadata.match_id))
+	if data.get("diagnostic_actions",[]) is Array:s.diagnostics.actions=data.get("diagnostic_actions",[]).slice(-10000)
 	s.history = data.get("history",[]).duplicate(true)
 	s.merges = operations
 	s.time = float(data.get("time",0))
@@ -174,6 +181,12 @@ static func restore(s, raw: Dictionary) -> bool:
 	s.enemies = live
 	s.projectiles = data.get("projectiles",[])
 	s.spawn_queue = data.get("spawn_queue",[])
+	for i in s.spawn_queue.size():
+		if s.spawn_queue[i] in ["heavy","armored"]:s.spawn_queue[i]="normal"
+	s.wave_reward_paid=bool(data.get("wave_reward_paid",not s.active))
+	s.wave_config=WaveCatalog.generate(s.next_wave)
+	for t in s.tower_history.values():s.ensure_tower_stats(t)
+	s.diagnostics.action("load",s.time,{"schema":data.schema,"balance_from":data.get("balance_id","0.2")})
 	s.spawn_timer = float(data.get("spawn_timer",0))
 	s.spawn_interval = float(data.get("spawn_interval",Balance.cfg.spawn_interval))
 	s.wave_stats = data.get("wave_stats",{})

@@ -246,6 +246,9 @@ func run() -> void:
 	advance(s,1); advance(restored,1)
 	var original_after: Dictionary = JSON.parse_string(JSON.stringify(s.snapshot(true)))
 	var restored_after: Dictionary = JSON.parse_string(JSON.stringify(restored.snapshot(true)))
+	# Loading is intentionally recorded in the audit timeline; compare world state separately.
+	original_after.erase("diagnostic_actions")
+	restored_after.erase("diagnostic_actions")
 	expect(equivalent(original_after,restored_after),"Restored simulation continues deterministically within float precision")
 	var old:=s.snapshot(); old.schema=2
 	old.towers=[{"id":1,"cell":[-1,2],"kind":"Minigun","d":5,"s":5,"ultimate":false,"mega":false,"invested":123,"damage":5.0,"kills":1}]

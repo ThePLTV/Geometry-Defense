@@ -29,11 +29,15 @@ var total_spent := 0
 var total_kills := 0
 var total_damage := 0.0
 var migration_note := ""
+var diagnostics: CombatDiagnostics
+var wave_config: Dictionary={}
+var wave_reward_paid:=false
 
 func _init(seed_value: int = 1) -> void:
 	Balance.load_config()
 	rng.seed = seed_value
 	credits = int(Balance.cfg.starting_credits)
+	diagnostics=CombatDiagnostics.new(seed_value)
 
 func tower_at(cell: Vector2i) -> Dictionary:
 	for t in towers:
@@ -70,6 +74,9 @@ func build(cell: Vector2i, kind: String) -> String:
 	total_spent += price
 	map.occupied[cell] = t.id
 	map.rebuild()
+	ensure_tower_stats(t)
+	t.built_at=time
+	diagnostics.action("tower_build",time,diagnostics.tower_context(t).merged({"paid":price}))
 	return ""
 
 func begin_job(t: Dictionary, type: String, seconds: float) -> void:
@@ -77,6 +84,7 @@ func begin_job(t: Dictionary, type: String, seconds: float) -> void:
 	t.job_left = seconds
 	t.job_total = seconds
 	t.cd = 0.0
+	diagnostics.action(type+"_start",time,diagnostics.tower_context(t))
 	for i in range(projectiles.size()-1,-1,-1):
 		if projectiles[i].owner_id == t.id:
 			projectiles.remove_at(i)
@@ -144,6 +152,7 @@ func sell(id: int) -> int:
 	towers.erase(t)
 	map.occupied.erase(t.cell)
 	map.rebuild()
+	diagnostics.action("sell",time,{"tower_id":id,"refund":refund})
 	return refund
 
 func can_merge(a: Dictionary, b: Dictionary) -> bool:
@@ -159,6 +168,7 @@ func merge(first_id: int, second_id: int) -> String:
 	begin_job(a,"merge",Balance.cfg.merge_seconds)
 	begin_job(b,"merge",Balance.cfg.merge_seconds)
 	merges.append({"a":a.id,"b":b.id,"left":float(Balance.cfg.merge_seconds),"total":float(Balance.cfg.merge_seconds)})
+	diagnostics.action("fusion_start",time,{"a":a.id,"b":b.id})
 	return ""
 
 func finish_merge(a: Dictionary, b: Dictionary) -> void:
@@ -185,6 +195,9 @@ func finish_merge(a: Dictionary, b: Dictionary) -> void:
 	tower_history[str(result.id)] = result
 	map.occupied.erase(b.cell)
 	map.occupied[a.cell] = result.id
+	for key in ["shots","hits","misses","attempted","overkill","boss_damage","expected_attacks"]: result[key]=0
+	result.idle_seconds={}
+	diagnostics.action("fusion_finish",time,{"a":a.id,"b":b.id,"tower_id":result.id})
 	map.rebuild()
 
 func update_jobs(delta: float) -> void:
@@ -195,6 +208,7 @@ func update_jobs(delta: float) -> void:
 			continue
 		t.job_left = maxf(0,t.job_left-delta)
 		if t.job_left <= .000001:
+			diagnostics.action(t.job+"_finish",time,diagnostics.tower_context(t))
 			if t.job == "upgrade":
 				t.level += 1
 			elif t.job == "ultimate":
@@ -216,112 +230,103 @@ func update_jobs(delta: float) -> void:
 			merges.remove_at(i)
 
 func start_wave() -> bool:
-	if active or defeated:
-		return false
-	finished_event = false
-	active = true
-	wave_time = 0.0
-	spawn_timer = 0.0
-	wave_stats = {"wave":next_wave,"spawned":0,"killed":0,"leaked":0,"earned":0,"damage":0.0,
-		"hp_start":base_hp,"spent_start":total_spent,"enemy_hp":0.0,"composition":{}}
-	var count := mini(int(Balance.cfg.wave_count_start+Balance.cfg.wave_count_step*(next_wave-1)),int(Balance.cfg.wave_count_max))
-	spawn_interval = Balance.cfg.spawn_interval
-	spawn_queue.clear()
-	var mixed := next_wave%20 == 19
-	var wave_kind: String = Balance.cfg.wave_types[(next_wave-1)%Balance.cfg.wave_types.size()]
-	if wave_kind != "normal" and next_wave < int(Balance.cfg.enemy_introduction.get(wave_kind,1)):
-		wave_kind = "normal"
-	for i in range(count):
-		var kind := wave_kind
-		if mixed:
-			var roll := rng.randf()
-			var accumulated := 0.0
-			for candidate in Balance.cfg.enemy_mix:
-				accumulated += float(Balance.cfg.enemy_mix[candidate])
-				if roll <= accumulated:
-					kind = candidate
-					break
-		spawn_queue.append(kind)
-	if next_wave%5 == 0:
-		spawn_queue.insert(int(count/2.0),"boss")
+	if active or defeated: return false
+	finished_event=false
+	active=true
+	wave_reward_paid=false
+	wave_time=0
+	spawn_timer=0
+	wave_config=WaveCatalog.generate(next_wave)
+	wave_stats={"wave":next_wave,"spawned":0,"killed":0,"leaked":0,"earned":0,"damage":0.0,"hp_start":base_hp,"credits_start":credits,
+		"spent_start":total_spent,"enemy_hp":0.0,"composition":{},"damage_by_tower_class":{},"damage_by_enemy_type":{},"death_fractions":[],
+		"bosses":[],"boss_exit_hp":0.0,"ttk_sum":0.0,"spawned_children":0}
+	spawn_interval=Balance.cfg.spawn_interval
+	spawn_queue=WaveCatalog.queue(wave_config)
+	diagnostics.emit("wave_start",time,{"wave":next_wave,"config":wave_config,"credits":credits},true)
 	return true
 
 func spawn_enemy(kind: String, wave: int = -1) -> Dictionary:
-	var w := next_wave if wave < 0 else wave
-	var boss_data := Balance.boss(w) if kind == "boss" else {}
-	var data: Dictionary = Balance.cfg.enemies.normal if kind == "boss" else Balance.cfg.enemies[kind]
-	var hp: float = Balance.cfg.enemy_base_hp*Balance.hp_multiplier(w)*(Balance.cfg.boss_hp if kind == "boss" else data.hp)
-	var reward := maxi(1,int(round(Balance.cfg.enemy_base_reward*(Balance.cfg.boss_reward if kind == "boss" else data.reward)*Balance.reward_growth(w))))
-	var e := {"id":next_id,"kind":kind,"hp":hp,"max_hp":hp,
-		"speed":float(Balance.cfg.boss_speed if kind == "boss" else data.speed),"reward":reward,
-		"cell":map.spawn,"next":map.next_cell(map.spawn),"progress":0.0,"trail":[map.spawn],
-		"pos":HexMap.point(map.spawn),"previous_pos":HexMap.point(map.spawn),"dead":false,
-		"immune":boss_data.get("immune",""),"color":boss_data.get("color",data.color),
-		"pushes":[],"last_hit":-100.0,"spawned_at":time}
-	next_id += 1
+	var w:=next_wave if wave<0 else wave
+	var config:=WaveCatalog.generate(w)
+	var boss_data:=Balance.boss(w) if kind=="boss" else {}
+	var data: Dictionary=Balance.cfg.enemies.normal if kind=="boss" else Balance.cfg.enemies[kind]
+	var hp: float=config.hp[kind]
+	var e:={"id":next_id,"kind":kind,"wave":w,"hp":hp,"max_hp":hp,"speed":float(Balance.cfg.boss_speed if kind=="boss" else data.speed)*Balance.cfg.base_enemy_speed,
+		"reward":int(config.reward[kind]),"cell":map.spawn,"next":map.next_cell(map.spawn),"progress":0.0,"trail":[map.spawn],
+		"pos":HexMap.point(map.spawn),"previous_pos":HexMap.point(map.spawn),"dead":false,"immune":boss_data.get("immune",""),"color":boss_data.get("color",data.color),
+		"pushes":[],"last_hit":-100.0,"spawned_at":time,"damage_sources":{},"hits":0,"parent_id":-1,"reward_paid":false}
+	next_id+=1
 	enemies.append(e)
 	add_effect("spawn",e.pos,e.pos,Color(e.color),.24,.22)
-	if not wave_stats.is_empty():
-		wave_stats.spawned += 1
-		wave_stats.enemy_hp += hp
-		wave_stats.composition[kind] = int(wave_stats.composition.get(kind,0))+1
+	register_spawn(e)
 	return e
 
 func hit(e: Dictionary, amount: float, t: Dictionary, ultimate_effect: bool = false) -> bool:
-	if e.dead or e.immune == t.kind or not t.job.is_empty():
+	if e.dead: return false
+	ensure_tower_stats(t)
+	t.attempted+=amount
+	if not t.job.is_empty():
+		diagnostics.issue("DAMAGE_DURING_INSTALL",time,{"tower_id":t.id,"enemy_id":e.id,"job":t.job})
 		return false
-	var actual := minf(amount,e.hp)
-	e.hp -= amount
-	e.last_hit = time
-	t.damage += actual
-	total_damage += actual
+	if e.immune==t.kind:
+		diagnostics.emit("immune_block",time,{"tower_id":t.id,"enemy_id":e.id,"attempted":amount})
+		return false
+	var actual:=minf(amount,e.hp)
+	var excess:=maxf(0,amount-e.hp)
+	e.hp=maxf(0,e.hp-amount)
+	e.last_hit=time
+	e.hits=int(e.get("hits",0))+1
+	if not e.has("damage_sources"): e.damage_sources={}
+	e.damage_sources[t.kind]=float(e.damage_sources.get(t.kind,0))+actual
+	t.damage+=actual; t.overkill+=excess; t.hits+=1
+	if e.kind=="boss": t.boss_damage+=actual
+	total_damage+=actual
 	if not wave_stats.is_empty():
-		wave_stats.damage += actual
-	if ultimate_effect:
-		t.ultimate_hits += 1
+		wave_stats.damage+=actual
+		for pair in [["damage_by_tower_class",t.kind],["damage_by_enemy_type",e.kind]]:
+			if not wave_stats.has(pair[0]):wave_stats[pair[0]]={}
+			wave_stats[pair[0]][pair[1]]=float(wave_stats[pair[0]].get(pair[1],0))+actual
+	if ultimate_effect:t.ultimate_hits+=1
+	diagnostics.emit("damage_applied",time,{"tower_id":t.id,"enemy_id":e.id,"type":e.kind,"attempted":amount,"effective":actual,"overkill":excess,"hp":e.hp})
 	add_effect("hit",e.pos,e.pos,Color(e.color),.13,.10)
-	if e.hp <= 0:
-		kill(e,t)
+	if e.hp<=0: kill(e,t)
 	return true
 
 func kill(e: Dictionary, t: Dictionary) -> void:
-	if e.dead:
-		return
-	e.dead = true
-	t.kills += 1
-	total_kills += 1
+	if e.dead: return
+	e.dead=true
+	t.kills+=1; total_kills+=1
+	var fraction:=path_fraction(e)
+	if e.kind!="boss" and not wave_stats.is_empty():
+		wave_stats.ordinary_killed=int(wave_stats.get("ordinary_killed",0))+1
+		if fraction<.15:wave_stats.early_ordinary_killed=int(wave_stats.get("early_ordinary_killed",0))+1
 	if not wave_stats.is_empty():
-		wave_stats.killed += 1
+		wave_stats.killed+=1
+		if not wave_stats.has("death_fractions"):wave_stats.death_fractions=[]
+		wave_stats.death_fractions.append(fraction)
+		wave_stats.ttk_sum=float(wave_stats.get("ttk_sum",0))+time-float(e.spawned_at)
+	if e.kind=="boss": register_boss(e,false)
+	diagnostics.emit("enemy_death",time,{"id":e.id,"tower_id":t.id,"type":e.kind,"wave":e.get("wave",next_wave),"path_fraction":fraction,"ttk":time-e.spawned_at,"pos":e.pos,"damage_sources":e.get("damage_sources",{})},e.kind=="boss")
 	add_effect("death",e.pos,e.pos,Color(e.color),.42,.35)
-	var reward: int = e.reward
-	if e.kind == "split":
-		var parent_reward := int(floor(reward*.25))
-		var rest := reward-parent_reward
-		for i in range(2):
-			var child: Dictionary = e.duplicate(true)
-			child.id = next_id
-			next_id += 1
-			child.kind = "child"
-			child.dead = false
-			child.max_hp = e.max_hp*Balance.cfg.split_hp
-			child.hp = child.max_hp
-			child.speed = Balance.cfg.enemies.child.speed
-			child.reward = int(rest/2.0) if i == 0 else rest-int(rest/2.0)
-			child.pushes = []
-			child.last_hit = -100.0
-			child.spawned_at = time
-			child.progress = maxf(0,e.progress-i*.09)
-			child.pos = HexMap.point(child.cell).lerp(HexMap.point(child.next),child.progress)
-			child.previous_pos = child.pos
-			enemies.append(child)
-			if not wave_stats.is_empty():
-				wave_stats.spawned += 1
-				wave_stats.enemy_hp += child.hp
-		reward = parent_reward
-	credits += reward
-	total_earned += reward
-	if not wave_stats.is_empty():
-		wave_stats.earned += reward
+	if e.get("reward_paid",false): diagnostics.issue("DOUBLE_DEATH_REWARD",time,{"enemy_id":e.id})
+	else:
+		e.reward_paid=true; credits+=e.reward; total_earned+=e.reward
+		if not wave_stats.is_empty():wave_stats.earned+=e.reward
+	if e.kind=="split":
+		var config:=WaveCatalog.generate(int(e.get("wave",next_wave)))
+		var children: Array=[]
+		for i in 2:
+			var child: Dictionary=e.duplicate(true)
+			child.id=next_id; next_id+=1
+			child.kind="child"; child.dead=false; child.reward_paid=false
+			child.max_hp=float(config.hp.child); child.hp=child.max_hp; child.reward=int(config.reward.child)
+			child.speed=Balance.cfg.enemies.child.speed*Balance.cfg.base_enemy_speed
+			child.pushes=[];child.last_hit=-100.0;child.spawned_at=time;child.damage_sources={};child.hits=0;child.parent_id=e.id
+			child.progress=maxf(0,e.progress-i*.09)
+			child.pos=HexMap.point(child.cell).lerp(HexMap.point(child.next),child.progress);child.previous_pos=child.pos
+			enemies.append(child);children.append(child.id);register_spawn(child)
+			if not wave_stats.is_empty():wave_stats.spawned_children=int(wave_stats.get("spawned_children",0))+1
+		diagnostics.emit("enemy_split",time,{"parent_id":e.id,"children":children},true)
 
 func add_effect(type: String, a: Vector2, b: Vector2, color: Color, radius: float = 0, duration: float = .2) -> void:
 	if visuals:
@@ -333,6 +338,7 @@ func step(delta: float) -> void:
 	if defeated:
 		return
 	time += delta
+	diagnostics.tick(self,delta)
 	update_jobs(delta)
 	for i in range(effects.size()-1,-1,-1):
 		effects[i].life -= delta
@@ -353,11 +359,21 @@ func step(delta: float) -> void:
 			spawn_timer = spawn_interval
 	for e in enemies:
 		if not e.dead:
+			if e.kind=="boss":
+				var eligible:=0.0
+				for t in towers:
+					if t.job.is_empty() and t.kind!=e.immune and HexMap.point(t.cell).distance_to(e.pos)<=Balance.reach(t):
+						eligible+=Balance.damage(t)*Balance.rate(t)*Balance.volley(t)
+				if eligible>0:
+					e.eligible_seconds=float(e.get("eligible_seconds",0))+delta
+					e.eligible_damage_integral=float(e.get("eligible_damage_integral",0))+eligible*delta
 			move_enemy(e,delta)
 		if base_hp <= 0:
 			base_hp = 0
 			defeated = true
 			active = false
+			diagnostics.emit("match_end",time,{"wave":next_wave,"defeated":true},true)
+			diagnostics.write_summary(self)
 			return
 	Combat.step(self,delta)
 	for i in range(enemies.size()-1,-1,-1):
@@ -430,12 +446,15 @@ func move_enemy(e: Dictionary, delta: float) -> void:
 		if e.cell == map.goal:
 			e.dead = true
 			base_hp -= 1
+			diagnostics.emit("enemy_leak",time,{"id":e.id,"type":e.kind,"wave":e.get("wave",next_wave),"remaining_hp":e.hp,"max_hp":e.max_hp,"damage_sources":e.get("damage_sources",{})},true)
+			if e.kind=="boss":register_boss(e,true)
 			if not wave_stats.is_empty():
 				wave_stats.leaked += 1
 			break
 		if e.progress <= 0.000001:
 			e.next = map.next_cell(e.cell)
 		if e.next == e.cell:
+			diagnostics.issue("PATH_INVARIANT",time,{"enemy_id":e.id,"cell":e.cell},get_stack())
 			push_error("Path invariant failed at %s" % e.cell)
 			break
 		var step: float = minf(travel,1.0-e.progress)
@@ -448,20 +467,73 @@ func move_enemy(e: Dictionary, delta: float) -> void:
 	e.pos = HexMap.point(e.cell).lerp(HexMap.point(e.next), e.progress)
 
 func complete_wave() -> void:
-	var bonus: int = int(Balance.cfg.wave_bonus_base + Balance.cfg.wave_bonus_step*next_wave)
-	if next_wave % 5 == 0:
-		bonus += int(Balance.cfg.boss_bonus_base + Balance.cfg.boss_bonus_step*next_wave)
-	credits += bonus
-	total_earned += bonus
-	wave_stats.earned += bonus
-	wave_stats.seconds = wave_time
-	wave_stats.hp_end = base_hp
-	wave_stats.spent = total_spent - wave_stats.spent_start
-	wave_stats.path_length = map.route(map.spawn).size()
+	if not active or wave_reward_paid or defeated:return
+	wave_reward_paid=true
+	var bonus:=int(WaveCatalog.generate(next_wave).completion_bonus)
+	credits+=bonus;total_earned+=bonus;wave_stats.earned+=bonus
+	wave_stats.seconds=wave_time;wave_stats.hp_end=base_hp;wave_stats.credits_end=credits
+	wave_stats.spent=total_spent-wave_stats.spent_start
+	wave_stats.path_length=map.route(map.spawn).size()
+	var fractions: Array=wave_stats.get("death_fractions",[])
+	fractions.sort()
+	wave_stats.median_death_fraction=fractions[fractions.size()/2] if not fractions.is_empty() else 0
+	wave_stats.average_ttk=float(wave_stats.get("ttk_sum",0))/maxi(1,wave_stats.killed)
+	wave_stats.effective_dps=wave_stats.damage/maxf(.001,wave_time)
+	wave_stats.mean_fps=diagnostics.fps_sum/maxi(1,diagnostics.frames)
+	audit_wave()
+	wave_stats.erase("death_fractions")
 	history.append(wave_stats.duplicate(true))
-	next_wave += 1
-	active = false
-	finished_event = true
-	projectiles.clear()
-	for t in towers:
-		t.cd = 0.0
+	diagnostics.emit("wave_end",time,wave_stats,true)
+	next_wave+=1;active=false;finished_event=true;projectiles.clear()
+	for t in towers:t.cd=0
+	diagnostics.write_summary(self)
+
+
+func ensure_tower_stats(t: Dictionary) -> void:
+	for key in ["shots","hits","misses","attempted","overkill","boss_damage","expected_attacks","ready_idle"]:
+		if not t.has(key):t[key]=0.0
+	if not t.has("last_shot"):t.last_shot=-100.0
+	if not t.has("idle_seconds"):t.idle_seconds={}
+
+func register_spawn(e: Dictionary) -> void:
+	if not wave_stats.is_empty():
+		wave_stats.spawned+=1;wave_stats.enemy_hp+=e.hp
+		wave_stats.composition[e.kind]=int(wave_stats.composition.get(e.kind,0))+1
+	diagnostics.emit("enemy_spawn",time,{"id":e.id,"type":e.kind,"wave":e.get("wave",next_wave),"hp":e.hp,"speed":e.speed,"reward":e.reward,"immune":e.immune,"pos":e.pos,"parent_id":e.get("parent_id",-1)},e.kind=="boss")
+
+func path_fraction(e: Dictionary) -> float:
+	var traveled:=maxf(0,e.trail.size()-1+float(e.progress))
+	var remaining:=maxf(0,float(map.distances.get(e.cell,0))-float(e.progress))
+	return clampf(traveled/maxf(1,traveled+remaining),0,1)
+
+func register_boss(e: Dictionary, leaked: bool) -> void:
+	if wave_stats.is_empty():return
+	if not wave_stats.has("bosses"):wave_stats.bosses=[]
+	var record:={"id":e.id,"hp_start":e.max_hp,"remaining_hp":e.hp,"immune":e.immune,"leaked":leaked,"time_alive":time-e.spawned_at,"time_under_attack":e.get("eligible_seconds",0),"mean_eligible_raw_dps":float(e.get("eligible_damage_integral",0))/maxf(.001,float(e.get("eligible_seconds",0))),
+		"path_fraction":path_fraction(e),"remaining_cells":map.distances.get(e.cell,0),"damage_sources":e.get("damage_sources",{})}
+	wave_stats.bosses.append(record)
+	if leaked:wave_stats.boss_exit_hp=float(wave_stats.get("boss_exit_hp",0))+e.hp
+
+func audit_wave() -> void:
+	wave_stats.early_death_fraction=float(wave_stats.get("early_ordinary_killed",0))/maxi(1,int(wave_stats.get("ordinary_killed",0)))
+	wave_stats.warnings=[]
+	var early_streak:=1 if wave_stats.early_death_fraction>.8 else 0
+	for index in range(history.size()-1,maxi(-1,history.size()-5),-1):
+		if float(history[index].get("early_death_fraction",0))>.8:early_streak+=1
+		else:break
+	if early_streak>=5:
+		wave_stats.warnings.append("EARLY_KILLS_5_WAVES")
+		diagnostics.issue("EARLY_KILLS_5_WAVES",time,{"wave":next_wave,"fraction":wave_stats.early_death_fraction})
+	if next_wave%5==0:
+		var records: Array=wave_stats.get("bosses",[]).duplicate()
+		for index in range(history.size()-1,-1,-1):
+			if int(history[index].wave)%5==0:
+				records.append_array(history[index].get("bosses",[]))
+				if records.size()>=3:break
+		if records.size()>=3:
+			var large_leaks:=true
+			for record in records.slice(0,3):
+				if not record.leaked or float(record.remaining_hp)/maxf(1,record.hp_start)<=.2:large_leaks=false
+			if large_leaks:
+				wave_stats.warnings.append("BOSS_LEAK_3_TIMES")
+				diagnostics.issue("BOSS_LEAK_3_TIMES",time,{"wave":next_wave})

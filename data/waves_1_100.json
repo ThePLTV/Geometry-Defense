@@ -1,0 +1,2332 @@
+[
+  {
+    "completion_bonus": 5,
+    "groups": {
+      "normal": 8
+    },
+    "hp": {
+      "boss": 126,
+      "child": 10,
+      "fast": 20,
+      "normal": 28,
+      "split": 34
+    },
+    "max_income": 21,
+    "reward": {
+      "boss": 19,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 86,
+    "wave": 1
+  },
+  {
+    "completion_bonus": 5,
+    "groups": {
+      "fast": 9
+    },
+    "hp": {
+      "boss": 135,
+      "child": 11,
+      "fast": 21,
+      "normal": 30,
+      "split": 36
+    },
+    "max_income": 23,
+    "reward": {
+      "boss": 20,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 109,
+    "wave": 2
+  },
+  {
+    "completion_bonus": 6,
+    "groups": {
+      "split": 10
+    },
+    "hp": {
+      "boss": 140,
+      "child": 11,
+      "fast": 22,
+      "normal": 31,
+      "split": 37
+    },
+    "max_income": 26,
+    "reward": {
+      "boss": 21,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 135,
+    "wave": 3
+  },
+  {
+    "completion_bonus": 7,
+    "groups": {
+      "normal": 11
+    },
+    "hp": {
+      "boss": 149,
+      "child": 12,
+      "fast": 23,
+      "normal": 33,
+      "split": 40
+    },
+    "max_income": 29,
+    "reward": {
+      "boss": 22,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 164,
+    "wave": 4
+  },
+  {
+    "completion_bonus": 7,
+    "groups": {
+      "boss": 1,
+      "normal": 12
+    },
+    "hp": {
+      "boss": 158,
+      "child": 12,
+      "fast": 25,
+      "normal": 35,
+      "split": 42
+    },
+    "max_income": 54,
+    "reward": {
+      "boss": 23,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 218,
+    "wave": 5
+  },
+  {
+    "completion_bonus": 8,
+    "groups": {
+      "split": 13
+    },
+    "hp": {
+      "boss": 167,
+      "child": 13,
+      "fast": 26,
+      "normal": 37,
+      "split": 44
+    },
+    "max_income": 34,
+    "reward": {
+      "boss": 25,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 252,
+    "wave": 6
+  },
+  {
+    "completion_bonus": 9,
+    "groups": {
+      "normal": 14
+    },
+    "hp": {
+      "boss": 176,
+      "child": 14,
+      "fast": 27,
+      "normal": 39,
+      "split": 47
+    },
+    "max_income": 37,
+    "reward": {
+      "boss": 26,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 289,
+    "wave": 7
+  },
+  {
+    "completion_bonus": 9,
+    "groups": {
+      "fast": 15
+    },
+    "hp": {
+      "boss": 185,
+      "child": 14,
+      "fast": 29,
+      "normal": 41,
+      "split": 49
+    },
+    "max_income": 39,
+    "reward": {
+      "boss": 27,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 328,
+    "wave": 8
+  },
+  {
+    "completion_bonus": 10,
+    "groups": {
+      "split": 16
+    },
+    "hp": {
+      "boss": 194,
+      "child": 15,
+      "fast": 30,
+      "normal": 43,
+      "split": 52
+    },
+    "max_income": 42,
+    "reward": {
+      "boss": 28,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 370,
+    "wave": 9
+  },
+  {
+    "completion_bonus": 11,
+    "groups": {
+      "boss": 1,
+      "normal": 17
+    },
+    "hp": {
+      "boss": 203,
+      "child": 16,
+      "fast": 31,
+      "normal": 45,
+      "split": 54
+    },
+    "max_income": 75,
+    "reward": {
+      "boss": 30,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 445,
+    "wave": 10
+  },
+  {
+    "completion_bonus": 12,
+    "groups": {
+      "fast": 18
+    },
+    "hp": {
+      "boss": 216,
+      "child": 17,
+      "fast": 34,
+      "normal": 48,
+      "split": 58
+    },
+    "max_income": 48,
+    "reward": {
+      "boss": 31,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 493,
+    "wave": 11
+  },
+  {
+    "completion_bonus": 13,
+    "groups": {
+      "split": 19
+    },
+    "hp": {
+      "boss": 225,
+      "child": 18,
+      "fast": 35,
+      "normal": 50,
+      "split": 60
+    },
+    "max_income": 51,
+    "reward": {
+      "boss": 33,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 544,
+    "wave": 12
+  },
+  {
+    "completion_bonus": 13,
+    "groups": {
+      "normal": 20
+    },
+    "hp": {
+      "boss": 239,
+      "child": 19,
+      "fast": 37,
+      "normal": 53,
+      "split": 64
+    },
+    "max_income": 53,
+    "reward": {
+      "boss": 34,
+      "child": 0,
+      "fast": 2,
+      "normal": 2,
+      "split": 2
+    },
+    "theoretical_budget": 597,
+    "wave": 13
+  },
+  {
+    "completion_bonus": 14,
+    "groups": {
+      "fast": 21
+    },
+    "hp": {
+      "boss": 252,
+      "child": 20,
+      "fast": 39,
+      "normal": 56,
+      "split": 67
+    },
+    "max_income": 77,
+    "reward": {
+      "boss": 36,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 674,
+    "wave": 14
+  },
+  {
+    "completion_bonus": 15,
+    "groups": {
+      "boss": 1,
+      "normal": 22
+    },
+    "hp": {
+      "boss": 266,
+      "child": 21,
+      "fast": 41,
+      "normal": 59,
+      "split": 71
+    },
+    "max_income": 119,
+    "reward": {
+      "boss": 38,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 793,
+    "wave": 15
+  },
+  {
+    "completion_bonus": 16,
+    "groups": {
+      "normal": 23
+    },
+    "hp": {
+      "boss": 284,
+      "child": 22,
+      "fast": 44,
+      "normal": 63,
+      "split": 76
+    },
+    "max_income": 85,
+    "reward": {
+      "boss": 39,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 878,
+    "wave": 16
+  },
+  {
+    "completion_bonus": 17,
+    "groups": {
+      "fast": 24
+    },
+    "hp": {
+      "boss": 297,
+      "child": 23,
+      "fast": 46,
+      "normal": 66,
+      "split": 79
+    },
+    "max_income": 89,
+    "reward": {
+      "boss": 41,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 967,
+    "wave": 17
+  },
+  {
+    "completion_bonus": 18,
+    "groups": {
+      "split": 25
+    },
+    "hp": {
+      "boss": 315,
+      "child": 25,
+      "fast": 49,
+      "normal": 70,
+      "split": 84
+    },
+    "max_income": 118,
+    "reward": {
+      "boss": 43,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 1085,
+    "wave": 18
+  },
+  {
+    "completion_bonus": 19,
+    "groups": {
+      "fast": 10,
+      "normal": 10,
+      "split": 10
+    },
+    "hp": {
+      "boss": 329,
+      "child": 26,
+      "fast": 51,
+      "normal": 73,
+      "split": 88
+    },
+    "max_income": 119,
+    "reward": {
+      "boss": 45,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 1204,
+    "wave": 19
+  },
+  {
+    "completion_bonus": 20,
+    "groups": {
+      "boss": 1,
+      "normal": 27
+    },
+    "hp": {
+      "boss": 347,
+      "child": 27,
+      "fast": 54,
+      "normal": 77,
+      "split": 92
+    },
+    "max_income": 148,
+    "reward": {
+      "boss": 47,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 1352,
+    "wave": 20
+  },
+  {
+    "completion_bonus": 21,
+    "groups": {
+      "split": 28
+    },
+    "hp": {
+      "boss": 369,
+      "child": 29,
+      "fast": 57,
+      "normal": 82,
+      "split": 98
+    },
+    "max_income": 133,
+    "reward": {
+      "boss": 49,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 1485,
+    "wave": 21
+  },
+  {
+    "completion_bonus": 22,
+    "groups": {
+      "normal": 29
+    },
+    "hp": {
+      "boss": 387,
+      "child": 30,
+      "fast": 60,
+      "normal": 86,
+      "split": 103
+    },
+    "max_income": 109,
+    "reward": {
+      "boss": 51,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 1594,
+    "wave": 22
+  },
+  {
+    "completion_bonus": 23,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 410,
+      "child": 32,
+      "fast": 64,
+      "normal": 91,
+      "split": 109
+    },
+    "max_income": 113,
+    "reward": {
+      "boss": 53,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 1707,
+    "wave": 23
+  },
+  {
+    "completion_bonus": 24,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 432,
+      "child": 34,
+      "fast": 67,
+      "normal": 96,
+      "split": 115
+    },
+    "max_income": 144,
+    "reward": {
+      "boss": 55,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 1851,
+    "wave": 24
+  },
+  {
+    "completion_bonus": 25,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 455,
+      "child": 35,
+      "fast": 71,
+      "normal": 101,
+      "split": 121
+    },
+    "max_income": 172,
+    "reward": {
+      "boss": 57,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2023,
+    "wave": 25
+  },
+  {
+    "completion_bonus": 26,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 482,
+      "child": 37,
+      "fast": 75,
+      "normal": 107,
+      "split": 128
+    },
+    "max_income": 116,
+    "reward": {
+      "boss": 59,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2139,
+    "wave": 26
+  },
+  {
+    "completion_bonus": 27,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 509,
+      "child": 40,
+      "fast": 79,
+      "normal": 113,
+      "split": 136
+    },
+    "max_income": 147,
+    "reward": {
+      "boss": 61,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2286,
+    "wave": 27
+  },
+  {
+    "completion_bonus": 29,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 536,
+      "child": 42,
+      "fast": 83,
+      "normal": 119,
+      "split": 143
+    },
+    "max_income": 119,
+    "reward": {
+      "boss": 63,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2405,
+    "wave": 28
+  },
+  {
+    "completion_bonus": 30,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 563,
+      "child": 44,
+      "fast": 88,
+      "normal": 125,
+      "split": 150
+    },
+    "max_income": 120,
+    "reward": {
+      "boss": 66,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2525,
+    "wave": 29
+  },
+  {
+    "completion_bonus": 31,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 594,
+      "child": 46,
+      "fast": 92,
+      "normal": 132,
+      "split": 158
+    },
+    "max_income": 189,
+    "reward": {
+      "boss": 68,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2714,
+    "wave": 30
+  },
+  {
+    "completion_bonus": 32,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 630,
+      "child": 49,
+      "fast": 98,
+      "normal": 140,
+      "split": 168
+    },
+    "max_income": 122,
+    "reward": {
+      "boss": 71,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2836,
+    "wave": 31
+  },
+  {
+    "completion_bonus": 33,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 662,
+      "child": 51,
+      "fast": 103,
+      "normal": 147,
+      "split": 176
+    },
+    "max_income": 123,
+    "reward": {
+      "boss": 73,
+      "child": 1,
+      "fast": 3,
+      "normal": 3,
+      "split": 2
+    },
+    "theoretical_budget": 2959,
+    "wave": 32
+  },
+  {
+    "completion_bonus": 35,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 698,
+      "child": 54,
+      "fast": 109,
+      "normal": 155,
+      "split": 186
+    },
+    "max_income": 185,
+    "reward": {
+      "boss": 75,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 3144,
+    "wave": 33
+  },
+  {
+    "completion_bonus": 36,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 738,
+      "child": 57,
+      "fast": 115,
+      "normal": 164,
+      "split": 197
+    },
+    "max_income": 156,
+    "reward": {
+      "boss": 78,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 3300,
+    "wave": 34
+  },
+  {
+    "completion_bonus": 37,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 779,
+      "child": 61,
+      "fast": 121,
+      "normal": 173,
+      "split": 208
+    },
+    "max_income": 238,
+    "reward": {
+      "boss": 81,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 3538,
+    "wave": 35
+  },
+  {
+    "completion_bonus": 39,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 819,
+      "child": 64,
+      "fast": 127,
+      "normal": 182,
+      "split": 218
+    },
+    "max_income": 189,
+    "reward": {
+      "boss": 83,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 3727,
+    "wave": 36
+  },
+  {
+    "completion_bonus": 40,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 864,
+      "child": 67,
+      "fast": 134,
+      "normal": 192,
+      "split": 230
+    },
+    "max_income": 160,
+    "reward": {
+      "boss": 86,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 3887,
+    "wave": 37
+  },
+  {
+    "completion_bonus": 41,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 914,
+      "child": 71,
+      "fast": 142,
+      "normal": 203,
+      "split": 244
+    },
+    "max_income": 161,
+    "reward": {
+      "boss": 89,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 4048,
+    "wave": 38
+  },
+  {
+    "completion_bonus": 43,
+    "groups": {
+      "fast": 10,
+      "normal": 10,
+      "split": 10
+    },
+    "hp": {
+      "boss": 963,
+      "child": 75,
+      "fast": 150,
+      "normal": 214,
+      "split": 257
+    },
+    "max_income": 173,
+    "reward": {
+      "boss": 92,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 4221,
+    "wave": 39
+  },
+  {
+    "completion_bonus": 44,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 1017,
+      "child": 79,
+      "fast": 158,
+      "normal": 226,
+      "split": 271
+    },
+    "max_income": 258,
+    "reward": {
+      "boss": 94,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 4479,
+    "wave": 40
+  },
+  {
+    "completion_bonus": 45,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 1071,
+      "child": 83,
+      "fast": 167,
+      "normal": 238,
+      "split": 286
+    },
+    "max_income": 165,
+    "reward": {
+      "boss": 97,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 4644,
+    "wave": 41
+  },
+  {
+    "completion_bonus": 47,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 1130,
+      "child": 88,
+      "fast": 176,
+      "normal": 251,
+      "split": 301
+    },
+    "max_income": 197,
+    "reward": {
+      "boss": 100,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 4841,
+    "wave": 42
+  },
+  {
+    "completion_bonus": 48,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 1193,
+      "child": 93,
+      "fast": 186,
+      "normal": 265,
+      "split": 318
+    },
+    "max_income": 168,
+    "reward": {
+      "boss": 103,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 5009,
+    "wave": 43
+  },
+  {
+    "completion_bonus": 50,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 1260,
+      "child": 98,
+      "fast": 196,
+      "normal": 280,
+      "split": 336
+    },
+    "max_income": 170,
+    "reward": {
+      "boss": 106,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 5179,
+    "wave": 44
+  },
+  {
+    "completion_bonus": 51,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 1328,
+      "child": 103,
+      "fast": 207,
+      "normal": 295,
+      "split": 354
+    },
+    "max_income": 280,
+    "reward": {
+      "boss": 109,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 5459,
+    "wave": 45
+  },
+  {
+    "completion_bonus": 53,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 1404,
+      "child": 109,
+      "fast": 218,
+      "normal": 312,
+      "split": 374
+    },
+    "max_income": 173,
+    "reward": {
+      "boss": 112,
+      "child": 1,
+      "fast": 4,
+      "normal": 4,
+      "split": 3
+    },
+    "theoretical_budget": 5632,
+    "wave": 46
+  },
+  {
+    "completion_bonus": 54,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 1481,
+      "child": 115,
+      "fast": 230,
+      "normal": 329,
+      "split": 395
+    },
+    "max_income": 204,
+    "reward": {
+      "boss": 116,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 5836,
+    "wave": 47
+  },
+  {
+    "completion_bonus": 56,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 1562,
+      "child": 121,
+      "fast": 243,
+      "normal": 347,
+      "split": 416
+    },
+    "max_income": 236,
+    "reward": {
+      "boss": 119,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 6072,
+    "wave": 48
+  },
+  {
+    "completion_bonus": 57,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 1647,
+      "child": 128,
+      "fast": 256,
+      "normal": 366,
+      "split": 439
+    },
+    "max_income": 207,
+    "reward": {
+      "boss": 122,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 6279,
+    "wave": 49
+  },
+  {
+    "completion_bonus": 59,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 1737,
+      "child": 135,
+      "fast": 270,
+      "normal": 386,
+      "split": 463
+    },
+    "max_income": 335,
+    "reward": {
+      "boss": 126,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 6614,
+    "wave": 50
+  },
+  {
+    "completion_bonus": 61,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 1832,
+      "child": 142,
+      "fast": 285,
+      "normal": 407,
+      "split": 488
+    },
+    "max_income": 241,
+    "reward": {
+      "boss": 129,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 6855,
+    "wave": 51
+  },
+  {
+    "completion_bonus": 62,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 1935,
+      "child": 151,
+      "fast": 301,
+      "normal": 430,
+      "split": 516
+    },
+    "max_income": 212,
+    "reward": {
+      "boss": 132,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 7067,
+    "wave": 52
+  },
+  {
+    "completion_bonus": 64,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 2039,
+      "child": 159,
+      "fast": 317,
+      "normal": 453,
+      "split": 544
+    },
+    "max_income": 214,
+    "reward": {
+      "boss": 136,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 7281,
+    "wave": 53
+  },
+  {
+    "completion_bonus": 66,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 2151,
+      "child": 167,
+      "fast": 335,
+      "normal": 478,
+      "split": 574
+    },
+    "max_income": 246,
+    "reward": {
+      "boss": 139,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 7527,
+    "wave": 54
+  },
+  {
+    "completion_bonus": 67,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 2268,
+      "child": 176,
+      "fast": 353,
+      "normal": 504,
+      "split": 605
+    },
+    "max_income": 360,
+    "reward": {
+      "boss": 143,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 7887,
+    "wave": 55
+  },
+  {
+    "completion_bonus": 69,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 2394,
+      "child": 186,
+      "fast": 372,
+      "normal": 532,
+      "split": 638
+    },
+    "max_income": 219,
+    "reward": {
+      "boss": 146,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 8106,
+    "wave": 56
+  },
+  {
+    "completion_bonus": 71,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 2525,
+      "child": 196,
+      "fast": 393,
+      "normal": 561,
+      "split": 673
+    },
+    "max_income": 251,
+    "reward": {
+      "boss": 150,
+      "child": 1,
+      "fast": 5,
+      "normal": 5,
+      "split": 4
+    },
+    "theoretical_budget": 8357,
+    "wave": 57
+  },
+  {
+    "completion_bonus": 72,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 2664,
+      "child": 207,
+      "fast": 414,
+      "normal": 592,
+      "split": 710
+    },
+    "max_income": 252,
+    "reward": {
+      "boss": 154,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 8609,
+    "wave": 58
+  },
+  {
+    "completion_bonus": 74,
+    "groups": {
+      "fast": 10,
+      "normal": 10,
+      "split": 10
+    },
+    "hp": {
+      "boss": 2813,
+      "child": 219,
+      "fast": 438,
+      "normal": 625,
+      "split": 750
+    },
+    "max_income": 264,
+    "reward": {
+      "boss": 158,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 8873,
+    "wave": 59
+  },
+  {
+    "completion_bonus": 76,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 2966,
+      "child": 231,
+      "fast": 461,
+      "normal": 659,
+      "split": 791
+    },
+    "max_income": 417,
+    "reward": {
+      "boss": 161,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 9290,
+    "wave": 60
+  },
+  {
+    "completion_bonus": 78,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 3132,
+      "child": 244,
+      "fast": 487,
+      "normal": 696,
+      "split": 835
+    },
+    "max_income": 258,
+    "reward": {
+      "boss": 165,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 9548,
+    "wave": 61
+  },
+  {
+    "completion_bonus": 80,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 3303,
+      "child": 257,
+      "fast": 514,
+      "normal": 734,
+      "split": 881
+    },
+    "max_income": 260,
+    "reward": {
+      "boss": 169,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 9808,
+    "wave": 62
+  },
+  {
+    "completion_bonus": 81,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 3483,
+      "child": 271,
+      "fast": 542,
+      "normal": 774,
+      "split": 929
+    },
+    "max_income": 291,
+    "reward": {
+      "boss": 173,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 10099,
+    "wave": 63
+  },
+  {
+    "completion_bonus": 83,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 3677,
+      "child": 286,
+      "fast": 572,
+      "normal": 817,
+      "split": 980
+    },
+    "max_income": 263,
+    "reward": {
+      "boss": 177,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 10362,
+    "wave": 64
+  },
+  {
+    "completion_bonus": 85,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 3879,
+      "child": 302,
+      "fast": 603,
+      "normal": 862,
+      "split": 1034
+    },
+    "max_income": 446,
+    "reward": {
+      "boss": 181,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 10808,
+    "wave": 65
+  },
+  {
+    "completion_bonus": 87,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 4091,
+      "child": 318,
+      "fast": 636,
+      "normal": 909,
+      "split": 1091
+    },
+    "max_income": 297,
+    "reward": {
+      "boss": 185,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 11105,
+    "wave": 66
+  },
+  {
+    "completion_bonus": 89,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 4316,
+      "child": 336,
+      "fast": 671,
+      "normal": 959,
+      "split": 1151
+    },
+    "max_income": 269,
+    "reward": {
+      "boss": 189,
+      "child": 1,
+      "fast": 6,
+      "normal": 6,
+      "split": 5
+    },
+    "theoretical_budget": 11374,
+    "wave": 67
+  },
+  {
+    "completion_bonus": 91,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 4554,
+      "child": 354,
+      "fast": 708,
+      "normal": 1012,
+      "split": 1214
+    },
+    "max_income": 301,
+    "reward": {
+      "boss": 194,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 11675,
+    "wave": 68
+  },
+  {
+    "completion_bonus": 93,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 4802,
+      "child": 373,
+      "fast": 747,
+      "normal": 1067,
+      "split": 1280
+    },
+    "max_income": 303,
+    "reward": {
+      "boss": 198,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 11978,
+    "wave": 69
+  },
+  {
+    "completion_bonus": 95,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 5067,
+      "child": 394,
+      "fast": 788,
+      "normal": 1126,
+      "split": 1351
+    },
+    "max_income": 507,
+    "reward": {
+      "boss": 202,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 12485,
+    "wave": 70
+  },
+  {
+    "completion_bonus": 97,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 5346,
+      "child": 416,
+      "fast": 832,
+      "normal": 1188,
+      "split": 1426
+    },
+    "max_income": 307,
+    "reward": {
+      "boss": 206,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 12792,
+    "wave": 71
+  },
+  {
+    "completion_bonus": 99,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 5639,
+      "child": 439,
+      "fast": 877,
+      "normal": 1253,
+      "split": 1504
+    },
+    "max_income": 309,
+    "reward": {
+      "boss": 211,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 13101,
+    "wave": 72
+  },
+  {
+    "completion_bonus": 101,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 5949,
+      "child": 463,
+      "fast": 925,
+      "normal": 1322,
+      "split": 1586
+    },
+    "max_income": 311,
+    "reward": {
+      "boss": 215,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 13412,
+    "wave": 73
+  },
+  {
+    "completion_bonus": 103,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 6278,
+      "child": 488,
+      "fast": 976,
+      "normal": 1395,
+      "split": 1674
+    },
+    "max_income": 313,
+    "reward": {
+      "boss": 220,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 13725,
+    "wave": 74
+  },
+  {
+    "completion_bonus": 105,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 6624,
+      "child": 515,
+      "fast": 1030,
+      "normal": 1472,
+      "split": 1766
+    },
+    "max_income": 539,
+    "reward": {
+      "boss": 224,
+      "child": 1,
+      "fast": 7,
+      "normal": 7,
+      "split": 5
+    },
+    "theoretical_budget": 14264,
+    "wave": 75
+  },
+  {
+    "completion_bonus": 107,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 6989,
+      "child": 544,
+      "fast": 1087,
+      "normal": 1553,
+      "split": 1864
+    },
+    "max_income": 347,
+    "reward": {
+      "boss": 229,
+      "child": 2,
+      "fast": 8,
+      "normal": 8,
+      "split": 6
+    },
+    "theoretical_budget": 14611,
+    "wave": 76
+  },
+  {
+    "completion_bonus": 109,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 7371,
+      "child": 573,
+      "fast": 1147,
+      "normal": 1638,
+      "split": 1966
+    },
+    "max_income": 349,
+    "reward": {
+      "boss": 233,
+      "child": 2,
+      "fast": 8,
+      "normal": 8,
+      "split": 6
+    },
+    "theoretical_budget": 14960,
+    "wave": 77
+  },
+  {
+    "completion_bonus": 112,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 7776,
+      "child": 605,
+      "fast": 1210,
+      "normal": 1728,
+      "split": 2074
+    },
+    "max_income": 412,
+    "reward": {
+      "boss": 238,
+      "child": 2,
+      "fast": 8,
+      "normal": 8,
+      "split": 6
+    },
+    "theoretical_budget": 15372,
+    "wave": 78
+  },
+  {
+    "completion_bonus": 114,
+    "groups": {
+      "fast": 10,
+      "normal": 10,
+      "split": 10
+    },
+    "hp": {
+      "boss": 8204,
+      "child": 638,
+      "fast": 1276,
+      "normal": 1823,
+      "split": 2188
+    },
+    "max_income": 374,
+    "reward": {
+      "boss": 243,
+      "child": 2,
+      "fast": 8,
+      "normal": 8,
+      "split": 6
+    },
+    "theoretical_budget": 15746,
+    "wave": 79
+  },
+  {
+    "completion_bonus": 116,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 8658,
+      "child": 673,
+      "fast": 1347,
+      "normal": 1924,
+      "split": 2309
+    },
+    "max_income": 604,
+    "reward": {
+      "boss": 248,
+      "child": 2,
+      "fast": 8,
+      "normal": 8,
+      "split": 6
+    },
+    "theoretical_budget": 16350,
+    "wave": 80
+  },
+  {
+    "completion_bonus": 118,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 9131,
+      "child": 710,
+      "fast": 1420,
+      "normal": 2029,
+      "split": 2435
+    },
+    "max_income": 418,
+    "reward": {
+      "boss": 252,
+      "child": 2,
+      "fast": 8,
+      "normal": 8,
+      "split": 6
+    },
+    "theoretical_budget": 16768,
+    "wave": 81
+  },
+  {
+    "completion_bonus": 120,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 9635,
+      "child": 749,
+      "fast": 1499,
+      "normal": 2141,
+      "split": 2569
+    },
+    "max_income": 360,
+    "reward": {
+      "boss": 257,
+      "child": 2,
+      "fast": 8,
+      "normal": 8,
+      "split": 6
+    },
+    "theoretical_budget": 17128,
+    "wave": 82
+  },
+  {
+    "completion_bonus": 123,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 10166,
+      "child": 791,
+      "fast": 1581,
+      "normal": 2259,
+      "split": 2711
+    },
+    "max_income": 393,
+    "reward": {
+      "boss": 262,
+      "child": 2,
+      "fast": 9,
+      "normal": 9,
+      "split": 7
+    },
+    "theoretical_budget": 17521,
+    "wave": 83
+  },
+  {
+    "completion_bonus": 125,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 10724,
+      "child": 834,
+      "fast": 1668,
+      "normal": 2383,
+      "split": 2860
+    },
+    "max_income": 455,
+    "reward": {
+      "boss": 267,
+      "child": 2,
+      "fast": 9,
+      "normal": 9,
+      "split": 7
+    },
+    "theoretical_budget": 17976,
+    "wave": 84
+  },
+  {
+    "completion_bonus": 127,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 11313,
+      "child": 880,
+      "fast": 1760,
+      "normal": 2514,
+      "split": 3017
+    },
+    "max_income": 669,
+    "reward": {
+      "boss": 272,
+      "child": 2,
+      "fast": 9,
+      "normal": 9,
+      "split": 7
+    },
+    "theoretical_budget": 18645,
+    "wave": 85
+  },
+  {
+    "completion_bonus": 130,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 11934,
+      "child": 928,
+      "fast": 1856,
+      "normal": 2652,
+      "split": 3182
+    },
+    "max_income": 400,
+    "reward": {
+      "boss": 277,
+      "child": 2,
+      "fast": 9,
+      "normal": 9,
+      "split": 7
+    },
+    "theoretical_budget": 19045,
+    "wave": 86
+  },
+  {
+    "completion_bonus": 132,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 12591,
+      "child": 979,
+      "fast": 1959,
+      "normal": 2798,
+      "split": 3358
+    },
+    "max_income": 462,
+    "reward": {
+      "boss": 282,
+      "child": 2,
+      "fast": 9,
+      "normal": 9,
+      "split": 7
+    },
+    "theoretical_budget": 19507,
+    "wave": 87
+  },
+  {
+    "completion_bonus": 134,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 13284,
+      "child": 1033,
+      "fast": 2066,
+      "normal": 2952,
+      "split": 3542
+    },
+    "max_income": 404,
+    "reward": {
+      "boss": 287,
+      "child": 2,
+      "fast": 9,
+      "normal": 9,
+      "split": 7
+    },
+    "theoretical_budget": 19911,
+    "wave": 88
+  },
+  {
+    "completion_bonus": 137,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 14013,
+      "child": 1090,
+      "fast": 2180,
+      "normal": 3114,
+      "split": 3737
+    },
+    "max_income": 437,
+    "reward": {
+      "boss": 293,
+      "child": 2,
+      "fast": 10,
+      "normal": 10,
+      "split": 8
+    },
+    "theoretical_budget": 20348,
+    "wave": 89
+  },
+  {
+    "completion_bonus": 139,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 14787,
+      "child": 1150,
+      "fast": 2300,
+      "normal": 3286,
+      "split": 3943
+    },
+    "max_income": 737,
+    "reward": {
+      "boss": 298,
+      "child": 2,
+      "fast": 10,
+      "normal": 10,
+      "split": 8
+    },
+    "theoretical_budget": 21085,
+    "wave": 90
+  },
+  {
+    "completion_bonus": 141,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 15597,
+      "child": 1213,
+      "fast": 2426,
+      "normal": 3466,
+      "split": 4159
+    },
+    "max_income": 441,
+    "reward": {
+      "boss": 303,
+      "child": 2,
+      "fast": 10,
+      "normal": 10,
+      "split": 8
+    },
+    "theoretical_budget": 21526,
+    "wave": 91
+  },
+  {
+    "completion_bonus": 144,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 16457,
+      "child": 1280,
+      "fast": 2560,
+      "normal": 3657,
+      "split": 4388
+    },
+    "max_income": 444,
+    "reward": {
+      "boss": 309,
+      "child": 2,
+      "fast": 10,
+      "normal": 10,
+      "split": 8
+    },
+    "theoretical_budget": 21970,
+    "wave": 92
+  },
+  {
+    "completion_bonus": 146,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 17361,
+      "child": 1350,
+      "fast": 2701,
+      "normal": 3858,
+      "split": 4630
+    },
+    "max_income": 506,
+    "reward": {
+      "boss": 314,
+      "child": 2,
+      "fast": 10,
+      "normal": 10,
+      "split": 8
+    },
+    "theoretical_budget": 22476,
+    "wave": 93
+  },
+  {
+    "completion_bonus": 149,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 18315,
+      "child": 1425,
+      "fast": 2849,
+      "normal": 4070,
+      "split": 4884
+    },
+    "max_income": 479,
+    "reward": {
+      "boss": 319,
+      "child": 2,
+      "fast": 11,
+      "normal": 11,
+      "split": 8
+    },
+    "theoretical_budget": 22955,
+    "wave": 94
+  },
+  {
+    "completion_bonus": 151,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 19323,
+      "child": 1503,
+      "fast": 3006,
+      "normal": 4294,
+      "split": 5153
+    },
+    "max_income": 806,
+    "reward": {
+      "boss": 325,
+      "child": 2,
+      "fast": 11,
+      "normal": 11,
+      "split": 8
+    },
+    "theoretical_budget": 23761,
+    "wave": 95
+  },
+  {
+    "completion_bonus": 154,
+    "groups": {
+      "split": 30
+    },
+    "hp": {
+      "boss": 20385,
+      "child": 1586,
+      "fast": 3171,
+      "normal": 4530,
+      "split": 5436
+    },
+    "max_income": 514,
+    "reward": {
+      "boss": 330,
+      "child": 2,
+      "fast": 11,
+      "normal": 11,
+      "split": 8
+    },
+    "theoretical_budget": 24275,
+    "wave": 96
+  },
+  {
+    "completion_bonus": 156,
+    "groups": {
+      "normal": 30
+    },
+    "hp": {
+      "boss": 21510,
+      "child": 1673,
+      "fast": 3346,
+      "normal": 4780,
+      "split": 5736
+    },
+    "max_income": 486,
+    "reward": {
+      "boss": 336,
+      "child": 2,
+      "fast": 11,
+      "normal": 11,
+      "split": 8
+    },
+    "theoretical_budget": 24761,
+    "wave": 97
+  },
+  {
+    "completion_bonus": 159,
+    "groups": {
+      "fast": 30
+    },
+    "hp": {
+      "boss": 22694,
+      "child": 1765,
+      "fast": 3530,
+      "normal": 5043,
+      "split": 6052
+    },
+    "max_income": 489,
+    "reward": {
+      "boss": 342,
+      "child": 2,
+      "fast": 11,
+      "normal": 11,
+      "split": 8
+    },
+    "theoretical_budget": 25250,
+    "wave": 98
+  },
+  {
+    "completion_bonus": 161,
+    "groups": {
+      "fast": 10,
+      "normal": 10,
+      "split": 10
+    },
+    "hp": {
+      "boss": 23940,
+      "child": 1862,
+      "fast": 3724,
+      "normal": 5320,
+      "split": 6384
+    },
+    "max_income": 501,
+    "reward": {
+      "boss": 347,
+      "child": 2,
+      "fast": 11,
+      "normal": 11,
+      "split": 8
+    },
+    "theoretical_budget": 25751,
+    "wave": 99
+  },
+  {
+    "completion_bonus": 164,
+    "groups": {
+      "boss": 1,
+      "normal": 30
+    },
+    "hp": {
+      "boss": 25254,
+      "child": 1964,
+      "fast": 3928,
+      "normal": 5612,
+      "split": 6734
+    },
+    "max_income": 877,
+    "reward": {
+      "boss": 353,
+      "child": 2,
+      "fast": 12,
+      "normal": 12,
+      "split": 9
+    },
+    "theoretical_budget": 26628,
+    "wave": 100
+  }
+]

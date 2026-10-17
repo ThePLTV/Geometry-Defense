@@ -11,6 +11,9 @@ $ProjectPath = [IO.Path]::GetFullPath($ProjectPath)
 $OutputApk = [IO.Path]::GetFullPath($OutputApk)
 if (-not (Test-Path -LiteralPath (Join-Path $ProjectPath 'project.godot'))) { throw 'project.godot not found.' }
 New-Item -ItemType Directory -Path (Split-Path $OutputApk -Parent) -Force | Out-Null
+if((Get-Content -LiteralPath (Join-Path $ProjectPath 'export_presets.cfg') -Raw) -match 'gradle_build/use_gradle_build=true') {
+    & (Join-Path $ProjectPath 'tools/windows/prepare-gradle.ps1') -ProjectPath $ProjectPath -Toolchain $GeometryDefenseToolchain
+}
 & $GeometryDefenseToolchain.godot --headless --path $ProjectPath --editor --import
 if ($LASTEXITCODE -ne 0) { throw 'Godot import failed.' }
 & $GeometryDefenseToolchain.godot --headless --path $ProjectPath --export-debug $Preset $OutputApk

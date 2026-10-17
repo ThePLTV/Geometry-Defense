@@ -16,10 +16,10 @@ static func level(t: Dictionary) -> int:
 	return clampi(int(t.get("level",1)),1,10)
 
 static func upgrade_cost(kind: String, target_level: int) -> int:
-	return maxi(1,int(round(tower(kind).upgrade*pow(cfg.upgrade_growth,maxi(0,target_level-2)))))
+	return maxi(1,int(round(tower(kind).price*cfg.upgrade_price_fraction*pow(cfg.upgrade_growth,maxi(0,target_level-2)))))
 
 static func ultimate_cost(kind: String) -> int:
-	return int(round(tower(kind).price*cfg.ultimate_price))
+	return int(tower(kind).ultimate_cost)
 
 static func damage(t: Dictionary) -> float:
 	var data := tower(t.kind)
@@ -41,24 +41,10 @@ static func reach(t: Dictionary) -> float:
 static func volley(t: Dictionary) -> int:
 	return level(t) if t.kind == "Rocket" else 1
 
-static func hp_multiplier(wave: int) -> float:
-	load_config()
-	var logarithm := 0.0
-	var previous := 1
-	for tier in cfg.hp_tiers:
-		var count := maxi(0,mini(wave,int(tier[0]))-previous)
-		logarithm += count*log(1.0+float(tier[1]))
-		previous = int(tier[0])
-	return exp(minf(logarithm,200.0))
-
-static func reward_growth(wave: int) -> float:
-	load_config()
-	return 1.0+cfg.reward_growth_per_wave*(wave-1)
-
 static func boss(wave: int) -> Dictionary:
 	return [
-		{"color":"58ed66","name":"Зелёный","immune":"Laser"},
 		{"color":"f4f6f8","name":"Белый","immune":"Minigun"},
+		{"color":"58ed66","name":"Зелёный","immune":"Laser"},
 		{"color":"f04749","name":"Красный","immune":"Rocket"},
 		{"color":"39b4f6","name":"Синий","immune":"Shockwave"}
 	][(int(wave/5.0)-1)%4]

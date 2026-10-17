@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 config/name="Geometry Defense"
-config/version="0.2.0"
+config/version="0.3.0"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://assets/icon.svg"
@@ -26,3 +26,6 @@ textures/default_filters/use_nearest_mipmap_filter=false
 
 [audio]
 driver/enable_input=false
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/report_share/plugin.cfg")

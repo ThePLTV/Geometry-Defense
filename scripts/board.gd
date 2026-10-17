@@ -12,6 +12,7 @@ var draw_scale := 1.0
 var draw_offset := Vector2.ZERO
 var merge_source := -1
 var interpolation := 1.0
+var diagnostic_rings:=false
 var held_id := -1
 var hold_time := 0.0
 var hold_shown := false
@@ -140,6 +141,13 @@ func _draw() -> void:
 		var chosen := sim.tower_at(selected)
 		if not chosen.is_empty():
 			ring(HexMap.point(selected),Balance.reach(chosen),Color(.55,.75,.87,.55))
+			if diagnostic_rings:
+				var origin:=HexMap.point(selected)
+				for radius in range(1,6):ring(origin,float(radius),Color(.7,.8,.9,.25),1)
+				draw_circle(center(selected),3*draw_scale,Color.WHITE)
+				var enemy:=sim.enemy_by_id(int(chosen.get("target_id",-1)))
+				if not enemy.is_empty():draw_line(center(selected),world_position(enemy.pos),Color("ffcd77"),draw_scale,true)
+				draw_string(ThemeDB.fallback_font,center(selected)+Vector2(-35,-40)*draw_scale,"R %.2f / цель %.2f"%[Balance.reach(chosen),float(chosen.get("target_distance",-1))],HORIZONTAL_ALIGNMENT_LEFT,-1,int(14*draw_scale),Color.WHITE)
 	for t in sim.towers:
 		TowerVisuals.draw(self,center(t.cell),t.kind,23*draw_scale,t.level,t.ultimate,t.mega,t.angle,t.flash,sim.time)
 		if not t.job.is_empty():
@@ -153,11 +161,11 @@ func _draw() -> void:
 			continue
 		var point: Vector2 = e.get("previous_pos",e.pos).lerp(e.pos,interpolation)
 		var position := world_position(point)
-		var data: Dictionary = Balance.cfg.enemies.get(e.kind,Balance.cfg.enemies.heavy)
+		var data: Dictionary = Balance.cfg.enemies.get(e.kind,Balance.cfg.enemies.normal)
 		var radius := (25.0 if e.kind == "boss" else float(data.radius))*draw_scale
 		var color := Color(e.color)
 		var shape: String = data.shape if e.kind != "boss" else "hexagon"
-		var sides := 6 if shape == "hexagon" else 3 if shape == "triangle" else 4
+		var sides := 32 if shape=="circle" else 6 if shape == "hexagon" else 3 if shape == "triangle" else 4
 		var angle := PI/4 if shape in ["square","double_square"] else -PI/2
 		TowerVisuals.poly(self,position,radius,sides,color,angle,2.3*draw_scale)
 		if shape == "double_square" or e.kind == "boss":

@@ -48,13 +48,18 @@ func run() -> void:
 			elif view=="tower":
 				game.select_cell(Vector2i(4,-1))
 				game.show_details(game.sim.tower_at(Vector2i(4,-1)).id)
+			elif view=="diagnostics":
+				game.select_cell(Vector2i(4,-1))
+				game.board.diagnostic_rings=true
+				game.show_diagnostics()
+			elif view=="catalog":game.show_catalog()
 			elif view=="debug": game.board.show_route=true; game.board.debug_grid=true
 			game.paused=true
 			game.update_hud()
 	await create_timer(.25).timeout
 	await RenderingServer.frame_post_draw
 	var picture:=root.get_texture().get_image()
-	var path:="res://../GeometryDefense-v0.2.0-%s.png"%view
+	var path:="res://../GeometryDefense-v0.3.0-%s.png"%view
 	var error:=picture.save_png(path)
 	print("CAPTURE ",view," ",picture.get_size()," ",error)
 	if game!=null:
