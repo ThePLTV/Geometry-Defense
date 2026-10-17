@@ -1,0 +1,9 @@
+.godot/
+*.apk
+*.aab
+*.keystore
+export_credentials.cfg
+/test-results/
+*.log
+work/
+tools/windows/toolchain.json

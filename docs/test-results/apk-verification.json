@@ -1,0 +1,27 @@
+{
+  "apk": "GeometryDefense-Android16.apk",
+  "bytes": 57042734,
+  "sha256": "6c56b91badb345676777f8ac726520e277ebc9b0656e6165ba803246ba71f328",
+  "native_libraries": [
+    {
+      "path": "lib/arm64-v8a/libc++_shared.so",
+      "min_load_alignment": 16384
+    },
+    {
+      "path": "lib/arm64-v8a/libgodot_android.so",
+      "min_load_alignment": 16384
+    },
+    {
+      "path": "lib/x86_64/libc++_shared.so",
+      "min_load_alignment": 16384
+    },
+    {
+      "path": "lib/x86_64/libgodot_android.so",
+      "min_load_alignment": 16384
+    }
+  ],
+  "data_files_packaged": true,
+  "test_and_document_files_excluded": true,
+  "native_16kb_alignment": true,
+  "device_install_tested": false
+}
