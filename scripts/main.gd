@@ -1,0 +1,677 @@
+extends Control
+
+var sim: Simulation
+var board: GameBoard
+var body: VBoxContainer
+var overlay: Control
+var sheet: PanelContainer
+var hud_hp: Label
+var hud_wave: Label
+var hud_credits: Label
+var status_label: Label
+var toast_label: Label
+var start_button: Button
+var pause_button: Button
+var speed_button: Button
+var slot := 1
+var speed := 1
+var paused := false
+var wave_mode := 0
+var timer_remaining := 5.0
+var accumulator := 0.0
+var ui_timer := 0.0
+var toast_timer := 0.0
+var game_visible := false
+var selected := Vector2i(999,999)
+var selected_id := -1
+var merge_source := -1
+var speed_values := [1,2,3,5]
+var checkpoint_error := ""
+var shown_defeat := false
+var sound_enabled := true
+var menu_font: Font
+var preferred_speed := 1
+var preferred_wave_mode := 0
+
+func _ready() -> void:
+	Balance.load_config()
+	load_preferences()
+	get_tree().auto_accept_quit = false
+	RenderingServer.set_default_clear_color(Color("1b2025"))
+	theme = make_theme()
+	show_menu()
+
+func load_preferences() -> void:
+	var preferences := ConfigFile.new()
+	if preferences.load(SaveStore.directory.path_join("preferences.cfg")) == OK:
+		preferred_speed = int(preferences.get_value("game","speed",1))
+		if not speed_values.has(preferred_speed):
+			preferred_speed = 1
+		preferred_wave_mode = clampi(int(preferences.get_value("game","wave_mode",0)),0,2)
+		slot = clampi(int(preferences.get_value("game","last_slot",1)),1,5)
+
+func save_preferences() -> void:
+	var preferences := ConfigFile.new()
+	preferences.set_value("game","speed",preferred_speed)
+	preferences.set_value("game","wave_mode",preferred_wave_mode)
+	preferences.set_value("game","last_slot",slot)
+	preferences.save(SaveStore.directory.path_join("preferences.cfg"))
+
+func make_theme() -> Theme:
+	var result := Theme.new()
+	result.default_font_size = 24
+	for type in ["Button","OptionButton"]:
+		result.set_stylebox("normal",type,style("2b333c",14))
+		result.set_stylebox("hover",type,style("364451",14,"77abc8"))
+		result.set_stylebox("pressed",type,style("52788e",14,"a7d4e9"))
+		result.set_stylebox("disabled",type,style("242a30",14))
+		result.set_color("font_color",type,Color("e7edf2"))
+		result.set_color("font_disabled_color",type,Color("66717b"))
+		result.set_constant("outline_size",type,0)
+	result.set_stylebox("panel","PanelContainer",style("252c33",22,"3b464f"))
+	result.set_color("font_color","Label",Color("e3e9ee"))
+	return result
+
+func style(color: String, radius: int, border: String = "") -> StyleBoxFlat:
+	var result := StyleBoxFlat.new()
+	result.bg_color = Color(color)
+	result.set_corner_radius_all(radius)
+	result.content_margin_left = 18
+	result.content_margin_right = 18
+	result.content_margin_top = 12
+	result.content_margin_bottom = 12
+	if not border.is_empty():
+		result.border_color = Color(border)
+		result.set_border_width_all(2)
+	return result
+
+func clear_screen() -> void:
+	for child in get_children():
+		remove_child(child)
+		child.queue_free()
+	overlay = null
+	sheet = null
+	board = null
+	game_visible = false
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var safe := DisplayServer.get_display_safe_area()
+	var screen := DisplayServer.screen_get_size()
+	var scale_y := size.y/maxf(1,float(screen.y))
+	margin.add_theme_constant_override("margin_left",20)
+	margin.add_theme_constant_override("margin_right",20)
+	margin.add_theme_constant_override("margin_top",maxi(22,int(safe.position.y*scale_y)+12))
+	margin.add_theme_constant_override("margin_bottom",maxi(22,int((screen.y-safe.end.y)*scale_y)+12))
+	add_child(margin)
+	body = VBoxContainer.new()
+	body.add_theme_constant_override("separation",16)
+	margin.add_child(body)
+
+func label(text: String, font_size: int = 24, color: String = "e3e9ee") -> Label:
+	var result := Label.new()
+	result.text = text
+	result.add_theme_font_size_override("font_size",font_size)
+	result.add_theme_color_override("font_color",Color(color))
+	result.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	return result
+
+func button(text: String, action: Callable, primary: bool = false, height: float = 76) -> Button:
+	var result := Button.new()
+	result.text = text
+	result.custom_minimum_size.y = height
+	result.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	result.pressed.connect(action)
+	if primary:
+		result.add_theme_stylebox_override("normal",style("73a6c3",14))
+		result.add_theme_color_override("font_color",Color("10222f"))
+	return result
+
+func spacer(parent: Control, height: float = 0, expand: bool = false) -> void:
+	var space := Control.new()
+	space.custom_minimum_size.y = height
+	if expand:
+		space.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	parent.add_child(space)
+
+func show_menu() -> void:
+	clear_screen()
+	spacer(body,30,true)
+	var badge := Control.new()
+	badge.custom_minimum_size.y = 190
+	badge.draw.connect(func() -> void:
+		GameBoard.tower_shape(badge,Vector2(130,110),"Minigun",48,10,true)
+		GameBoard.tower_shape(badge,Vector2(335,85),"Laser",68,20,true,true)
+		GameBoard.tower_shape(badge,Vector2(545,110),"Rocket",48,10,true)
+	)
+	body.add_child(badge)
+	var title := label("GEOMETRY\nDEFENSE",62,"9ec4d9")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(title)
+	var subtitle := label("Один путь. Тысячи решений.",24,"9daab5")
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(subtitle)
+	spacer(body,24)
+	var checkpoint := SaveStore.load_slot(slot)
+	var can_resume := sim != null and not sim.defeated
+	var resume := button("Продолжить · слот %d" % slot,func() -> void:
+		if can_resume:
+			show_game()
+		else:
+			load_game(slot)
+	,true,90)
+	resume.disabled = not can_resume and checkpoint.is_empty()
+	body.add_child(resume)
+	body.add_child(button("Новая игра",func() -> void: show_slots(true)))
+	body.add_child(button("Слоты сохранений",func() -> void: show_slots(false)))
+	body.add_child(button("Как играть",show_help))
+	body.add_child(button("Настройки",show_settings))
+	spacer(body,24,true)
+	var version := label("v0.1.0  ·  Android 16  ·  офлайн",19,"7d8b96")
+	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(version)
+
+func show_slots(new_slot: bool) -> void:
+	clear_screen()
+	body.add_child(label("НОВАЯ ИГРА" if new_slot else "СОХРАНЕНИЯ",36))
+	body.add_child(label("Выберите один из пяти независимых слотов.",23,"a4b1bd"))
+	for i in range(1,6):
+		var state := SaveStore.load_slot(i)
+		var caption := "Слот %d · пусто" % i if state.is_empty() else "Слот %d · волна %d\n♥ %d/10     ◆ %d" % [i,int(state.next_wave),int(state.base_hp),int(state.credits)]
+		var existing := FileAccess.file_exists(SaveStore.path(i)) or FileAccess.file_exists(SaveStore.path(i)+".bak")
+		if state.is_empty() and existing:
+			caption = "Слот %d · повреждён или несовместим" % i
+		var current_slot := i
+		var entry := button(caption,func() -> void:
+			if new_slot and existing:
+				confirm_new_slot(current_slot)
+			elif new_slot:
+				new_game(current_slot)
+			else:
+				load_game(current_slot)
+		,false,128)
+		entry.disabled = not new_slot and state.is_empty() and not existing
+		body.add_child(entry)
+	spacer(body,0,true)
+	body.add_child(button("Назад",show_menu))
+
+func confirm_new_slot(index: int) -> void:
+	var box := open_sheet(420)
+	box.add_child(label("Заменить слот %d?" % index,32))
+	box.add_child(label("Сохранение этого слота будет заменено новой игрой. Остальные слоты сохранятся.",24,"aab6c1"))
+	box.add_child(button("Создать новую игру",func() -> void: new_game(index),true))
+	box.add_child(button("Отмена",close_sheet))
+
+func new_game(index: int) -> void:
+	slot = index
+	sim = Simulation.new(int(Time.get_unix_time_from_system())+index)
+	speed = preferred_speed
+	wave_mode = preferred_wave_mode
+	timer_remaining = 1.2 if wave_mode == 1 else 5.0
+	paused = false
+	accumulator = 0.0
+	selected_id = -1
+	selected = Vector2i(999,999)
+	merge_source = -1
+	shown_defeat = false
+	show_game()
+	save_preferences()
+	checkpoint()
+
+func checkpoint() -> void:
+	if sim == null or sim.active or sim.defeated:
+		return
+	var state := sim.snapshot()
+	state.slot = slot
+	state.speed = speed
+	state.wave_mode = wave_mode
+	state.sound_enabled = sound_enabled
+	checkpoint_error = SaveStore.save_slot(slot,state)
+	if not checkpoint_error.is_empty():
+		toast(checkpoint_error)
+
+func load_game(index: int) -> void:
+	var state := SaveStore.load_slot(index)
+	var candidate := Simulation.new()
+	if state.is_empty() or not candidate.restore(state):
+		var box := open_sheet(420)
+		box.add_child(label("Слот не удалось загрузить",30))
+		box.add_child(label("Сохранение повреждено или несовместимо с текущей версией карты. Другие слоты доступны.",23))
+		box.add_child(button("Закрыть",close_sheet))
+		return
+	slot = index
+	sim = candidate
+	speed = int(state.get("speed",1))
+	if not speed_values.has(speed):
+		speed = 1
+	wave_mode = clampi(int(state.get("wave_mode",0)),0,2)
+	sound_enabled = bool(state.get("sound_enabled",true))
+	paused = false
+	accumulator = 0.0
+	timer_remaining = 5.0
+	selected_id = -1
+	selected = Vector2i(999,999)
+	merge_source = -1
+	shown_defeat = false
+	show_game()
+	save_preferences()
+
+func show_game() -> void:
+	clear_screen()
+	game_visible = true
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation",12)
+	body.add_child(top)
+	hud_hp = label("",27,"a8c8b4")
+	hud_hp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hud_wave = label("",29)
+	hud_wave.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hud_wave.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hud_credits = label("",27,"aacde0")
+	hud_credits.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	hud_credits.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(hud_hp)
+	top.add_child(hud_wave)
+	top.add_child(hud_credits)
+	status_label = label("",20,"9dabb6")
+	body.add_child(status_label)
+	board = GameBoard.new()
+	board.sim = sim
+	board.selected = selected
+	board.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	board.cell_selected.connect(select_cell)
+	body.add_child(board)
+	toast_label = label("Нажмите на чёрную клетку, чтобы построить башню.",21,"afc0cd")
+	toast_label.custom_minimum_size.y = 48
+	body.add_child(toast_label)
+	var controls := HBoxContainer.new()
+	controls.add_theme_constant_override("separation",10)
+	body.add_child(controls)
+	pause_button = button("Ⅱ",toggle_pause,false,82)
+	pause_button.size_flags_horizontal = Control.SIZE_FILL
+	pause_button.custom_minimum_size.x = 84
+	controls.add_child(pause_button)
+	speed_button = button("×%d" % speed,cycle_speed,false,82)
+	speed_button.size_flags_horizontal = Control.SIZE_FILL
+	speed_button.custom_minimum_size.x = 90
+	controls.add_child(speed_button)
+	start_button = button("",start_wave,true,82)
+	controls.add_child(start_button)
+	var menu := button("☰",show_game_menu,false,82)
+	menu.size_flags_horizontal = Control.SIZE_FILL
+	menu.custom_minimum_size.x = 82
+	controls.add_child(menu)
+	update_hud()
+
+func update_hud() -> void:
+	if not game_visible or sim == null:
+		return
+	hud_hp.text = "♥ %d/10" % sim.base_hp
+	hud_wave.text = "Волна %d" % sim.next_wave
+	hud_credits.text = "◆ %s" % format_number(sim.credits)
+	pause_button.text = "▶" if paused else "Ⅱ"
+	speed_button.text = "×%d" % speed
+	start_button.text = "Волна идёт" if sim.active else "Начать %d" % sim.next_wave
+	start_button.disabled = sim.active or sim.defeated
+	var mode: String = ["вручную","авто","таймер"][wave_mode]
+	if sim.next_wave % 5 == 0:
+		var boss := Balance.boss(sim.next_wave)
+		status_label.text = "%s босс · иммунитет: %s" % [boss.name,Balance.tower(boss.immune).name]
+	else:
+		status_label.text = "Врагов: %d  ·  запуск: %s%s" % [sim.enemies.size()+sim.spawn_queue.size(),mode,"  ·  ПАУЗА" if paused else ""]
+	if not sim.active and wave_mode > 0:
+		status_label.text += "  ·  %.1f с" % maxf(0,timer_remaining)
+
+func format_number(value: int) -> String:
+	return "%.1fM" % (value/1000000.0) if value >= 1000000 else "%.1fK" % (value/1000.0) if value >= 10000 else str(value)
+
+func _process(delta: float) -> void:
+	if not game_visible or sim == null:
+		return
+	if not paused and sim.active:
+		accumulator += delta*speed
+		var steps := 0
+		while accumulator + 0.000000001 >= float(Balance.cfg.fixed_step) and steps < 120 and sim.active:
+			sim.step(Balance.cfg.fixed_step)
+			accumulator = maxf(0.0,accumulator-float(Balance.cfg.fixed_step))
+			steps += 1
+	elif not sim.active:
+		accumulator = 0.0
+	if sim.finished_event:
+		sim.finished_event = false
+		checkpoint()
+		timer_remaining = 1.2 if wave_mode == 1 else 5.0
+		toast("Волна завершена · чекпоинт сохранён" if checkpoint_error.is_empty() else checkpoint_error)
+	if not sim.active and not sim.defeated and not paused and wave_mode > 0 and overlay == null:
+		timer_remaining -= delta*speed
+		if timer_remaining <= 0:
+			start_wave()
+	if sim.defeated and not shown_defeat:
+		shown_defeat = true
+		show_defeat()
+	toast_timer -= delta
+	if toast_timer <= 0 and toast_label != null:
+		toast_label.text = "Выберите башню или свободную чёрную клетку."
+	ui_timer += delta
+	if ui_timer >= 0.1:
+		ui_timer = 0
+		update_hud()
+	if board != null:
+		board.queue_redraw()
+
+func toast(text: String) -> void:
+	if toast_label != null and is_instance_valid(toast_label):
+		toast_label.text = text
+	toast_timer = 4.0
+
+func start_wave() -> void:
+	close_sheet()
+	if sim.start_wave():
+		toast("Волна %d началась" % sim.next_wave)
+	update_hud()
+
+func toggle_pause() -> void:
+	paused = not paused
+	update_hud()
+
+func cycle_speed() -> void:
+	speed = speed_values[(speed_values.find(speed)+1)%speed_values.size()]
+	update_hud()
+
+func open_sheet(height: float) -> VBoxContainer:
+	close_sheet()
+	overlay = Control.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(overlay)
+	var shade := ColorRect.new()
+	shade.color = Color(0,0,0,0.48)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	shade.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed:
+			close_sheet()
+	)
+	overlay.add_child(shade)
+	sheet = PanelContainer.new()
+	sheet.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	sheet.offset_top = -minf(height,size.y-60)
+	sheet.offset_left = 12
+	sheet.offset_right = -12
+	sheet.offset_bottom = -16
+	overlay.add_child(sheet)
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sheet.add_child(scroll)
+	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation",14)
+	scroll.add_child(box)
+	return box
+
+func close_sheet() -> void:
+	if overlay != null and is_instance_valid(overlay):
+		remove_child(overlay)
+		overlay.queue_free()
+	overlay = null
+	sheet = null
+
+func select_cell(cell: Vector2i) -> void:
+	if sim.defeated:
+		return
+	selected = cell
+	board.selected = cell
+	var t := sim.tower_at(cell)
+	if merge_source >= 0 and not t.is_empty():
+		if t.id == merge_source:
+			merge_source = -1
+			board.merge_source = -1
+			toast("Выбор слияния отменён")
+			return
+		var result := sim.merge(merge_source,t.id)
+		if result.is_empty():
+			merge_source = -1
+			board.merge_source = -1
+			close_sheet()
+			toast("Мегабашня создана. Вторая клетка освобождена.")
+		else:
+			toast(result)
+		update_hud()
+		return
+	if not t.is_empty():
+		selected_id = t.id
+		show_tower(t.id)
+	elif sim.map.cells.has(cell) and cell != sim.map.spawn and cell != sim.map.goal:
+		show_build(cell)
+	else:
+		close_sheet()
+		toast("Вход, база и зелёные клетки недоступны для строительства.")
+
+func show_build(cell: Vector2i) -> void:
+	var box := open_sheet(550)
+	box.add_child(label("Новая башня",33))
+	box.add_child(label("Клетка %d:%d  ·  путь должен остаться свободным" % [cell.x,cell.y],20,"9eacb8"))
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation",12)
+	grid.add_theme_constant_override("v_separation",12)
+	box.add_child(grid)
+	for kind in Balance.KINDS:
+		var current: String = kind
+		var data := Balance.tower(current)
+		var entry := button("%s  ◆ %d\nУрон %s · %.2f/с · %.1f гекса" % [data.name,data.price,str(data.damage),data.rate,data.range],func() -> void:
+			var result := sim.build(cell,current)
+			if result.is_empty():
+				selected_id = sim.tower_at(cell).id
+				close_sheet()
+				toast("Башня построена · маршрут пересчитан")
+			else:
+				toast(result)
+			update_hud()
+		,false,130)
+		entry.add_theme_font_size_override("font_size",21)
+		entry.add_theme_color_override("font_color",Color(data.color).lightened(.3))
+		entry.disabled = sim.credits < int(data.price)
+		grid.add_child(entry)
+	box.add_child(label("Числа — стартовый баланс. Слияние: две соседние башни 10/10 с ультимейтами.",20,"96a7b3"))
+	box.add_child(button("Закрыть",close_sheet))
+
+func show_tower(id: int) -> void:
+	var t := sim.find_tower(id)
+	if t.is_empty():
+		close_sheet()
+		return
+	var box := open_sheet(900)
+	box.add_child(label("%s%s  №%d" % ["MEGA · " if t.mega else "",Balance.tower(t.kind).name,id],32,Balance.tower(t.kind).color))
+	box.add_child(label("Урон %.1f   ·   %.2f атак/с   ·   дальность %.2f\nВложено ◆ %d   ·   убийств %d" % [Balance.damage(t),Balance.rate(t),Balance.reach(t),t.invested,t.kills],23,"b1c0ca"))
+	for branch in ["d","s"]:
+		var key: String = branch
+		var level: int = int(t[key])
+		var cost := Balance.upgrade_cost(t.kind,level+1) if level < 10 else 0
+		var entry := button("%s  %d/10%s" % ["Урон" if key == "d" else "Скорострельность",level,"  ·  ◆ %d" % cost if level < 10 else "  ·  максимум"],func() -> void:
+			var result := sim.upgrade(id,key)
+			if not result.is_empty():
+				toast(result)
+			show_tower(id)
+			update_hud()
+		,false,83)
+		entry.disabled = level >= 10 or t.mega or sim.credits < cost
+		box.add_child(entry)
+		var progress := ProgressBar.new()
+		progress.max_value = 10
+		progress.value = level
+		progress.show_percentage = false
+		progress.custom_minimum_size.y = 8
+		var progress_background := style("343d46",4)
+		var progress_fill := style("79adc9",4)
+		for progress_style in [progress_background,progress_fill]:
+			progress_style.content_margin_top = 0
+			progress_style.content_margin_bottom = 0
+		progress.add_theme_stylebox_override("background",progress_background)
+		progress.add_theme_stylebox_override("fill",progress_fill)
+		box.add_child(progress)
+	var descriptions := {
+		"Minigun":"Форсаж: ×2 темп после непрерывной стрельбы.",
+		"Laser":"Зеркальный луч: последовательные рикошеты.",
+		"Rocket":"Кассета: самонаводящиеся мини-ракеты.",
+		"Shockwave":"Обратная волна: отбрасывание с лимитом."
+	}
+	box.add_child(label(descriptions[t.kind],21,"a7b7c3"))
+	var ultimate_cost := Balance.ultimate_cost(t.kind)
+	var ultimate_button := button("Ультимейт открыт" if t.ultimate else "Открыть ультимейт  ◆ %d" % ultimate_cost,func() -> void:
+		var result := sim.buy_ultimate(id)
+		if not result.is_empty():
+			toast(result)
+		show_tower(id)
+		update_hud()
+	,true,80)
+	if not t.ultimate and (t.d < 5 or t.s < 5):
+		ultimate_button.text = "Ультимейт · нужны обе ветки 5/10"
+	ultimate_button.disabled = t.ultimate or t.d < 5 or t.s < 5 or sim.credits < ultimate_cost
+	box.add_child(ultimate_button)
+	var merge_button := button("Выбрать соседнюю башню для слияния",func() -> void:
+		merge_source = id
+		board.merge_source = id
+		close_sheet()
+		toast("Нажмите на соседнюю башню того же класса. Повторный тап отменяет выбор.")
+	)
+	merge_button.disabled = t.mega or t.d < 10 or t.s < 10 or not t.ultimate
+	if merge_button.disabled:
+		merge_button.text = "MEGA" if t.mega else "Слияние · нужны 10/10 и ультимейты"
+	box.add_child(merge_button)
+	box.add_child(button("Продать  +◆ %d" % int(floor(t.invested*Balance.cfg.sell_ratio)),func() -> void:
+		var refund := sim.sell(id)
+		selected_id = -1
+		close_sheet()
+		toast("Продано: +◆ %d · маршрут пересчитан" % refund)
+		update_hud()
+	))
+	box.add_child(button("Закрыть",close_sheet))
+
+func show_game_menu() -> void:
+	var box := open_sheet(980)
+	box.add_child(label("Управление игрой",33))
+	box.add_child(label("Слот %d · сохранение после каждой волны" % slot,21,"a3b3be"))
+	box.add_child(button("Пауза / продолжить",func() -> void: toggle_pause(); close_sheet()))
+	var save := button("Сохранить чекпоинт",func() -> void:
+		checkpoint()
+		toast("Сохранено" if checkpoint_error.is_empty() else checkpoint_error)
+		close_sheet()
+	)
+	save.disabled = sim.active or sim.defeated
+	box.add_child(save)
+	var mode := OptionButton.new()
+	mode.custom_minimum_size.y = 76
+	for text in ["Волны: вручную","Волны: автоматически","Волны: таймер 5 секунд"]:
+		mode.add_item(text)
+	mode.select(wave_mode)
+	mode.item_selected.connect(func(index: int) -> void:
+		wave_mode = index
+		timer_remaining = 1.2 if index == 1 else 5.0
+		update_hud()
+	)
+	box.add_child(mode)
+	box.add_child(button("Маршрут: %s" % ("показан" if board.show_route else "скрыт"),func() -> void: board.show_route = not board.show_route; close_sheet()))
+	box.add_child(button("Координаты клеток / отладка",func() -> void: board.debug_grid = not board.debug_grid; close_sheet()))
+	box.add_child(button("Статистика",show_statistics))
+	box.add_child(button("Отменить выбор слияния",func() -> void:
+		merge_source = -1
+		board.merge_source = -1
+		close_sheet()
+	))
+	box.add_child(button("Главное меню",func() -> void:
+		if not sim.active:
+			checkpoint()
+		show_menu()
+	))
+	box.add_child(button("Закрыть",close_sheet))
+
+func show_statistics() -> void:
+	var box := open_sheet(size.y-70)
+	box.add_child(label("Статистика",34))
+	box.add_child(label("Убито: %d   ·   урон: %s\nПолучено: ◆ %s   ·   потрачено: ◆ %s" % [sim.total_kills,format_number(int(sim.total_damage)),format_number(sim.total_earned),format_number(sim.total_spent)],24))
+	box.add_child(label("Башни",29,"93bcd3"))
+	for id in sim.tower_history:
+		var t: Dictionary = sim.tower_history[id]
+		var efficiency: float = t.damage/maxf(1,t.invested)
+		box.add_child(label("№%s %s%s · %s\nУрон %s · убийств %d · ◆ %d · урон/◆ %.2f\nЭффекты ультимейта: %d%s" % [id,Balance.tower(t.kind).name," MEGA" if t.mega else "",{"active":"на поле","sold":"продана","merged":"слита"}.get(t.status,t.status),format_number(int(t.damage)),t.kills,t.invested,efficiency,t.ultimate_hits,"\nИсточники: %s" % str(t.parents) if not t.parents.is_empty() else ""],21,"b2c0ca"))
+	box.add_child(label("История волн",29,"93bcd3"))
+	for i in range(sim.history.size()-1,-1,-1):
+		var row: Dictionary = sim.history[i]
+		box.add_child(label("Волна %d · убито %d · прошли %d · ♥ %d\n◆ +%d / −%d · %.1f с · урон %s\n%s" % [row.wave,row.killed,row.leaked,row.hp_end,row.earned,row.spent,row.seconds,format_number(int(row.damage)),format_composition(row.composition)],21,"aab9c4"))
+	box.add_child(button("Закрыть",close_sheet))
+
+func format_composition(composition: Dictionary) -> String:
+	var names := {"normal":"обычные","fast":"быстрые","heavy":"тяжёлые","armored":"броня","split":"делящиеся","resistant":"сопротивление","boss":"босс"}
+	var parts: PackedStringArray = []
+	for kind in composition:
+		parts.append("%s: %d" % [names.get(kind,kind),composition[kind]])
+	return ", ".join(parts)
+
+func show_defeat() -> void:
+	var box := open_sheet(650)
+	box.add_child(label("База потеряна",42,"dda3a3"))
+	box.add_child(label("Волна %d · убито %d врагов.\nПоследний успешный чекпоинт сохранён." % [sim.next_wave,sim.total_kills],26))
+	var resume := button("Восстановить чекпоинт",func() -> void: load_game(slot),true,90)
+	resume.disabled = SaveStore.load_slot(slot).is_empty()
+	box.add_child(resume)
+	box.add_child(button("Посмотреть статистику",show_statistics))
+	box.add_child(button("Главное меню",show_menu))
+	box.add_child(button("Новая игра",func() -> void: confirm_new_slot(slot)))
+
+func show_help() -> void:
+	clear_screen()
+	body.add_child(label("Как играть",38))
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body.add_child(scroll)
+	var text := label("Враги идут от красного входа к фиолетовой базе по кратчайшему открытому пути.\n\nСтройте на чёрных клетках. Башня перекрывает свою клетку: маршрут перестроится. Полностью закрыть проход или замуровать врага нельзя.\n\nМиниган — быстрый одиночный огонь.\nЛазер — точный дальний луч.\nРакета — взрыв по площади.\nУдарная волна — импульс вокруг башни.\n\nТап по башне: две независимые ветки улучшений до 10/10. На 5/5 можно купить постоянный ультимейт. Две соседние башни одного класса на 10/10 с ультимейтами сливаются в MEGA.\n\nБашни сами выбирают ближайшего к ним врага. У каждого пятого босса иммунитет к одному классу:\n5 — зелёный, Лазер;\n10 — белый, Миниган;\n15 — красный, Ракета;\n20 — синий, Ударная волна.\nЗатем цикл повторяется.\n\nБаза: 10 HP. Каждый прошедший враг снимает 1 HP. Продажа возвращает 70% вложений.\n\nНа паузе можно строить, улучшать, продавать и сливать. Скорости: ×1, ×2, ×3, ×5.\n\nПосле каждой волны игра автоматически сохраняется в выбранный слот. При поражении можно вернуться к чекпоинту. Ручное сохранение — между волнами.\n\nВся игра работает офлайн. Баланс первой версии ещё будет уточняться по тестам.",24,"bdc9d3")
+	text.custom_minimum_size.x = 630
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(text)
+	body.add_child(button("Назад",show_menu))
+
+func show_settings() -> void:
+	clear_screen()
+	body.add_child(label("Настройки",38))
+	body.add_child(label("Настройки новых игр. Каждый сохранённый слот хранит собственную скорость и режим волн.",25,"b0bec9"))
+	spacer(body,20)
+	body.add_child(label("Начальная скорость",27,"a6c8da"))
+	var speed_choice := OptionButton.new()
+	speed_choice.custom_minimum_size.y = 84
+	for value in speed_values:
+		speed_choice.add_item("×%d" % value)
+	speed_choice.select(speed_values.find(preferred_speed))
+	speed_choice.item_selected.connect(func(index: int) -> void:
+		preferred_speed = speed_values[index]
+		save_preferences()
+	)
+	body.add_child(speed_choice)
+	body.add_child(label("Запуск волн",27,"a6c8da"))
+	var wave_choice := OptionButton.new()
+	wave_choice.custom_minimum_size.y = 84
+	for text in ["Вручную","Автоматически","По таймеру: 5 секунд"]:
+		wave_choice.add_item(text)
+	wave_choice.select(preferred_wave_mode)
+	wave_choice.item_selected.connect(func(index: int) -> void:
+		preferred_wave_mode = index
+		save_preferences()
+	)
+	body.add_child(wave_choice)
+	spacer(body,20)
+	body.add_child(label("Скорость и режим можно менять во время игры.\nИгра полностью офлайн.\n\nМузыка и звуки в первой версии отсутствуют.",24,"a6b5c0"))
+	spacer(body,0,true)
+	body.add_child(button("Назад",show_menu))
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		if overlay != null:
+			close_sheet()
+		elif game_visible:
+			paused = true
+			show_game_menu()
+		else:
+			get_tree().quit()
+	elif what == NOTIFICATION_APPLICATION_PAUSED:
+		paused = true
+		if sim != null and not sim.active and not sim.defeated:
+			checkpoint()
