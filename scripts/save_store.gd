@@ -22,7 +22,7 @@ static func decode(filename: String) -> Dictionary:
 	if parser.parse(envelope.payload) != OK:
 		return {}
 	var data = parser.data
-	if data is not Dictionary or int(data.get("schema",0)) != 2:
+	if data is not Dictionary or int(data.get("schema",0)) not in [2,3]:
 		return {}
 	return data
 
@@ -33,11 +33,15 @@ static func load_slot(slot: int) -> Dictionary:
 	return decode(path(slot)+".bak") if data.is_empty() else data
 
 static func save_slot(slot: int, state: Dictionary) -> String:
+	if state.get("active",false):
+		return "Активная волна не является чекпоинтом"
+	return write_state(path(slot),slot,state)
+
+static func write_state(filename: String, slot: int, state: Dictionary) -> String:
 	if slot < 1 or slot > 5 or int(state.get("base_hp",0)) <= 0:
 		return "Некорректное сохранение"
 	var payload := JSON.stringify(state)
 	var envelope := {"payload":payload,"sha256":payload.sha256_text()}
-	var filename := path(slot)
 	var temporary := filename + ".tmp"
 	var backup := filename + ".bak"
 	var file := FileAccess.open(temporary,FileAccess.WRITE)
@@ -57,3 +61,18 @@ static func save_slot(slot: int, state: Dictionary) -> String:
 				return "Не удалось создать резервную копию"
 	var error := DirAccess.rename_absolute(temporary,filename)
 	return "" if error == OK else "Не удалось заменить сохранение (%d)" % error
+
+static func session_path(slot: int) -> String:
+	return directory.path_join("session_%d.json" % slot)
+
+static func save_session(slot: int, state: Dictionary) -> String:
+	return write_state(session_path(slot),slot,state)
+
+static func load_session(slot: int) -> Dictionary:
+	var data := decode(session_path(slot))
+	return decode(session_path(slot)+".bak") if data.is_empty() else data
+
+static func clear_session(slot: int) -> void:
+	for suffix in ["",".bak",".tmp"]:
+		if FileAccess.file_exists(session_path(slot)+suffix):
+			DirAccess.remove_absolute(session_path(slot)+suffix)

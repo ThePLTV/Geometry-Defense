@@ -1,5 +1,11 @@
 extends Control
 
+var music: AudioStreamPlayer
+var music_volume := .55
+var footer: VBoxContainer
+var action_signature := ""
+var details: PanelContainer
+var session_timer := 0.0
 var sim: Simulation
 var board: GameBoard
 var body: VBoxContainer
@@ -39,6 +45,7 @@ func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	RenderingServer.set_default_clear_color(Color("1b2025"))
 	theme = make_theme()
+	setup_music()
 	show_menu()
 
 func load_preferences() -> void:
@@ -48,6 +55,8 @@ func load_preferences() -> void:
 		if not speed_values.has(preferred_speed):
 			preferred_speed = 1
 		preferred_wave_mode = clampi(int(preferences.get_value("game","wave_mode",0)),0,2)
+		sound_enabled = bool(preferences.get_value("audio","enabled",true))
+		music_volume = clampf(float(preferences.get_value("audio","volume",.55)),0,1)
 		slot = clampi(int(preferences.get_value("game","last_slot",1)),1,5)
 
 func save_preferences() -> void:
@@ -55,6 +64,8 @@ func save_preferences() -> void:
 	preferences.set_value("game","speed",preferred_speed)
 	preferences.set_value("game","wave_mode",preferred_wave_mode)
 	preferences.set_value("game","last_slot",slot)
+	preferences.set_value("audio","enabled",sound_enabled)
+	preferences.set_value("audio","volume",music_volume)
 	preferences.save(SaveStore.directory.path_join("preferences.cfg"))
 
 func make_theme() -> Theme:
@@ -86,7 +97,10 @@ func style(color: String, radius: int, border: String = "") -> StyleBoxFlat:
 	return result
 
 func clear_screen() -> void:
+	hide_details()
 	for child in get_children():
+		if child == music:
+			continue
 		remove_child(child)
 		child.queue_free()
 	overlay = null
@@ -104,7 +118,7 @@ func clear_screen() -> void:
 	margin.add_theme_constant_override("margin_bottom",maxi(22,int((screen.y-safe.end.y)*scale_y)+12))
 	add_child(margin)
 	body = VBoxContainer.new()
-	body.add_theme_constant_override("separation",16)
+	body.add_theme_constant_override("separation",10)
 	margin.add_child(body)
 
 func label(text: String, font_size: int = 24, color: String = "e3e9ee") -> Label:
@@ -151,7 +165,9 @@ func show_menu() -> void:
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(subtitle)
 	spacer(body,24)
-	var checkpoint := SaveStore.load_slot(slot)
+	var checkpoint := SaveStore.load_session(slot)
+	if checkpoint.is_empty():
+		checkpoint = SaveStore.load_slot(slot)
 	var can_resume := sim != null and not sim.defeated
 	var resume := button("Продолжить · слот %d" % slot,func() -> void:
 		if can_resume:
@@ -166,7 +182,7 @@ func show_menu() -> void:
 	body.add_child(button("Как играть",show_help))
 	body.add_child(button("Настройки",show_settings))
 	spacer(body,24,true)
-	var version := label("v0.1.0  ·  Android 16  ·  офлайн",19,"7d8b96")
+	var version := label("v0.2.0  ·  Android 16  ·  офлайн",19,"7d8b96")
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(version)
 
@@ -213,9 +229,11 @@ func new_game(index: int) -> void:
 	selected = Vector2i(999,999)
 	merge_source = -1
 	shown_defeat = false
+	SaveStore.clear_session(slot)
 	show_game()
 	save_preferences()
 	checkpoint()
+	save_session()
 
 func checkpoint() -> void:
 	if sim == null or sim.active or sim.defeated:
@@ -229,8 +247,10 @@ func checkpoint() -> void:
 	if not checkpoint_error.is_empty():
 		toast(checkpoint_error)
 
-func load_game(index: int) -> void:
-	var state := SaveStore.load_slot(index)
+func load_game(index: int, checkpoint_only: bool = false) -> void:
+	var state := {} if checkpoint_only else SaveStore.load_session(index)
+	if state.is_empty():
+		state = SaveStore.load_slot(index)
 	var candidate := Simulation.new()
 	if state.is_empty() or not candidate.restore(state):
 		var box := open_sheet(420)
@@ -244,10 +264,9 @@ func load_game(index: int) -> void:
 	if not speed_values.has(speed):
 		speed = 1
 	wave_mode = clampi(int(state.get("wave_mode",0)),0,2)
-	sound_enabled = bool(state.get("sound_enabled",true))
-	paused = false
+	paused = bool(state.get("paused",false))
 	accumulator = 0.0
-	timer_remaining = 5.0
+	timer_remaining = float(state.get("timer_remaining",5.0))
 	selected_id = -1
 	selected = Vector2i(999,999)
 	merge_source = -1
@@ -259,47 +278,46 @@ func show_game() -> void:
 	clear_screen()
 	game_visible = true
 	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation",12)
 	body.add_child(top)
-	hud_hp = label("",27,"a8c8b4")
-	hud_hp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hud_wave = label("",29)
+	hud_hp = label("",26,"a8c8b4")
+	hud_wave = label("",28)
+	hud_credits = label("",26,"aacde0")
+	for item in [hud_hp,hud_wave,hud_credits]:
+		item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		top.add_child(item)
 	hud_wave.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hud_wave.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hud_credits = label("",27,"aacde0")
 	hud_credits.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	hud_credits.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	top.add_child(hud_hp)
-	top.add_child(hud_wave)
-	top.add_child(hud_credits)
-	status_label = label("",20,"9dabb6")
+	status_label = label("",19,"9dabb6")
 	body.add_child(status_label)
 	board = GameBoard.new()
 	board.sim = sim
 	board.selected = selected
 	board.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	board.cell_selected.connect(select_cell)
+	board.tower_hold_started.connect(show_details)
+	board.tower_hold_ended.connect(hide_details)
 	body.add_child(board)
-	toast_label = label("Нажмите на чёрную клетку, чтобы построить башню.",21,"afc0cd")
-	toast_label.custom_minimum_size.y = 48
+	footer = VBoxContainer.new()
+	footer.add_theme_constant_override("separation",6)
+	body.add_child(footer)
+	action_signature = ""
+	refresh_actions(true)
+	toast_label = label("Тап — выбор · удержание — характеристики",19,"afc0cd")
+	toast_label.custom_minimum_size.y = 46
 	body.add_child(toast_label)
 	var controls := HBoxContainer.new()
-	controls.add_theme_constant_override("separation",10)
+	controls.add_theme_constant_override("separation",8)
 	body.add_child(controls)
-	pause_button = button("Ⅱ",toggle_pause,false,82)
-	pause_button.size_flags_horizontal = Control.SIZE_FILL
-	pause_button.custom_minimum_size.x = 84
+	pause_button = button("Ⅱ",toggle_pause,false,68)
+	pause_button.custom_minimum_size.x = 68
 	controls.add_child(pause_button)
-	speed_button = button("×%d" % speed,cycle_speed,false,82)
-	speed_button.size_flags_horizontal = Control.SIZE_FILL
-	speed_button.custom_minimum_size.x = 90
+	speed_button = button("×%d" % speed,cycle_speed,false,68)
+	speed_button.custom_minimum_size.x = 76
 	controls.add_child(speed_button)
-	start_button = button("",start_wave,true,82)
+	start_button = button("",start_wave,true,68)
+	start_button.size_flags_stretch_ratio = 2.5
 	controls.add_child(start_button)
-	var menu := button("☰",show_game_menu,false,82)
-	menu.size_flags_horizontal = Control.SIZE_FILL
-	menu.custom_minimum_size.x = 82
-	controls.add_child(menu)
+	controls.add_child(button("⚙",show_game_menu,false,68))
 	update_hud()
 
 func update_hud() -> void:
@@ -327,35 +345,41 @@ func format_number(value: int) -> String:
 func _process(delta: float) -> void:
 	if not game_visible or sim == null:
 		return
-	if not paused and sim.active:
-		accumulator += delta*speed
+	if not paused and not sim.defeated:
+		accumulator += minf(delta,.25)*speed
 		var steps := 0
-		while accumulator + 0.000000001 >= float(Balance.cfg.fixed_step) and steps < 120 and sim.active:
+		while accumulator + .000000001 >= float(Balance.cfg.fixed_step) and steps < 120:
 			sim.step(Balance.cfg.fixed_step)
-			accumulator = maxf(0.0,accumulator-float(Balance.cfg.fixed_step))
+			accumulator = maxf(0,accumulator-float(Balance.cfg.fixed_step))
 			steps += 1
-	elif not sim.active:
-		accumulator = 0.0
 	if sim.finished_event:
 		sim.finished_event = false
 		checkpoint()
 		timer_remaining = 1.2 if wave_mode == 1 else 5.0
-		toast("Волна завершена · чекпоинт сохранён" if checkpoint_error.is_empty() else checkpoint_error)
+		save_session()
+		toast("Волна завершена · сохранено" if checkpoint_error.is_empty() else checkpoint_error)
 	if not sim.active and not sim.defeated and not paused and wave_mode > 0 and overlay == null:
 		timer_remaining -= delta*speed
 		if timer_remaining <= 0:
 			start_wave()
 	if sim.defeated and not shown_defeat:
 		shown_defeat = true
+		SaveStore.clear_session(slot)
 		show_defeat()
 	toast_timer -= delta
-	if toast_timer <= 0 and toast_label != null:
-		toast_label.text = "Выберите башню или свободную чёрную клетку."
+	if toast_timer <= 0 and is_instance_valid(toast_label):
+		toast_label.text = "Тап — выбор · удержание — характеристики"
 	ui_timer += delta
-	if ui_timer >= 0.1:
+	session_timer += delta
+	if ui_timer >= .1:
 		ui_timer = 0
 		update_hud()
-	if board != null:
+		refresh_actions()
+	if session_timer >= 3:
+		session_timer = 0
+		save_session()
+	if is_instance_valid(board):
+		board.interpolation = 1.0 if paused else clampf(accumulator/float(Balance.cfg.fixed_step),0,1)
 		board.queue_redraw()
 
 func toast(text: String) -> void:
@@ -371,6 +395,7 @@ func start_wave() -> void:
 
 func toggle_pause() -> void:
 	paused = not paused
+	save_session()
 	update_hud()
 
 func cycle_speed() -> void:
@@ -421,131 +446,25 @@ func select_cell(cell: Vector2i) -> void:
 	selected = cell
 	board.selected = cell
 	var t := sim.tower_at(cell)
-	if merge_source >= 0 and not t.is_empty():
-		if t.id == merge_source:
-			merge_source = -1
-			board.merge_source = -1
-			toast("Выбор слияния отменён")
-			return
-		var result := sim.merge(merge_source,t.id)
-		if result.is_empty():
-			merge_source = -1
-			board.merge_source = -1
-			close_sheet()
-			toast("Мегабашня создана. Вторая клетка освобождена.")
-		else:
-			toast(result)
-		update_hud()
-		return
-	if not t.is_empty():
-		selected_id = t.id
-		show_tower(t.id)
-	elif sim.map.cells.has(cell) and cell != sim.map.spawn and cell != sim.map.goal:
-		show_build(cell)
-	else:
-		close_sheet()
-		toast("Вход, база и зелёные клетки недоступны для строительства.")
+	if merge_source >= 0:
+		if not t.is_empty() and t.id != merge_source:
+			var result := sim.merge(merge_source,t.id)
+			toast("Слияние: 5 игровых секунд" if result.is_empty() else result)
+		merge_source = -1
+		board.merge_source = -1
+	selected_id = -1 if t.is_empty() else int(t.id)
+	refresh_actions(true)
+	update_hud()
+	save_session()
 
 func show_build(cell: Vector2i) -> void:
-	var box := open_sheet(550)
-	box.add_child(label("Новая башня",33))
-	box.add_child(label("Клетка %d:%d  ·  путь должен остаться свободным" % [cell.x,cell.y],20,"9eacb8"))
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation",12)
-	grid.add_theme_constant_override("v_separation",12)
-	box.add_child(grid)
-	for kind in Balance.KINDS:
-		var current: String = kind
-		var data := Balance.tower(current)
-		var entry := button("%s  ◆ %d\nУрон %s · %.2f/с · %.1f гекса" % [data.name,data.price,str(data.damage),data.rate,data.range],func() -> void:
-			var result := sim.build(cell,current)
-			if result.is_empty():
-				selected_id = sim.tower_at(cell).id
-				close_sheet()
-				toast("Башня построена · маршрут пересчитан")
-			else:
-				toast(result)
-			update_hud()
-		,false,130)
-		entry.add_theme_font_size_override("font_size",21)
-		entry.add_theme_color_override("font_color",Color(data.color).lightened(.3))
-		entry.disabled = sim.credits < int(data.price)
-		grid.add_child(entry)
-	box.add_child(label("Числа — стартовый баланс. Слияние: две соседние башни 10/10 с ультимейтами.",20,"96a7b3"))
-	box.add_child(button("Закрыть",close_sheet))
+	selected = cell
+	selected_id = -1
+	refresh_actions(true)
 
 func show_tower(id: int) -> void:
-	var t := sim.find_tower(id)
-	if t.is_empty():
-		close_sheet()
-		return
-	var box := open_sheet(900)
-	box.add_child(label("%s%s  №%d" % ["MEGA · " if t.mega else "",Balance.tower(t.kind).name,id],32,Balance.tower(t.kind).color))
-	box.add_child(label("Урон %.1f   ·   %.2f атак/с   ·   дальность %.2f\nВложено ◆ %d   ·   убийств %d" % [Balance.damage(t),Balance.rate(t),Balance.reach(t),t.invested,t.kills],23,"b1c0ca"))
-	for branch in ["d","s"]:
-		var key: String = branch
-		var level: int = int(t[key])
-		var cost := Balance.upgrade_cost(t.kind,level+1) if level < 10 else 0
-		var entry := button("%s  %d/10%s" % ["Урон" if key == "d" else "Скорострельность",level,"  ·  ◆ %d" % cost if level < 10 else "  ·  максимум"],func() -> void:
-			var result := sim.upgrade(id,key)
-			if not result.is_empty():
-				toast(result)
-			show_tower(id)
-			update_hud()
-		,false,83)
-		entry.disabled = level >= 10 or t.mega or sim.credits < cost
-		box.add_child(entry)
-		var progress := ProgressBar.new()
-		progress.max_value = 10
-		progress.value = level
-		progress.show_percentage = false
-		progress.custom_minimum_size.y = 8
-		var progress_background := style("343d46",4)
-		var progress_fill := style("79adc9",4)
-		for progress_style in [progress_background,progress_fill]:
-			progress_style.content_margin_top = 0
-			progress_style.content_margin_bottom = 0
-		progress.add_theme_stylebox_override("background",progress_background)
-		progress.add_theme_stylebox_override("fill",progress_fill)
-		box.add_child(progress)
-	var descriptions := {
-		"Minigun":"Форсаж: ×2 темп после непрерывной стрельбы.",
-		"Laser":"Зеркальный луч: последовательные рикошеты.",
-		"Rocket":"Кассета: самонаводящиеся мини-ракеты.",
-		"Shockwave":"Обратная волна: отбрасывание с лимитом."
-	}
-	box.add_child(label(descriptions[t.kind],21,"a7b7c3"))
-	var ultimate_cost := Balance.ultimate_cost(t.kind)
-	var ultimate_button := button("Ультимейт открыт" if t.ultimate else "Открыть ультимейт  ◆ %d" % ultimate_cost,func() -> void:
-		var result := sim.buy_ultimate(id)
-		if not result.is_empty():
-			toast(result)
-		show_tower(id)
-		update_hud()
-	,true,80)
-	if not t.ultimate and (t.d < 5 or t.s < 5):
-		ultimate_button.text = "Ультимейт · нужны обе ветки 5/10"
-	ultimate_button.disabled = t.ultimate or t.d < 5 or t.s < 5 or sim.credits < ultimate_cost
-	box.add_child(ultimate_button)
-	var merge_button := button("Выбрать соседнюю башню для слияния",func() -> void:
-		merge_source = id
-		board.merge_source = id
-		close_sheet()
-		toast("Нажмите на соседнюю башню того же класса. Повторный тап отменяет выбор.")
-	)
-	merge_button.disabled = t.mega or t.d < 10 or t.s < 10 or not t.ultimate
-	if merge_button.disabled:
-		merge_button.text = "MEGA" if t.mega else "Слияние · нужны 10/10 и ультимейты"
-	box.add_child(merge_button)
-	box.add_child(button("Продать  +◆ %d" % int(floor(t.invested*Balance.cfg.sell_ratio)),func() -> void:
-		var refund := sim.sell(id)
-		selected_id = -1
-		close_sheet()
-		toast("Продано: +◆ %d · маршрут пересчитан" % refund)
-		update_hud()
-	))
-	box.add_child(button("Закрыть",close_sheet))
+	selected_id = id
+	refresh_actions(true)
 
 func show_game_menu() -> void:
 	var box := open_sheet(980)
@@ -572,6 +491,7 @@ func show_game_menu() -> void:
 	box.add_child(mode)
 	box.add_child(button("Маршрут: %s" % ("показан" if board.show_route else "скрыт"),func() -> void: board.show_route = not board.show_route; close_sheet()))
 	box.add_child(button("Координаты клеток / отладка",func() -> void: board.debug_grid = not board.debug_grid; close_sheet()))
+	add_audio_controls(box)
 	box.add_child(button("Статистика",show_statistics))
 	box.add_child(button("Отменить выбор слияния",func() -> void:
 		merge_source = -1
@@ -579,8 +499,7 @@ func show_game_menu() -> void:
 		close_sheet()
 	))
 	box.add_child(button("Главное меню",func() -> void:
-		if not sim.active:
-			checkpoint()
+		save_session()
 		show_menu()
 	))
 	box.add_child(button("Закрыть",close_sheet))
@@ -601,7 +520,7 @@ func show_statistics() -> void:
 	box.add_child(button("Закрыть",close_sheet))
 
 func format_composition(composition: Dictionary) -> String:
-	var names := {"normal":"обычные","fast":"быстрые","heavy":"тяжёлые","armored":"броня","split":"делящиеся","resistant":"сопротивление","boss":"босс"}
+	var names := {"normal":"обычные","fast":"быстрые","heavy":"тяжёлые","armored":"броня","split":"делящиеся","boss":"босс"}
 	var parts: PackedStringArray = []
 	for kind in composition:
 		parts.append("%s: %d" % [names.get(kind,kind),composition[kind]])
@@ -611,7 +530,7 @@ func show_defeat() -> void:
 	var box := open_sheet(650)
 	box.add_child(label("База потеряна",42,"dda3a3"))
 	box.add_child(label("Волна %d · убито %d врагов.\nПоследний успешный чекпоинт сохранён." % [sim.next_wave,sim.total_kills],26))
-	var resume := button("Восстановить чекпоинт",func() -> void: load_game(slot),true,90)
+	var resume := button("Восстановить чекпоинт",func() -> void: load_game(slot,true),true,90)
 	resume.disabled = SaveStore.load_slot(slot).is_empty()
 	box.add_child(resume)
 	box.add_child(button("Посмотреть статистику",show_statistics))
@@ -624,7 +543,7 @@ func show_help() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(scroll)
-	var text := label("Враги идут от красного входа к фиолетовой базе по кратчайшему открытому пути.\n\nСтройте на чёрных клетках. Башня перекрывает свою клетку: маршрут перестроится. Полностью закрыть проход или замуровать врага нельзя.\n\nМиниган — быстрый одиночный огонь.\nЛазер — точный дальний луч.\nРакета — взрыв по площади.\nУдарная волна — импульс вокруг башни.\n\nТап по башне: две независимые ветки улучшений до 10/10. На 5/5 можно купить постоянный ультимейт. Две соседние башни одного класса на 10/10 с ультимейтами сливаются в MEGA.\n\nБашни сами выбирают ближайшего к ним врага. У каждого пятого босса иммунитет к одному классу:\n5 — зелёный, Лазер;\n10 — белый, Миниган;\n15 — красный, Ракета;\n20 — синий, Ударная волна.\nЗатем цикл повторяется.\n\nБаза: 10 HP. Каждый прошедший враг снимает 1 HP. Продажа возвращает 70% вложений.\n\nНа паузе можно строить, улучшать, продавать и сливать. Скорости: ×1, ×2, ×3, ×5.\n\nПосле каждой волны игра автоматически сохраняется в выбранный слот. При поражении можно вернуться к чекпоинту. Ручное сохранение — между волнами.\n\nВся игра работает офлайн. Баланс первой версии ещё будет уточняться по тестам.",24,"bdc9d3")
+	var text := label("Враги идут от красного входа к фиолетовой базе по кратчайшему открытому пути.\n\nСтройте на чёрных клетках. Башня перекрывает свою клетку: маршрут перестроится. Полностью закрыть проход или замуровать врага нельзя.\n\nМиниган — быстрый одиночный огонь.\nЛазер — точный дальний луч.\nРакета — взрыв по площади.\nУдарная волна — импульс вокруг башни.\n\nТап по башне: действия снизу. Удержание: характеристики. Единый уровень 1–10. Улучшение и установка ульты занимают 3 игровые секунды. Ульта покупается отдельно на 10-м уровне. Слияние двух соседних башен одного класса с установленными ультами занимает 5 секунд. Пока идёт установка, башня не стреляет.\n\nБашни сами выбирают ближайшего к ним врага. У каждого пятого босса иммунитет к одному классу:\n5 — зелёный, Лазер;\n10 — белый, Миниган;\n15 — красный, Ракета;\n20 — синий, Ударная волна.\nЗатем цикл повторяется.\n\nБаза: 10 HP. Каждый прошедший враг снимает 1 HP. Продажа возвращает 70% вложений.\n\nНа паузе можно строить, улучшать, продавать и сливать. Скорости: ×1, ×2, ×3, ×5.\n\nПосле каждой волны игра автоматически сохраняется в выбранный слот. При поражении можно вернуться к чекпоинту. Ручное сохранение — между волнами.\n\nВся игра работает офлайн. Баланс первой версии ещё будет уточняться по тестам.",24,"bdc9d3")
 	text.custom_minimum_size.x = 630
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(text)
@@ -658,12 +577,14 @@ func show_settings() -> void:
 	)
 	body.add_child(wave_choice)
 	spacer(body,20)
-	body.add_child(label("Скорость и режим можно менять во время игры.\nИгра полностью офлайн.\n\nМузыка и звуки в первой версии отсутствуют.",24,"a6b5c0"))
+	body.add_child(label("Скорость и режим можно менять во время игры.\nИгра полностью офлайн.\n\nФоновая музыка: Барабанщики. Громкость регулируется ниже.",24,"a6b5c0"))
 	spacer(body,0,true)
+	add_audio_controls(body)
 	body.add_child(button("Назад",show_menu))
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		save_session()
 		if overlay != null:
 			close_sheet()
 		elif game_visible:
@@ -671,7 +592,176 @@ func _notification(what: int) -> void:
 			show_game_menu()
 		else:
 			get_tree().quit()
-	elif what == NOTIFICATION_APPLICATION_PAUSED:
-		paused = true
-		if sim != null and not sim.active and not sim.defeated:
-			checkpoint()
+	elif what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		if is_instance_valid(music):
+			music.stream_paused = true
+		save_session()
+		if game_visible:
+			paused = true
+	elif what == NOTIFICATION_APPLICATION_RESUMED or what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		if is_instance_valid(music):
+			music.stream_paused = false
+
+
+func refresh_actions(force: bool = false) -> void:
+	if not is_instance_valid(footer):
+		return
+	var t := sim.tower_at(selected)
+	if not t.is_empty():
+		selected_id = t.id
+	var signature := str(selected)+str(sim.credits)+str(merge_source)
+	if not t.is_empty():
+		signature += str(t.id)+str(t.level)+str(t.ultimate)+str(t.mega)+str(t.job)+str(ceili(t.job_left))
+	if not force and signature == action_signature:
+		return
+	action_signature = signature
+	for child in footer.get_children():
+		footer.remove_child(child)
+		child.queue_free()
+	if not t.is_empty():
+		var caption := "%s · ур. %d%s" % [Balance.tower(t.kind).name,t.level," · MEGA" if t.mega else " · ульта" if t.ultimate else ""]
+		if not t.job.is_empty():
+			caption += " · %s %.0f с" % [{"upgrade":"улучшение","ultimate":"установка ульты","merge":"слияние"}[t.job],ceil(t.job_left)]
+		footer.add_child(label(caption,21,Balance.tower(t.kind).color))
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation",10)
+		footer.add_child(row)
+		var id: int = t.id
+		row.add_child(button("Продать +%d" % int(floor(t.invested*Balance.cfg.sell_ratio)),func() -> void:
+			sim.sell(id)
+			selected_id = -1
+			refresh_actions(true)
+			update_hud()
+			save_session()
+		,false,64))
+		var cost := Balance.upgrade_cost(t.kind,t.level+1) if t.level < 10 else Balance.ultimate_cost(t.kind)
+		var action := "Улучшить · %d" % cost if t.level < 10 else "Ульта · %d" % cost
+		if t.ultimate:
+			action = "Слить" if not t.mega else "MEGA"
+		if not t.job.is_empty():
+			action = "Установка…"
+		var entry := button(action,func() -> void:
+			var error := ""
+			if t.level < 10:
+				error = sim.upgrade(id)
+			elif not t.ultimate:
+				error = sim.buy_ultimate(id)
+			else:
+				merge_source = id
+				board.merge_source = id
+				toast("Выберите соседнюю башню того же класса с ультой")
+			if not error.is_empty():
+				toast(error)
+			refresh_actions(true)
+			update_hud()
+			save_session()
+		,true,64)
+		entry.disabled = not t.job.is_empty() or t.mega or (not t.ultimate and sim.credits < cost)
+		row.add_child(entry)
+		if t.job == "merge":
+			footer.add_child(button("Отменить слияние",func() -> void:
+				sim.cancel_merge(id)
+				refresh_actions(true)
+				save_session()
+			,false,50))
+	elif sim.map.cells.has(selected) and selected != sim.map.spawn and selected != sim.map.goal:
+		footer.add_child(label("Построить башню",21))
+		var grid := GridContainer.new()
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation",8)
+		grid.add_theme_constant_override("v_separation",6)
+		footer.add_child(grid)
+		for kind in Balance.KINDS:
+			var k: String = kind
+			var data := Balance.tower(k)
+			var entry := button("%s · %d" % [data.name,data.price],func() -> void:
+				var error := sim.build(selected,k)
+				if not error.is_empty():
+					toast(error)
+				refresh_actions(true)
+				update_hud()
+				save_session()
+			,false,62)
+			entry.add_theme_font_size_override("font_size",21)
+			entry.add_theme_color_override("font_color",Color(data.color))
+			entry.disabled = sim.credits < data.price
+			grid.add_child(entry)
+	else:
+		footer.add_child(label("Выберите клетку для постройки",21,"99acba"))
+
+func show_details(id: int) -> void:
+	hide_details()
+	var t := sim.find_tower(id)
+	if t.is_empty():
+		return
+	details = PanelContainer.new()
+	details.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	details.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	details.offset_top = 110
+	details.offset_left = 28
+	details.offset_right = -28
+	add_child(details)
+	var cost := Balance.upgrade_cost(t.kind,t.level+1) if t.level < 10 else Balance.ultimate_cost(t.kind)
+	var info := label("%s · уровень %d%s\nУрон %.1f · %.2f атак/с · залп %d\nРадиус %.2f гекса · вложено %d\nУльта: %s · следующая покупка %d%s" % [Balance.tower(t.kind).name,t.level," · MEGA" if t.mega else "",Balance.damage(t),Balance.rate(t),Balance.volley(t),Balance.reach(t),t.invested,"установлена" if t.ultimate else "доступна на ур. 10",cost,"\nУстановка: %.1f игровых секунд" % t.job_left if not t.job.is_empty() else ""],22)
+	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	details.add_child(info)
+
+func hide_details() -> void:
+	if is_instance_valid(details):
+		details.queue_free()
+	details = null
+
+func setup_music() -> void:
+	music = AudioStreamPlayer.new()
+	music.name = "BackgroundMusic"
+	if ResourceLoader.exists("res://assets/audio/background.ogg"):
+		music.stream = load("res://assets/audio/background.ogg")
+	add_child(music)
+	apply_audio()
+	if music.stream != null:
+		music.play()
+
+func apply_audio() -> void:
+	if is_instance_valid(music):
+		music.volume_db = linear_to_db(maxf(.0001,music_volume))
+		AudioServer.set_bus_mute(0,not sound_enabled or music_volume <= .001)
+
+func add_audio_controls(parent: Control) -> void:
+	var mute := CheckButton.new()
+	mute.text = "Фоновая музыка"
+	mute.button_pressed = sound_enabled
+	mute.toggled.connect(func(value: bool) -> void:
+		sound_enabled = value
+		apply_audio()
+		save_preferences()
+	)
+	parent.add_child(mute)
+	var slider := HSlider.new()
+	slider.min_value = 0
+	slider.max_value = 100
+	slider.value = music_volume*100
+	slider.custom_minimum_size.y = 48
+	slider.value_changed.connect(func(value: float) -> void:
+		music_volume = value/100
+		apply_audio()
+		save_preferences()
+	)
+	parent.add_child(slider)
+
+func save_session() -> void:
+	if sim == null or sim.defeated:
+		return
+	var state := sim.snapshot(true)
+	state.slot = slot
+	state.speed = speed
+	state.wave_mode = wave_mode
+	state.paused = paused
+	state.timer_remaining = timer_remaining
+	var error := SaveStore.save_session(slot,state)
+	if not error.is_empty():
+		toast(error)
+
+func _exit_tree() -> void:
+	if is_instance_valid(music):
+		music.stop()
+		music.stream = null

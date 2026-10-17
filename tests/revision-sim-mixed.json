@@ -1,0 +1,485 @@
+{
+	"first_wave": 1,
+	"max_wave": 20,
+	"maximum_completed": 20,
+	"mean_completed": 20.0,
+	"minimum_completed": 20,
+	"passed_20": 10,
+	"rows": [
+		{
+			"credits_earned": 552,
+			"credits_spent": 555,
+			"damage_dealt": 22988.6130198541,
+			"defeated": false,
+			"enemy_hp_total": 22988.6130198545,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.0,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 47,
+					"damage": 22988.6130198541,
+					"hp": 10,
+					"seconds": 32.8749999999992,
+					"towers": 3,
+					"wave": 20
+				}
+			],
+			"seed": 1,
+			"timeout": false,
+			"towers": 3
+		},
+		{
+			"credits_earned": 545,
+			"credits_spent": 547,
+			"damage_dealt": 22411.129494271,
+			"defeated": false,
+			"enemy_hp_total": 22411.1294942714,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.05,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 48,
+					"damage": 22411.129494271,
+					"hp": 10,
+					"seconds": 33.1249999999992,
+					"towers": 4,
+					"wave": 20
+				}
+			],
+			"seed": 2,
+			"timeout": false,
+			"towers": 4
+		},
+		{
+			"credits_earned": 547,
+			"credits_spent": 547,
+			"damage_dealt": 22767.3590201348,
+			"defeated": false,
+			"enemy_hp_total": 22767.3590201352,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.05,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 50,
+					"damage": 22767.3590201348,
+					"hp": 10,
+					"seconds": 33.1249999999992,
+					"towers": 4,
+					"wave": 20
+				}
+			],
+			"seed": 3,
+			"timeout": false,
+			"towers": 4
+		},
+		{
+			"credits_earned": 550,
+			"credits_spent": 547,
+			"damage_dealt": 23020.6366250766,
+			"defeated": false,
+			"enemy_hp_total": 23020.636625077,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.05,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 53,
+					"damage": 23020.6366250766,
+					"hp": 10,
+					"seconds": 33.1249999999992,
+					"towers": 4,
+					"wave": 20
+				}
+			],
+			"seed": 4,
+			"timeout": false,
+			"towers": 4
+		},
+		{
+			"credits_earned": 555,
+			"credits_spent": 555,
+			"damage_dealt": 23455.4695455775,
+			"defeated": false,
+			"enemy_hp_total": 23455.4695455779,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.0,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 50,
+					"damage": 23455.4695455775,
+					"hp": 10,
+					"seconds": 32.8749999999992,
+					"towers": 3,
+					"wave": 20
+				}
+			],
+			"seed": 5,
+			"timeout": false,
+			"towers": 3
+		},
+		{
+			"credits_earned": 552,
+			"credits_spent": 555,
+			"damage_dealt": 23461.0273613599,
+			"defeated": false,
+			"enemy_hp_total": 23461.0273613603,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.0,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 47,
+					"damage": 23461.0273613599,
+					"hp": 10,
+					"seconds": 32.8749999999992,
+					"towers": 3,
+					"wave": 20
+				}
+			],
+			"seed": 6,
+			"timeout": false,
+			"towers": 3
+		},
+		{
+			"credits_earned": 550,
+			"credits_spent": 547,
+			"damage_dealt": 22965.8524409356,
+			"defeated": false,
+			"enemy_hp_total": 22965.852440936,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.05,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 53,
+					"damage": 22965.8524409356,
+					"hp": 10,
+					"seconds": 33.1249999999992,
+					"towers": 4,
+					"wave": 20
+				}
+			],
+			"seed": 7,
+			"timeout": false,
+			"towers": 4
+		},
+		{
+			"credits_earned": 549,
+			"credits_spent": 547,
+			"damage_dealt": 23014.0201777166,
+			"defeated": false,
+			"enemy_hp_total": 23014.020177717,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.05,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 52,
+					"damage": 23014.0201777166,
+					"hp": 10,
+					"seconds": 33.1249999999992,
+					"towers": 4,
+					"wave": 20
+				}
+			],
+			"seed": 8,
+			"timeout": false,
+			"towers": 4
+		},
+		{
+			"credits_earned": 550,
+			"credits_spent": 547,
+			"damage_dealt": 23194.5168616981,
+			"defeated": false,
+			"enemy_hp_total": 23194.5168616985,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.05,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 53,
+					"damage": 23194.5168616981,
+					"hp": 10,
+					"seconds": 33.1249999999992,
+					"towers": 4,
+					"wave": 20
+				}
+			],
+			"seed": 9,
+			"timeout": false,
+			"towers": 4
+		},
+		{
+			"credits_earned": 552,
+			"credits_spent": 555,
+			"damage_dealt": 23445.9418613791,
+			"defeated": false,
+			"enemy_hp_total": 23445.9418613795,
+			"hp": 10,
+			"last_completed": 20,
+			"mean_path": 33.0,
+			"milestones": [
+				{
+					"credits": 39,
+					"damage": 1334.73308906249,
+					"hp": 10,
+					"seconds": 24.0499999999997,
+					"towers": 2,
+					"wave": 5
+				},
+				{
+					"credits": 37,
+					"damage": 5007.74464422297,
+					"hp": 10,
+					"seconds": 35.5749999999991,
+					"towers": 3,
+					"wave": 10
+				},
+				{
+					"credits": 70,
+					"damage": 11127.2620470127,
+					"hp": 10,
+					"seconds": 28.8499999999994,
+					"towers": 3,
+					"wave": 15
+				},
+				{
+					"credits": 47,
+					"damage": 23445.9418613791,
+					"hp": 10,
+					"seconds": 32.8749999999992,
+					"towers": 3,
+					"wave": 20
+				}
+			],
+			"seed": 10,
+			"timeout": false,
+			"towers": 3
+		}
+	],
+	"scenario": "campaign",
+	"seeds": 10,
+	"strategy": "mixed",
+	"timeouts": 0,
+	"wall_seconds": 5.061
+}
