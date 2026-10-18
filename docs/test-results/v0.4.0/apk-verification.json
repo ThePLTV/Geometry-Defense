@@ -1,7 +1,7 @@
 {
   "apk": "GeometryDefense-Android16-v0.4.0.apk",
-  "bytes": 72184778,
-  "sha256": "dab66b4b29e42c0a6ba529f96222e7a8820e24caf35203d22a27fa9a07c4fd31",
+  "bytes": 72184770,
+  "sha256": "d85e7d265b95aa4b3d6873553af61f4081402a9eddbf4fd08e7d61a70eae1d88",
   "device_install_tested": false,
   "native_libraries": [
     {

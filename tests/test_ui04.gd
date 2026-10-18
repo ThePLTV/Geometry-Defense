@@ -13,6 +13,12 @@ func touch(pos: Vector2, pressed: bool, index: int = 0) -> void:
 func drag(pos: Vector2, relative: Vector2, index: int = 0) -> void:
 	var e:=InputEventScreenDrag.new();e.position=pos;e.relative=relative;e.index=index
 	root.push_input(e,true)
+func mouse(pos: Vector2, pressed: bool) -> void:
+	var e:=InputEventMouseButton.new();e.position=pos;e.button_index=MOUSE_BUTTON_LEFT;e.pressed=pressed
+	root.push_input(e,true)
+func motion(pos: Vector2, held: bool) -> void:
+	var e:=InputEventMouseMotion.new();e.position=pos;e.button_mask=MOUSE_BUTTON_MASK_LEFT if held else 0
+	root.push_input(e,true)
 func find(node: Node, wanted: String) -> Node:
 	if node.name==wanted:return node
 	for child in node.get_children():
@@ -83,6 +89,23 @@ func run() -> void:
 	pos=buttons[3].get_global_rect().get_center()
 	touch(pos,true);touch(pos,false);await process_frame
 	check(taps==1,"Tap still activates once after a drag")
+	var slider:=HSlider.new();slider.custom_minimum_size.y=70;slider.value=50
+	box.add_child(slider);box.move_child(slider,0);scroll.scroll_vertical=0
+	var releases: Array=[0]
+	slider.drag_ended.connect(func(_changed: bool) -> void:releases[0]+=1)
+	await process_frame;await process_frame
+	pos=slider.get_global_rect().get_center()
+	motion(pos,false);mouse(pos,true);motion(pos-Vector2(0,90),true);mouse(pos-Vector2(0,90),false)
+	await process_frame
+	check(releases[0]==1,"Slider receives release after vertical scrolling")
+	check(scroll.scroll_vertical>=80,"Vertical swipe can start on a slider")
+	scroll.scroll_vertical=0
+	await process_frame;await process_frame
+	pos=slider.get_global_rect().get_center()
+	motion(pos,false);mouse(pos,true);motion(pos+Vector2(150,0),true);mouse(pos+Vector2(150,0),false)
+	await process_frame
+	check(slider.value>50 and scroll.scroll_vertical==0,"Horizontal slider drag stays horizontal")
+	check(releases[0]==2,"Slider ends the following drag normally")
 	# OptionButton is a release action and is cancellable by the same gesture.
 	game.show_settings_page("audio");await process_frame;await process_frame
 	var tracks: OptionButton=find(game,"MusicTracks")

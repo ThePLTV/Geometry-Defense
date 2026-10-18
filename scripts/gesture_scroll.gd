@@ -43,7 +43,9 @@ func _input(event: InputEvent) -> void:
 				scroll_vertical=initial_scroll-int(travel.y)
 		if end:
 			if dragging:
-				get_viewport().set_input_as_handled()
+				# Deliver the release to the original focused control so sliders
+				# and button_up listeners clear their gesture state. The scroll
+				# begin notification already cancelled any pending button tap.
 				propagate_notification(Control.NOTIFICATION_SCROLL_END)
 			pointer=-2;dragging=false;horizontal=false
 
