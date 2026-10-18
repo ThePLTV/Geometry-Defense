@@ -98,7 +98,7 @@ func run() -> void:
 	for name in ["events.jsonl","errors.jsonl","match_summary.json","balance_report.json","balance_report.csv"]:
 		expect(zip.get_files().has(name),"Archive contains "+name)
 	var summary: Dictionary=JSON.parse_string(zip.read_file("match_summary.json").get_string_from_utf8())
-	expect(summary.metadata.seed=="77" and summary.metadata.version=="0.4.0","Reproduction metadata")
+	expect(summary.metadata.seed=="77" and summary.metadata.version=="0.4.1","Reproduction metadata")
 	for line in zip.read_file("events.jsonl").get_string_from_utf8().strip_edges().split("\n"):
 		expect(JSON.parse_string(line) is Dictionary,"Valid JSONL record")
 	zip.close();s.diagnostics.close()

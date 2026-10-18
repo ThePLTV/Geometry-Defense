@@ -33,7 +33,8 @@ func run() -> void:
 		root.add_child(game)
 		await process_frame
 		game.set_process(false)
-		if view in ["settings","difficulty","audio","economy"]:
+		if view=="backhint":game.request_back()
+		elif view in ["settings","difficulty","audio","economy"]:
 			game.show_settings()
 			if view!="settings":game.show_settings_page(view)
 		elif view=="countdown":
@@ -63,7 +64,7 @@ func run() -> void:
 	await create_timer(.25).timeout
 	await RenderingServer.frame_post_draw
 	var picture:=root.get_texture().get_image()
-	var path:="res://../GeometryDefense-v0.4.0-%s.png"%view
+	var path:="res://../GeometryDefense-v%s-%s.png"%[ProjectSettings.get_setting("application/config/version","dev"),view]
 	var error:=picture.save_png(path)
 	print("CAPTURE ",view," ",picture.get_size()," ",error)
 	if game!=null:

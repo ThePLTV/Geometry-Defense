@@ -1,0 +1,60 @@
+extends SceneTree
+var checks:=0
+var failures: Array=[]
+func check(ok: bool, message: String) -> void:
+	checks+=1
+	if not ok:failures.append(message);printerr("FAIL ",message)
+func _init() -> void:call_deferred("run")
+func run() -> void:
+	SaveStore.directory="user://back041_"+str(Time.get_ticks_usec())
+	DirAccess.make_dir_recursive_absolute(SaveStore.directory)
+	var game=load("res://main.tscn").instantiate();root.add_child(game)
+	await process_frame;game.set_process(false)
+	check(not quit_on_go_back and not auto_accept_quit,"Engine does not automatically quit on Android Back")
+	check(not game.request_back(1000),"First menu Back never exits")
+	check(game.exit_hint.text.contains("2 секунд"),"First Back displays exit hint")
+	check(game.request_back(2500),"Second Back inside two seconds confirms exit")
+	check(not game.request_back(5000),"New exit sequence starts with confirmation")
+	check(not game.request_back(7501),"A late second Back only rearms confirmation")
+	check(game.request_back(8500),"Back after rearming confirms exit")
+	game.show_help();game._notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	check(game.screen_name=="menu" and game.exit_deadline_msec==0,"Back from help returns to menu without arming exit")
+	game.show_slots(false);game.request_back(10000)
+	check(game.screen_name=="menu" and game.exit_deadline_msec==0,"Back from slots returns to menu")
+	game.show_settings();game.show_settings_page("audio");game.request_back(11000)
+	check(game.settings_page=="hub" and game.screen_name!="menu","Back from audio returns to settings hub")
+	game.request_back(12000)
+	check(game.screen_name=="menu" and game.exit_deadline_msec==0,"Back from settings hub returns to main menu")
+	game.new_game(1);game.sim.start_wave()
+	var original: Simulation=game.sim
+	game._notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	check(game.screen_name=="menu" and not game.game_visible and game.paused,"System Back from a match opens main menu and pauses")
+	check(game.sim==original and game.sim.active,"Back retains active match")
+	var saved:=SaveStore.load_session(1)
+	check(saved.active and saved.paused,"Back persists paused active session")
+	check(game.exit_deadline_msec==0,"Navigation gesture is not the first exit gesture")
+	game.show_game();game.show_settings_hub(true);game.show_settings_page("difficulty")
+	game.request_back(13000)
+	check(game.settings_page=="hub" and game.overlay!=null,"In-game settings return to their hub")
+	game.request_back(14000)
+	check(game.sheet_page=="game_menu","In-game settings hub returns to game menu")
+	game.request_back(15000)
+	check(game.overlay==null and game.game_visible,"Back closes game menu")
+	game.show_diagnostics();game.show_catalog();game.request_back(16000)
+	check(game.sheet_page=="diagnostics","Catalog opened from diagnostics returns there")
+	game.request_back(17000)
+	check(game.sheet_page=="game_menu","Diagnostics return to game menu")
+	game.close_sheet();game.show_menu();game.request_back(18000)
+	game.show_help();game.request_back(18100)
+	check(game.exit_deadline_msec==0 and not game.request_back(18200),"Changing screens cancels pending exit")
+	game._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	check(game.exit_deadline_msec==0,"Backgrounding cancels pending exit")
+	game._notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+	await process_frame;await process_frame
+	game.music.stop();game.music.stream=null
+	await create_timer(.3).timeout
+	root.remove_child(game);game.free();await process_frame
+	var file:=FileAccess.open("res://tests/patch041-back.json",FileAccess.WRITE)
+	file.store_string(JSON.stringify({"checks":checks,"failures":failures},"  "));file.close()
+	print("BACK041: ",checks," checks; ",failures.size()," failures")
+	quit(0 if failures.is_empty() else 1)

@@ -13,3 +13,4 @@ tools/windows/toolchain.json
 /tests/patch03-*.json
 
 /tests/patch04-*.json
+/tests/patch041-*.json
