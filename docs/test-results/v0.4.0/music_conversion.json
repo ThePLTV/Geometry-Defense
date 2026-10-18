@@ -1,0 +1,18 @@
+[
+  {
+    "source_name": "Н ворд все в адидасах.mp3",
+    "source_sha256": "45fd75607eba6a56cb6a2ff5d77bea909c3aaf935ade1eae53b017d207a64394",
+    "output": "adidas.ogg",
+    "output_sha256": "11d40f0a5abb6bade7b7c087c7abadda9ae4fb4f201798212796bdf2795dae0b",
+    "source_recovered_from_fragmented_aac": true,
+    "known_duration_seconds": 165.140317
+  },
+  {
+    "source_name": "Всё решено.weba",
+    "source_sha256": "ad303dfeaf092c707ea8fc4c9b620a596c4cc015a7d8882e24cc0e21dbdd2721",
+    "output": "decided.ogg",
+    "output_sha256": "fca5d5025e2d4e8f9d20c972fa2fc60866791d76daf0af7188553bfdc9d455ee",
+    "source_recovered_from_fragmented_aac": false,
+    "known_duration_seconds": null
+  }
+]

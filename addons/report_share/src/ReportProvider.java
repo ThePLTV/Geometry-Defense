@@ -14,8 +14,8 @@ import java.io.FileNotFoundException;
 public final class ReportProvider extends ContentProvider {
     @Override public boolean onCreate() { return true; }
     private File resolve(Uri uri) throws FileNotFoundException {
-        if (!"/report/GeometryDefense-03-report.zip".equals(uri.getPath())) throw new FileNotFoundException("Unknown report");
-        File file = new File(getContext().getCacheDir(), "geometry_reports/GeometryDefense-03-report.zip");
+        if (!"/report/GeometryDefense-04-report.zip".equals(uri.getPath())) throw new FileNotFoundException("Unknown report");
+        File file = new File(getContext().getCacheDir(), "geometry_reports/GeometryDefense-04-report.zip");
         if (!file.isFile()) throw new FileNotFoundException("Report unavailable");
         return file;
     }

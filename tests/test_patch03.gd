@@ -33,8 +33,8 @@ func run() -> void:
 		var t: Dictionary=s.towers[0]
 		for level in range(1,11):
 			t.level=level
-			if kind=="Minigun":expect(absf(Balance.reach(t)-(1.25+(level-1)*2.75/9))<.000001,"Exact minigun radius")
-			elif kind=="Rocket":expect(absf(Balance.reach(t)-(1.75+(level-1)*3.25/9))<.000001,"Exact rocket radius")
+			if kind=="Minigun":expect(absf(Balance.reach(t)-(1.25+(level-1)*1.75/9))<.000001,"Exact minigun radius")
+			elif kind=="Rocket":expect(absf(Balance.reach(t)-(1.75+(level-1)*2.25/9))<.000001,"Exact rocket radius")
 			elif kind=="Laser":expect(Balance.reach(t)==2.5,"Laser fixed radius")
 		# Every class must attack a target inside/at the border at its scheduled cadence.
 		for distance in [.7,Balance.reach(t)-.00001,Balance.reach(t)]:
@@ -98,7 +98,7 @@ func run() -> void:
 	for name in ["events.jsonl","errors.jsonl","match_summary.json","balance_report.json","balance_report.csv"]:
 		expect(zip.get_files().has(name),"Archive contains "+name)
 	var summary: Dictionary=JSON.parse_string(zip.read_file("match_summary.json").get_string_from_utf8())
-	expect(summary.metadata.seed=="77" and summary.metadata.version=="0.3.0","Reproduction metadata")
+	expect(summary.metadata.seed=="77" and summary.metadata.version=="0.4.0","Reproduction metadata")
 	for line in zip.read_file("events.jsonl").get_string_from_utf8().strip_edges().split("\n"):
 		expect(JSON.parse_string(line) is Dictionary,"Valid JSONL record")
 	zip.close();s.diagnostics.close()

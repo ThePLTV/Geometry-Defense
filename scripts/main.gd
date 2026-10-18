@@ -4,6 +4,16 @@ var debug_enabled:=true
 var error_logger: EngineErrorLogger
 var music: AudioStreamPlayer
 var music_volume := .55
+var music_index := 0
+const TRACKS = [
+ {"title":"Барабанщики","path":"res://assets/audio/background.ogg"},
+ {"title":"Н ворд все в адидасах","path":"res://assets/audio/adidas.ogg"},
+ {"title":"Всё решено","path":"res://assets/audio/decided.ogg"}
+]
+var preferred_rules: Dictionary={"pressure":1.0,"hp":1.0,"money":1.0}
+var countdown: WaveCountdown
+var settings_in_game := false
+var settings_page := ""
 var footer: VBoxContainer
 var action_signature := ""
 var details: PanelContainer
@@ -63,6 +73,10 @@ func load_preferences() -> void:
 		sound_enabled = bool(preferences.get_value("audio","enabled",true))
 		music_volume = clampf(float(preferences.get_value("audio","volume",.55)),0,1)
 		slot = clampi(int(preferences.get_value("game","last_slot",1)),1,5)
+		music_index=clampi(int(preferences.get_value("audio","track",0)),0,TRACKS.size()-1)
+		var stored: Dictionary={}
+		for key in preferred_rules:stored[key]=preferences.get_value("balance",key,1.0)
+		preferred_rules=Simulation.clean_rules(stored)
 
 func save_preferences() -> void:
 	var preferences := ConfigFile.new()
@@ -71,6 +85,8 @@ func save_preferences() -> void:
 	preferences.set_value("game","last_slot",slot)
 	preferences.set_value("audio","enabled",sound_enabled)
 	preferences.set_value("audio","volume",music_volume)
+	preferences.set_value("audio","track",music_index)
+	for key in preferred_rules:preferences.set_value("balance",key,preferred_rules[key])
 	preferences.set_value("diagnostics","enabled",debug_enabled)
 	preferences.save(SaveStore.directory.path_join("preferences.cfg"))
 
@@ -87,6 +103,9 @@ func make_theme() -> Theme:
 		result.set_constant("outline_size",type,0)
 	result.set_stylebox("panel","PanelContainer",style("252c33",22,"3b464f"))
 	result.set_color("font_color","Label",Color("e3e9ee"))
+	var thumb: Texture2D=load("res://assets/slider_thumb.svg")
+	result.set_icon("grabber","HSlider",thumb)
+	result.set_icon("grabber_highlight","HSlider",thumb)
 	return result
 
 func style(color: String, radius: int, border: String = "") -> StyleBoxFlat:
@@ -188,7 +207,7 @@ func show_menu() -> void:
 	body.add_child(button("Как играть",show_help))
 	body.add_child(button("Настройки",show_settings))
 	spacer(body,24,true)
-	var version := label("v0.3.0  ·  Android 16  ·  офлайн",19,"7d8b96")
+	var version := label("v0.4.0  ·  Android 16  ·  офлайн",19,"7d8b96")
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(version)
 
@@ -227,10 +246,11 @@ func new_game(index: int) -> void:
 	slot = index
 	if sim!=null:sim.diagnostics.close()
 	sim = Simulation.new(int(Time.get_unix_time_from_system())+index)
+	sim.rules=preferred_rules.duplicate()
 	setup_diagnostics()
 	speed = preferred_speed
 	wave_mode = preferred_wave_mode
-	timer_remaining = 1.2 if wave_mode == 1 else 5.0
+	timer_remaining = 5.0
 	paused = false
 	accumulator = 0.0
 	selected_id = -1
@@ -333,6 +353,8 @@ func show_game() -> void:
 	start_button = button("",start_wave,true,68)
 	start_button.size_flags_stretch_ratio = 2.5
 	controls.add_child(start_button)
+	countdown=WaveCountdown.new()
+	controls.add_child(countdown)
 	controls.add_child(button("⚙",show_game_menu,false,68))
 	update_hud()
 
@@ -346,6 +368,10 @@ func update_hud() -> void:
 	speed_button.text = "×%d" % speed
 	start_button.text = "Волна идёт" if sim.active else "Начать %d" % sim.next_wave
 	start_button.disabled = sim.active or sim.defeated
+	if is_instance_valid(countdown):
+		countdown.visible=not sim.active and not sim.defeated and wave_mode>0
+		countdown.remaining=timer_remaining
+		countdown.queue_redraw()
 	var mode: String = ["вручную","авто","таймер"][wave_mode]
 	if sim.next_wave % 5 == 0:
 		var boss := Balance.boss(sim.next_wave)
@@ -373,14 +399,15 @@ func _process(delta: float) -> void:
 			sim.step(Balance.cfg.fixed_step)
 			accumulator = maxf(0,accumulator-float(Balance.cfg.fixed_step))
 			steps += 1
-	if sim.finished_event:
+	var completed_now := sim.finished_event
+	if completed_now:
 		sim.finished_event = false
 		checkpoint()
-		timer_remaining = 1.2 if wave_mode == 1 else 5.0
+		timer_remaining = 5.0
 		save_session()
 		toast("Волна завершена · сохранено" if checkpoint_error.is_empty() else checkpoint_error)
-	if not sim.active and not sim.defeated and not paused and wave_mode > 0 and overlay == null:
-		timer_remaining -= delta*speed
+	if not completed_now and not sim.active and not sim.defeated and not paused and wave_mode > 0 and overlay == null:
+		timer_remaining -= delta
 		if timer_remaining <= 0:
 			start_wave()
 	if sim.defeated and not shown_defeat:
@@ -447,10 +474,11 @@ func open_sheet(height: float) -> VBoxContainer:
 	sheet.offset_right = -12
 	sheet.offset_bottom = -16
 	overlay.add_child(sheet)
-	var scroll := ScrollContainer.new()
+	var scroll := GestureScroll.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	sheet.add_child(scroll)
 	var box := VBoxContainer.new()
+	box.mouse_filter=Control.MOUSE_FILTER_STOP
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_theme_constant_override("separation",14)
 	scroll.add_child(box)
@@ -503,19 +531,20 @@ func show_game_menu() -> void:
 	save.disabled = sim.active or sim.defeated
 	box.add_child(save)
 	var mode := OptionButton.new()
+	mode.action_mode=BaseButton.ACTION_MODE_BUTTON_RELEASE
 	mode.custom_minimum_size.y = 76
 	for text in ["Волны: вручную","Волны: автоматически","Волны: таймер 5 секунд"]:
 		mode.add_item(text)
 	mode.select(wave_mode)
 	mode.item_selected.connect(func(index: int) -> void:
 		wave_mode = index
-		timer_remaining = 1.2 if index == 1 else 5.0
+		timer_remaining = 5.0
 		update_hud()
 	)
 	box.add_child(mode)
 	box.add_child(button("Маршрут: %s" % ("показан" if board.show_route else "скрыт"),func() -> void: board.show_route = not board.show_route; close_sheet()))
 	box.add_child(button("Координаты клеток / отладка",func() -> void: board.debug_grid = not board.debug_grid; close_sheet()))
-	add_audio_controls(box)
+	box.add_child(button("Настройки: игра, баланс, музыка",func() -> void: show_settings_hub(true)))
 	box.add_child(button("Диагностика",show_diagnostics))
 	box.add_child(button("Каталог башен",show_catalog))
 	box.add_child(button("Статистика",show_statistics))
@@ -566,47 +595,132 @@ func show_defeat() -> void:
 func show_help() -> void:
 	clear_screen()
 	body.add_child(label("Как играть",38))
-	var scroll := ScrollContainer.new()
+	var scroll := GestureScroll.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(scroll)
-	var text := label("Враги идут от красного входа к фиолетовой базе по кратчайшему открытому пути.\n\nСтройте на чёрных клетках. Башня перекрывает свою клетку: маршрут перестроится. Полностью закрыть проход или замуровать врага нельзя.\n\nМиниган — быстрый одиночный огонь.\nЛазер — пробивающий луч через всех на линии.\nРакета — взрыв по площади.\nУдарная волна — импульс вокруг башни.\n\nТап по башне: действия снизу. Удержание: характеристики. Единый уровень 1–10. Улучшение и установка ульты занимают 3 игровые секунды. Ульта покупается отдельно на 10-м уровне. Слияние двух соседних башен одного класса с установленными ультами занимает 5 секунд. Пока идёт установка, башня не стреляет.\n\nБашни сами выбирают ближайшего к ним врага. У каждого пятого босса иммунитет к одному классу:\n5 — белый, Миниган;\n10 — зелёный, Лазер;\n15 — красный, Ракета;\n20 — синий, Ударная волна.\nЗатем цикл повторяется.\n\nБаза: 10 HP. Каждый прошедший враг снимает 1 HP. Продажа возвращает 70% вложений.\n\nНа паузе можно строить, улучшать, продавать и сливать. Скорости: ×1, ×2, ×3, ×5.\n\nПосле каждой волны игра автоматически сохраняется в выбранный слот. При поражении можно вернуться к чекпоинту. Ручное сохранение — между волнами.\n\nВся игра работает офлайн. Баланс B1 provisional: 100 волн, 3 типа врагов и 4 босса. Диагностика и экспорт отчёта доступны в игровом меню.",24,"bdc9d3")
+	var text := label("Враги идут от красного входа к фиолетовой базе по кратчайшему открытому пути.\n\nСтройте на чёрных клетках. Башня перекрывает свою клетку: маршрут перестроится. Полностью закрыть проход или замуровать врага нельзя.\n\nМиниган — быстрый одиночный огонь.\nЛазер — пробивающий луч через всех на линии.\nРакета — взрыв по площади.\nУдарная волна — импульс вокруг башни.\n\nТап по башне: действия снизу. Удержание: характеристики. Единый уровень 1–10. Улучшение и установка ульты занимают 3 игровые секунды. Ульта покупается отдельно на 10-м уровне. Слияние двух соседних башен одного класса с установленными ультами занимает 5 секунд. Пока идёт установка, башня не стреляет.\n\nБашни сами выбирают ближайшего к ним врага. У каждого пятого босса иммунитет к одному классу:\n5 — белый, Миниган;\n10 — зелёный, Лазер;\n15 — красный, Ракета;\n20 — синий, Ударная волна.\nЗатем цикл повторяется.\n\nБаза: 10 HP. Каждый прошедший враг снимает 1 HP. Продажа возвращает 70% вложений.\n\nНа паузе можно строить, улучшать, продавать и сливать. Скорости: ×1, ×2, ×3, ×5.\n\nПосле каждой волны игра автоматически сохраняется в выбранный слот. При поражении можно вернуться к чекпоинту. Ручное сохранение — между волнами.\n\nВся игра работает офлайн. Баланс C1: 100 волн, 3 типа врагов и 4 босса. Диагностика и экспорт отчёта доступны в игровом меню.",24,"bdc9d3")
 	text.custom_minimum_size.x = 630
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(text)
 	body.add_child(button("Назад",show_menu))
 
 func show_settings() -> void:
-	clear_screen()
-	body.add_child(label("Настройки",38))
-	body.add_child(label("Настройки новых игр. Каждый сохранённый слот хранит собственную скорость и режим волн.",25,"b0bec9"))
-	spacer(body,20)
-	body.add_child(label("Начальная скорость",27,"a6c8da"))
-	var speed_choice := OptionButton.new()
-	speed_choice.custom_minimum_size.y = 84
-	for value in speed_values:
-		speed_choice.add_item("×%d" % value)
-	speed_choice.select(speed_values.find(preferred_speed))
-	speed_choice.item_selected.connect(func(index: int) -> void:
-		preferred_speed = speed_values[index]
-		save_preferences()
+	show_settings_hub(false)
+
+func settings_box(title: String) -> VBoxContainer:
+	var box: VBoxContainer
+	if settings_in_game:
+		box=open_sheet(size.y-100)
+	else:
+		clear_screen()
+		var scroll:=GestureScroll.new()
+		scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+		scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL
+		body.add_child(scroll)
+		box=VBoxContainer.new()
+		box.mouse_filter=Control.MOUSE_FILTER_STOP
+		box.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		box.add_theme_constant_override("separation",16)
+		scroll.add_child(box)
+	box.add_child(label(title,36))
+	return box
+
+func show_settings_hub(in_game: bool = false) -> void:
+	settings_in_game=in_game
+	settings_page="hub"
+	var box:=settings_box("Настройки")
+	box.add_child(label("Для текущего слота" if in_game else "Для новых игр",23,"a6b8c8"))
+	box.add_child(button("Игра · скорость и волны",func() -> void: show_settings_page("game")))
+	box.add_child(button("Сложность · плотность и HP",func() -> void: show_settings_page("difficulty")))
+	box.add_child(button("Экономика · деньги за врагов",func() -> void: show_settings_page("economy")))
+	box.add_child(button("Музыка · трек и громкость",func() -> void: show_settings_page("audio")))
+	box.add_child(button("Назад",show_game_menu if in_game else show_menu))
+
+func settings_rules() -> Dictionary:
+	return sim.rules if settings_in_game and sim!=null else preferred_rules
+
+func change_rule(key: String, value: float) -> void:
+	settings_rules()[key]=value
+	if settings_in_game:
+		sim.diagnostics.action("balance_setting",sim.time,{"key":key,"value":value,"applies":"next_wave"})
+		# Session autosave and lifecycle saves persist this without writing a full
+		# match JSON at every pixel of a slider drag.
+	else:save_preferences()
+
+func percentage_slider(parent: Control, caption: String, key: String, low: float, high: float, step_value: float, offset: bool = false) -> void:
+	var current: float=settings_rules()[key]*100-(100 if offset else 0)
+	var text:=label("",25,"a6c8da")
+	var describe:=func(value: float) -> void:
+		text.text="%s: %s%d%%"%[caption,"+" if offset and value>0 else "",roundi(value)]
+	describe.call(current)
+	parent.add_child(text)
+	var slider:=HSlider.new()
+	slider.name="Setting_"+key
+	slider.min_value=low;slider.max_value=high;slider.step=step_value;slider.value=current
+	slider.custom_minimum_size.y=64
+	slider.value_changed.connect(func(value: float) -> void:
+		describe.call(value)
+		change_rule(key,(value+(100 if offset else 0))/100.0)
 	)
-	body.add_child(speed_choice)
-	body.add_child(label("Запуск волн",27,"a6c8da"))
-	var wave_choice := OptionButton.new()
-	wave_choice.custom_minimum_size.y = 84
-	for text in ["Вручную","Автоматически","По таймеру: 5 секунд"]:
-		wave_choice.add_item(text)
-	wave_choice.select(preferred_wave_mode)
-	wave_choice.item_selected.connect(func(index: int) -> void:
-		preferred_wave_mode = index
-		save_preferences()
-	)
-	body.add_child(wave_choice)
-	spacer(body,20)
-	body.add_child(label("Скорость и режим можно менять во время игры.\nИгра полностью офлайн.\n\nФоновая музыка: Барабанщики. Громкость регулируется ниже.",24,"a6b5c0"))
-	spacer(body,0,true)
-	add_audio_controls(body)
-	body.add_child(button("Назад",show_menu))
+	parent.add_child(slider)
+	var limits:=HBoxContainer.new()
+	var low_label:=label("%d%%"%int(low),19,"8b9dab")
+	low_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	limits.add_child(low_label)
+	var high_label:=label("%s%d%%"%["+" if offset else "",int(high)],19,"8b9dab")
+	high_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	high_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
+	limits.add_child(high_label)
+	parent.add_child(limits)
+
+func show_settings_page(page: String) -> void:
+	settings_page=page
+	var names: Dictionary={"game":"Игра","difficulty":"Сложность","economy":"Экономика","audio":"Музыка"}
+	var box:=settings_box(names[page])
+	if page=="game":
+		box.add_child(label("Скорость боя",25,"a6c8da"))
+		var speed_choice:=OptionButton.new()
+		speed_choice.action_mode=BaseButton.ACTION_MODE_BUTTON_RELEASE
+		speed_choice.custom_minimum_size.y=80
+		for value in speed_values:speed_choice.add_item("×%d"%value)
+		speed_choice.select(speed_values.find(speed if settings_in_game else preferred_speed))
+		speed_choice.item_selected.connect(func(index: int) -> void:
+			if settings_in_game:speed=speed_values[index];save_session();update_hud()
+			else:preferred_speed=speed_values[index];save_preferences()
+		)
+		box.add_child(speed_choice)
+		box.add_child(label("Запуск волн",25,"a6c8da"))
+		var mode:=OptionButton.new()
+		mode.action_mode=BaseButton.ACTION_MODE_BUTTON_RELEASE
+		mode.custom_minimum_size.y=80
+		for text in ["Вручную","Авто · пауза 5 секунд","Таймер · пауза 5 секунд"]:mode.add_item(text)
+		mode.select(wave_mode if settings_in_game else preferred_wave_mode)
+		mode.item_selected.connect(func(index: int) -> void:
+			if settings_in_game:wave_mode=index;timer_remaining=5.0;save_session();update_hud()
+			else:preferred_wave_mode=index;save_preferences()
+		)
+		box.add_child(mode)
+		box.add_child(label("Между автоволнами — 5 обычных секунд при любой скорости боя. Пауза и открытое меню останавливают отсчёт.",23,"a8b9c6"))
+	elif page=="difficulty":
+		box.add_child(label("Базовый баланс C1 · 100 волн",24,"a8b9c6"))
+		percentage_slider(box,"Сложность · плотность потока","pressure",75,150,5)
+		box.add_child(label("100% — стандарт. Выше — враги выходят чаще; их число, скорость и награда за волну сохраняются.",22,"a8b9c6"))
+		percentage_slider(box,"HP врагов от нового стандарта","hp",-30,100,1,true)
+		box.add_child(label("0% — новое стандартное HP. −30% = ×0,70; +100% = ×2,00. Боссы и дочерние круги учитывают настройку.",22,"a8b9c6"))
+		box.add_child(button("Стандартная сложность",func() -> void:
+			change_rule("pressure",1.0);change_rule("hp",1.0);show_settings_page("difficulty")
+		))
+	elif page=="economy":
+		percentage_slider(box,"Деньги за побеждённого врага","money",25,300,5)
+		box.add_child(label("100% — стандартная награда. Учитываются обычные враги, боссы и дочерние круги. Округление до целого, минимум 1 кредит за врага. Бонус за завершение волны остаётся прежним.",23,"a8b9c6"))
+		box.add_child(button("Стандартная экономика",func() -> void:
+			change_rule("money",1.0);show_settings_page("economy")
+		))
+	elif page=="audio":
+		add_audio_controls(box)
+	if page in ["difficulty","economy"]:
+		box.add_child(label("Изменения применяются со следующей волны и сохраняются в этом слоте." if settings_in_game else "Эти значения будут использованы в новых играх. Текущие слоты настраиваются через игровое меню.",22,"8fa8bb"))
+	box.add_child(button("Назад к разделам",func() -> void: show_settings_hub(settings_in_game)))
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST or what == NOTIFICATION_WM_CLOSE_REQUEST:
@@ -740,12 +854,21 @@ func hide_details() -> void:
 func setup_music() -> void:
 	music = AudioStreamPlayer.new()
 	music.name = "BackgroundMusic"
-	if ResourceLoader.exists("res://assets/audio/background.ogg"):
-		music.stream = load("res://assets/audio/background.ogg")
+	if ResourceLoader.exists(TRACKS[music_index].path):
+		music.stream = load(TRACKS[music_index].path)
 	add_child(music)
 	apply_audio()
 	if music.stream != null:
 		music.play()
+
+func select_music(index: int) -> void:
+	music_index=clampi(index,0,TRACKS.size()-1)
+	if is_instance_valid(music):
+		music.stop()
+		music.stream=load(TRACKS[music_index].path)
+		music.play()
+		apply_audio()
+	save_preferences()
 
 func apply_audio() -> void:
 	if is_instance_valid(music):
@@ -753,7 +876,17 @@ func apply_audio() -> void:
 		AudioServer.set_bus_mute(0,not sound_enabled or music_volume <= .001)
 
 func add_audio_controls(parent: Control) -> void:
+	parent.add_child(label("Фоновая песня",25,"a6c8da"))
+	var tracks:=OptionButton.new()
+	tracks.name="MusicTracks"
+	tracks.action_mode=BaseButton.ACTION_MODE_BUTTON_RELEASE
+	tracks.custom_minimum_size.y=84
+	for track in TRACKS:tracks.add_item(track.title)
+	tracks.select(music_index)
+	tracks.item_selected.connect(select_music)
+	parent.add_child(tracks)
 	var mute := CheckButton.new()
+	mute.action_mode=BaseButton.ACTION_MODE_BUTTON_RELEASE
 	mute.text = "Фоновая музыка"
 	mute.button_pressed = sound_enabled
 	mute.toggled.connect(func(value: bool) -> void:
@@ -762,6 +895,8 @@ func add_audio_controls(parent: Control) -> void:
 		save_preferences()
 	)
 	parent.add_child(mute)
+	var volume_label:=label("Громкость: %d%%"%roundi(music_volume*100),24,"a6c8da")
+	parent.add_child(volume_label)
 	var slider := HSlider.new()
 	slider.min_value = 0
 	slider.max_value = 100
@@ -769,6 +904,7 @@ func add_audio_controls(parent: Control) -> void:
 	slider.custom_minimum_size.y = 48
 	slider.value_changed.connect(func(value: float) -> void:
 		music_volume = value/100
+		volume_label.text="Громкость: %d%%"%roundi(value)
 		apply_audio()
 		save_preferences()
 	)
@@ -806,6 +942,7 @@ func show_diagnostics() -> void:
 	box.add_child(label("Диагностика",34))
 	box.add_child(label("Отчёт содержит события боя, причины простоя, урон, баланс и ошибки. Личные данные и сохранения в архив не входят.",22,"a8bac8"))
 	var toggle:=CheckButton.new()
+	toggle.action_mode=BaseButton.ACTION_MODE_BUTTON_RELEASE
 	toggle.text="Записывать диагностику"
 	toggle.button_pressed=debug_enabled
 	toggle.toggled.connect(func(value: bool) -> void:
@@ -814,6 +951,7 @@ func show_diagnostics() -> void:
 	)
 	box.add_child(toggle)
 	var rings:=CheckButton.new()
+	rings.action_mode=BaseButton.ACTION_MODE_BUTTON_RELEASE
 	rings.text="Радиусы 1R…5R и расстояние до цели"
 	rings.button_pressed=board.diagnostic_rings
 	rings.toggled.connect(func(value: bool) -> void:board.diagnostic_rings=value)

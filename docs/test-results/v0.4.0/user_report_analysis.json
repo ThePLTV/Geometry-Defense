@@ -1,0 +1,9 @@
+{
+  "source": "GeometryDefense-03-report.zip",
+  "error_codes": {
+    "EARLY_KILLS_5_WAVES": 4
+  },
+  "reproduction_before_fix": "RESTORE true ID 1.0 KEYS [1.0] OWNER 0",
+  "after_fix": "RESTORE true ID 1 KEYS [1] OWNER 31",
+  "root_cause": "JSON numeric tower IDs remained float; string dictionary keys disagreed with typed int owner lookup. All projectile classes were affected; Laser direct hits used the live tower dictionary."
+}

@@ -1,0 +1,440 @@
+[
+  {
+    "base_hp": 9,
+    "classes": [
+      "Laser"
+    ],
+    "early_fraction": 0.0333333333333333,
+    "early_kills": 1,
+    "hp": 301,
+    "killed": 30,
+    "leaked": 1,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 9,
+    "classes": [
+      "Laser"
+    ],
+    "early_fraction": 0.166666666666667,
+    "early_kills": 5,
+    "hp": 301,
+    "killed": 30,
+    "leaked": 1,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Rocket"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Rocket"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Laser",
+      "Rocket"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Laser",
+      "Rocket"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Rocket",
+      "Rocket"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Rocket",
+      "Rocket"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Minigun",
+      "Minigun"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Minigun",
+      "Minigun"
+    ],
+    "early_fraction": 1.0,
+    "early_kills": 30,
+    "hp": 301,
+    "killed": 31,
+    "leaked": 0,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 30
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Laser"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 1997,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Laser"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 1997,
+    "killed": 2,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 1997,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Rocket"
+    ],
+    "early_fraction": 0.0333333333333333,
+    "early_kills": 1,
+    "hp": 1997,
+    "killed": 10,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Laser",
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 1997,
+    "killed": 1,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 2,
+    "classes": [
+      "Laser",
+      "Rocket"
+    ],
+    "early_fraction": 0.0333333333333333,
+    "early_kills": 1,
+    "hp": 1997,
+    "killed": 23,
+    "leaked": 8,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Rocket",
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 1997,
+    "killed": 1,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 10,
+    "classes": [
+      "Rocket",
+      "Rocket"
+    ],
+    "early_fraction": 0.666666666666667,
+    "early_kills": 20,
+    "hp": 1997,
+    "killed": 31,
+    "leaked": 0,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Minigun",
+      "Minigun"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 1997,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Minigun",
+      "Minigun"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 1997,
+    "killed": 4,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 60
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Laser"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Laser"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Laser",
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Laser",
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Rocket",
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Rocket",
+      "Rocket"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 1,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Minigun",
+      "Minigun"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": false,
+    "ordinary_spawned": 30,
+    "wave": 90
+  },
+  {
+    "base_hp": 0,
+    "classes": [
+      "Minigun",
+      "Minigun"
+    ],
+    "early_fraction": 0.0,
+    "early_kills": 0,
+    "hp": 6576,
+    "killed": 0,
+    "leaked": 10,
+    "mega": true,
+    "ordinary_spawned": 30,
+    "wave": 90
+  }
+]

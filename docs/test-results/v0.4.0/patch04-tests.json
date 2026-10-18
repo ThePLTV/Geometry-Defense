@@ -1,0 +1,342 @@
+{
+  "checks": 444,
+  "failures": [],
+  "reload_cases": [
+    {
+      "damage_after_load": 86.8,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 1,
+      "shots": 31.0
+    },
+    {
+      "damage_after_load": 111.384,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 2,
+      "shots": 34.0
+    },
+    {
+      "damage_after_load": 141.81804,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 3,
+      "shots": 37.0
+    },
+    {
+      "damage_after_load": 179.380656,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 4,
+      "shots": 40.0
+    },
+    {
+      "damage_after_load": 225.616020084,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 5,
+      "shots": 43.0
+    },
+    {
+      "damage_after_load": 282.38730699816,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 6,
+      "shots": 46.0
+    },
+    {
+      "damage_after_load": 351.940528482707,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 7,
+      "shots": 49.0
+    },
+    {
+      "damage_after_load": 436.980852099752,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 8,
+      "shots": 52.0
+    },
+    {
+      "damage_after_load": 540.763804473443,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 9,
+      "shots": 55.0
+    },
+    {
+      "damage_after_load": 667.204214028507,
+      "form": "base",
+      "kind": "Minigun",
+      "level": 10,
+      "shots": 58.0
+    },
+    {
+      "damage_after_load": 667.204214028507,
+      "form": "ultimate",
+      "kind": "Minigun",
+      "level": 10,
+      "shots": 58.0
+    },
+    {
+      "damage_after_load": 1334.40842805701,
+      "form": "mega",
+      "kind": "Minigun",
+      "level": 10,
+      "shots": 58.0
+    },
+    {
+      "damage_after_load": 90.0,
+      "form": "base",
+      "kind": "Laser",
+      "level": 1,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 111.6,
+      "form": "base",
+      "kind": "Laser",
+      "level": 2,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 138.384,
+      "form": "base",
+      "kind": "Laser",
+      "level": 3,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 171.59616,
+      "form": "base",
+      "kind": "Laser",
+      "level": 4,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 212.7792384,
+      "form": "base",
+      "kind": "Laser",
+      "level": 5,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 263.846255616,
+      "form": "base",
+      "kind": "Laser",
+      "level": 6,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 327.16935696384,
+      "form": "base",
+      "kind": "Laser",
+      "level": 7,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 405.690002635162,
+      "form": "base",
+      "kind": "Laser",
+      "level": 8,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 503.0556032676,
+      "form": "base",
+      "kind": "Laser",
+      "level": 9,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 623.788948051825,
+      "form": "base",
+      "kind": "Laser",
+      "level": 10,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 623.788948051825,
+      "form": "ultimate",
+      "kind": "Laser",
+      "level": 10,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 1247.57789610365,
+      "form": "mega",
+      "kind": "Laser",
+      "level": 10,
+      "shots": 6.0
+    },
+    {
+      "damage_after_load": 48.0,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 1,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 102.72,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 2,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 164.8656,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 3,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 235.208256,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 4,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 314.5910424,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 5,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 403.9348984416,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 6,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 504.245398221264,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 7,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 616.620086967717,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 8,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 742.256429687389,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 9,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 882.460421961674,
+      "form": "base",
+      "kind": "Rocket",
+      "level": 10,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 1464.88430045638,
+      "form": "ultimate",
+      "kind": "Rocket",
+      "level": 10,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 3706.33377223904,
+      "form": "mega",
+      "kind": "Rocket",
+      "level": 10,
+      "shots": 4.0
+    },
+    {
+      "damage_after_load": 90.0,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 1,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 109.8,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 2,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 133.956,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 3,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 163.42632,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 4,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 199.3801104,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 5,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 243.243734688,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 6,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 296.75735631936,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 7,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 362.043974709619,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 8,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 441.693649145735,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 9,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 538.866251957797,
+      "form": "base",
+      "kind": "Shockwave",
+      "level": 10,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 107.773250391559,
+      "form": "ultimate",
+      "kind": "Shockwave",
+      "level": 10,
+      "shots": 5.0
+    },
+    {
+      "damage_after_load": 215.546500783119,
+      "form": "mega",
+      "kind": "Shockwave",
+      "level": 10,
+      "shots": 5.0
+    }
+  ]
+}

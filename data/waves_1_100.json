@@ -14,7 +14,7 @@
     "max_income": 21,
     "reward": {
       "boss": 19,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
@@ -28,16 +28,16 @@
       "fast": 9
     },
     "hp": {
-      "boss": 135,
-      "child": 11,
-      "fast": 21,
-      "normal": 30,
-      "split": 36
+      "boss": 129,
+      "child": 10,
+      "fast": 20,
+      "normal": 29,
+      "split": 35
     },
     "max_income": 23,
     "reward": {
       "boss": 20,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
@@ -51,21 +51,21 @@
       "split": 10
     },
     "hp": {
-      "boss": 140,
+      "boss": 131,
       "child": 11,
-      "fast": 22,
-      "normal": 31,
-      "split": 37
+      "fast": 21,
+      "normal": 30,
+      "split": 36
     },
-    "max_income": 26,
+    "max_income": 46,
     "reward": {
       "boss": 21,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 135,
+    "theoretical_budget": 155,
     "wave": 3
   },
   {
@@ -74,21 +74,21 @@
       "normal": 11
     },
     "hp": {
-      "boss": 149,
-      "child": 12,
-      "fast": 23,
-      "normal": 33,
-      "split": 40
+      "boss": 134,
+      "child": 11,
+      "fast": 22,
+      "normal": 31,
+      "split": 37
     },
     "max_income": 29,
     "reward": {
       "boss": 22,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 164,
+    "theoretical_budget": 184,
     "wave": 4
   },
   {
@@ -98,21 +98,21 @@
       "normal": 12
     },
     "hp": {
-      "boss": 158,
+      "boss": 140,
       "child": 12,
-      "fast": 25,
-      "normal": 35,
-      "split": 42
+      "fast": 23,
+      "normal": 33,
+      "split": 40
     },
     "max_income": 54,
     "reward": {
       "boss": 23,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 218,
+    "theoretical_budget": 238,
     "wave": 5
   },
   {
@@ -121,21 +121,21 @@
       "split": 13
     },
     "hp": {
-      "boss": 167,
-      "child": 13,
-      "fast": 26,
-      "normal": 37,
-      "split": 44
+      "boss": 147,
+      "child": 12,
+      "fast": 25,
+      "normal": 35,
+      "split": 42
     },
-    "max_income": 34,
+    "max_income": 60,
     "reward": {
       "boss": 25,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 252,
+    "theoretical_budget": 298,
     "wave": 6
   },
   {
@@ -144,21 +144,21 @@
       "normal": 14
     },
     "hp": {
-      "boss": 176,
-      "child": 14,
+      "boss": 157,
+      "child": 13,
       "fast": 27,
-      "normal": 39,
-      "split": 47
+      "normal": 38,
+      "split": 46
     },
     "max_income": 37,
     "reward": {
       "boss": 26,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 289,
+    "theoretical_budget": 335,
     "wave": 7
   },
   {
@@ -167,7 +167,7 @@
       "fast": 15
     },
     "hp": {
-      "boss": 185,
+      "boss": 167,
       "child": 14,
       "fast": 29,
       "normal": 41,
@@ -176,12 +176,12 @@
     "max_income": 39,
     "reward": {
       "boss": 27,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 328,
+    "theoretical_budget": 374,
     "wave": 8
   },
   {
@@ -190,21 +190,21 @@
       "split": 16
     },
     "hp": {
-      "boss": 194,
-      "child": 15,
-      "fast": 30,
-      "normal": 43,
-      "split": 52
+      "boss": 182,
+      "child": 16,
+      "fast": 31,
+      "normal": 45,
+      "split": 54
     },
-    "max_income": 42,
+    "max_income": 74,
     "reward": {
       "boss": 28,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 370,
+    "theoretical_budget": 448,
     "wave": 9
   },
   {
@@ -214,21 +214,21 @@
       "normal": 17
     },
     "hp": {
-      "boss": 203,
-      "child": 16,
-      "fast": 31,
-      "normal": 45,
-      "split": 54
+      "boss": 195,
+      "child": 17,
+      "fast": 34,
+      "normal": 49,
+      "split": 59
     },
     "max_income": 75,
     "reward": {
       "boss": 30,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 445,
+    "theoretical_budget": 523,
     "wave": 10
   },
   {
@@ -237,21 +237,21 @@
       "fast": 18
     },
     "hp": {
-      "boss": 216,
-      "child": 17,
-      "fast": 34,
-      "normal": 48,
-      "split": 58
+      "boss": 213,
+      "child": 19,
+      "fast": 38,
+      "normal": 54,
+      "split": 65
     },
     "max_income": 48,
     "reward": {
       "boss": 31,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 493,
+    "theoretical_budget": 571,
     "wave": 11
   },
   {
@@ -260,21 +260,21 @@
       "split": 19
     },
     "hp": {
-      "boss": 225,
-      "child": 18,
-      "fast": 35,
-      "normal": 50,
-      "split": 60
+      "boss": 230,
+      "child": 21,
+      "fast": 41,
+      "normal": 59,
+      "split": 71
     },
-    "max_income": 51,
+    "max_income": 89,
     "reward": {
       "boss": 33,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 544,
+    "theoretical_budget": 660,
     "wave": 12
   },
   {
@@ -283,21 +283,21 @@
       "normal": 20
     },
     "hp": {
-      "boss": 239,
-      "child": 19,
-      "fast": 37,
-      "normal": 53,
-      "split": 64
+      "boss": 254,
+      "child": 23,
+      "fast": 46,
+      "normal": 66,
+      "split": 79
     },
     "max_income": 53,
     "reward": {
       "boss": 34,
-      "child": 0,
+      "child": 1,
       "fast": 2,
       "normal": 2,
       "split": 2
     },
-    "theoretical_budget": 597,
+    "theoretical_budget": 713,
     "wave": 13
   },
   {
@@ -306,11 +306,11 @@
       "fast": 21
     },
     "hp": {
-      "boss": 252,
-      "child": 20,
-      "fast": 39,
-      "normal": 56,
-      "split": 67
+      "boss": 274,
+      "child": 25,
+      "fast": 50,
+      "normal": 72,
+      "split": 86
     },
     "max_income": 77,
     "reward": {
@@ -320,7 +320,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 674,
+    "theoretical_budget": 790,
     "wave": 14
   },
   {
@@ -330,11 +330,11 @@
       "normal": 22
     },
     "hp": {
-      "boss": 266,
-      "child": 21,
-      "fast": 41,
-      "normal": 59,
-      "split": 71
+      "boss": 302,
+      "child": 28,
+      "fast": 56,
+      "normal": 80,
+      "split": 96
     },
     "max_income": 119,
     "reward": {
@@ -344,7 +344,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 793,
+    "theoretical_budget": 909,
     "wave": 15
   },
   {
@@ -353,11 +353,11 @@
       "normal": 23
     },
     "hp": {
-      "boss": 284,
-      "child": 22,
-      "fast": 44,
-      "normal": 63,
-      "split": 76
+      "boss": 329,
+      "child": 31,
+      "fast": 62,
+      "normal": 88,
+      "split": 106
     },
     "max_income": 85,
     "reward": {
@@ -367,7 +367,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 878,
+    "theoretical_budget": 994,
     "wave": 16
   },
   {
@@ -376,11 +376,11 @@
       "fast": 24
     },
     "hp": {
-      "boss": 297,
-      "child": 23,
-      "fast": 46,
-      "normal": 66,
-      "split": 79
+      "boss": 359,
+      "child": 34,
+      "fast": 68,
+      "normal": 97,
+      "split": 116
     },
     "max_income": 89,
     "reward": {
@@ -390,7 +390,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 967,
+    "theoretical_budget": 1083,
     "wave": 17
   },
   {
@@ -399,11 +399,11 @@
       "split": 25
     },
     "hp": {
-      "boss": 315,
-      "child": 25,
-      "fast": 49,
-      "normal": 70,
-      "split": 84
+      "boss": 388,
+      "child": 37,
+      "fast": 74,
+      "normal": 106,
+      "split": 127
     },
     "max_income": 118,
     "reward": {
@@ -413,7 +413,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 1085,
+    "theoretical_budget": 1201,
     "wave": 18
   },
   {
@@ -424,11 +424,11 @@
       "split": 10
     },
     "hp": {
-      "boss": 329,
-      "child": 26,
-      "fast": 51,
-      "normal": 73,
-      "split": 88
+      "boss": 424,
+      "child": 41,
+      "fast": 82,
+      "normal": 117,
+      "split": 140
     },
     "max_income": 119,
     "reward": {
@@ -438,7 +438,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 1204,
+    "theoretical_budget": 1320,
     "wave": 19
   },
   {
@@ -448,11 +448,11 @@
       "normal": 27
     },
     "hp": {
-      "boss": 347,
-      "child": 27,
-      "fast": 54,
-      "normal": 77,
-      "split": 92
+      "boss": 460,
+      "child": 45,
+      "fast": 90,
+      "normal": 128,
+      "split": 154
     },
     "max_income": 148,
     "reward": {
@@ -462,7 +462,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 1352,
+    "theoretical_budget": 1468,
     "wave": 20
   },
   {
@@ -471,11 +471,11 @@
       "split": 28
     },
     "hp": {
-      "boss": 369,
-      "child": 29,
-      "fast": 57,
-      "normal": 82,
-      "split": 98
+      "boss": 503,
+      "child": 49,
+      "fast": 99,
+      "normal": 141,
+      "split": 169
     },
     "max_income": 133,
     "reward": {
@@ -485,7 +485,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 1485,
+    "theoretical_budget": 1601,
     "wave": 21
   },
   {
@@ -494,11 +494,11 @@
       "normal": 29
     },
     "hp": {
-      "boss": 387,
-      "child": 30,
-      "fast": 60,
-      "normal": 86,
-      "split": 103
+      "boss": 544,
+      "child": 54,
+      "fast": 108,
+      "normal": 154,
+      "split": 185
     },
     "max_income": 109,
     "reward": {
@@ -508,7 +508,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 1594,
+    "theoretical_budget": 1710,
     "wave": 22
   },
   {
@@ -517,11 +517,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 410,
-      "child": 32,
-      "fast": 64,
-      "normal": 91,
-      "split": 109
+      "boss": 589,
+      "child": 59,
+      "fast": 118,
+      "normal": 168,
+      "split": 202
     },
     "max_income": 113,
     "reward": {
@@ -531,7 +531,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 1707,
+    "theoretical_budget": 1823,
     "wave": 23
   },
   {
@@ -540,11 +540,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 432,
-      "child": 34,
-      "fast": 67,
-      "normal": 96,
-      "split": 115
+      "boss": 640,
+      "child": 64,
+      "fast": 129,
+      "normal": 184,
+      "split": 221
     },
     "max_income": 144,
     "reward": {
@@ -554,7 +554,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 1851,
+    "theoretical_budget": 1967,
     "wave": 24
   },
   {
@@ -564,11 +564,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 455,
-      "child": 35,
-      "fast": 71,
-      "normal": 101,
-      "split": 121
+      "boss": 690,
+      "child": 70,
+      "fast": 140,
+      "normal": 200,
+      "split": 240
     },
     "max_income": 172,
     "reward": {
@@ -578,7 +578,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2023,
+    "theoretical_budget": 2139,
     "wave": 25
   },
   {
@@ -587,11 +587,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 482,
-      "child": 37,
-      "fast": 75,
-      "normal": 107,
-      "split": 128
+      "boss": 747,
+      "child": 76,
+      "fast": 153,
+      "normal": 218,
+      "split": 262
     },
     "max_income": 116,
     "reward": {
@@ -601,7 +601,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2139,
+    "theoretical_budget": 2255,
     "wave": 26
   },
   {
@@ -610,11 +610,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 509,
-      "child": 40,
-      "fast": 79,
-      "normal": 113,
-      "split": 136
+      "boss": 806,
+      "child": 83,
+      "fast": 166,
+      "normal": 237,
+      "split": 284
     },
     "max_income": 147,
     "reward": {
@@ -624,7 +624,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2286,
+    "theoretical_budget": 2402,
     "wave": 27
   },
   {
@@ -633,11 +633,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 536,
-      "child": 42,
-      "fast": 83,
-      "normal": 119,
-      "split": 143
+      "boss": 868,
+      "child": 90,
+      "fast": 180,
+      "normal": 257,
+      "split": 308
     },
     "max_income": 119,
     "reward": {
@@ -647,7 +647,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2405,
+    "theoretical_budget": 2521,
     "wave": 28
   },
   {
@@ -656,11 +656,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 563,
-      "child": 44,
-      "fast": 88,
-      "normal": 125,
-      "split": 150
+      "boss": 933,
+      "child": 97,
+      "fast": 195,
+      "normal": 278,
+      "split": 334
     },
     "max_income": 120,
     "reward": {
@@ -670,7 +670,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2525,
+    "theoretical_budget": 2641,
     "wave": 29
   },
   {
@@ -680,11 +680,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 594,
-      "child": 46,
-      "fast": 92,
-      "normal": 132,
-      "split": 158
+      "boss": 1003,
+      "child": 105,
+      "fast": 211,
+      "normal": 301,
+      "split": 361
     },
     "max_income": 189,
     "reward": {
@@ -694,7 +694,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2714,
+    "theoretical_budget": 2830,
     "wave": 30
   },
   {
@@ -703,11 +703,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 630,
-      "child": 49,
-      "fast": 98,
-      "normal": 140,
-      "split": 168
+      "boss": 1076,
+      "child": 114,
+      "fast": 227,
+      "normal": 325,
+      "split": 390
     },
     "max_income": 122,
     "reward": {
@@ -717,7 +717,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2836,
+    "theoretical_budget": 2952,
     "wave": 31
   },
   {
@@ -726,11 +726,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 662,
-      "child": 51,
-      "fast": 103,
-      "normal": 147,
-      "split": 176
+      "boss": 1155,
+      "child": 123,
+      "fast": 246,
+      "normal": 351,
+      "split": 421
     },
     "max_income": 123,
     "reward": {
@@ -740,7 +740,7 @@
       "normal": 3,
       "split": 2
     },
-    "theoretical_budget": 2959,
+    "theoretical_budget": 3075,
     "wave": 32
   },
   {
@@ -749,11 +749,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 698,
-      "child": 54,
-      "fast": 109,
-      "normal": 155,
-      "split": 186
+      "boss": 1237,
+      "child": 132,
+      "fast": 265,
+      "normal": 378,
+      "split": 454
     },
     "max_income": 185,
     "reward": {
@@ -763,7 +763,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 3144,
+    "theoretical_budget": 3260,
     "wave": 33
   },
   {
@@ -772,11 +772,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 738,
-      "child": 57,
-      "fast": 115,
-      "normal": 164,
-      "split": 197
+      "boss": 1324,
+      "child": 142,
+      "fast": 285,
+      "normal": 407,
+      "split": 488
     },
     "max_income": 156,
     "reward": {
@@ -786,7 +786,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 3300,
+    "theoretical_budget": 3416,
     "wave": 34
   },
   {
@@ -796,11 +796,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 779,
-      "child": 61,
-      "fast": 121,
-      "normal": 173,
-      "split": 208
+      "boss": 1418,
+      "child": 153,
+      "fast": 307,
+      "normal": 438,
+      "split": 526
     },
     "max_income": 238,
     "reward": {
@@ -810,7 +810,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 3538,
+    "theoretical_budget": 3654,
     "wave": 35
   },
   {
@@ -819,11 +819,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 819,
-      "child": 64,
-      "fast": 127,
-      "normal": 182,
-      "split": 218
+      "boss": 1513,
+      "child": 165,
+      "fast": 329,
+      "normal": 470,
+      "split": 564
     },
     "max_income": 189,
     "reward": {
@@ -833,7 +833,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 3727,
+    "theoretical_budget": 3843,
     "wave": 36
   },
   {
@@ -842,11 +842,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 864,
-      "child": 67,
-      "fast": 134,
-      "normal": 192,
-      "split": 230
+      "boss": 1614,
+      "child": 176,
+      "fast": 353,
+      "normal": 504,
+      "split": 605
     },
     "max_income": 160,
     "reward": {
@@ -856,7 +856,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 3887,
+    "theoretical_budget": 4003,
     "wave": 37
   },
   {
@@ -865,11 +865,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 914,
-      "child": 71,
-      "fast": 142,
-      "normal": 203,
-      "split": 244
+      "boss": 1721,
+      "child": 189,
+      "fast": 378,
+      "normal": 540,
+      "split": 648
     },
     "max_income": 161,
     "reward": {
@@ -879,7 +879,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 4048,
+    "theoretical_budget": 4164,
     "wave": 38
   },
   {
@@ -890,11 +890,11 @@
       "split": 10
     },
     "hp": {
-      "boss": 963,
-      "child": 75,
-      "fast": 150,
-      "normal": 214,
-      "split": 257
+      "boss": 1833,
+      "child": 202,
+      "fast": 405,
+      "normal": 578,
+      "split": 694
     },
     "max_income": 173,
     "reward": {
@@ -904,7 +904,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 4221,
+    "theoretical_budget": 4337,
     "wave": 39
   },
   {
@@ -914,11 +914,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 1017,
-      "child": 79,
-      "fast": 158,
-      "normal": 226,
-      "split": 271
+      "boss": 1951,
+      "child": 216,
+      "fast": 433,
+      "normal": 618,
+      "split": 742
     },
     "max_income": 258,
     "reward": {
@@ -928,7 +928,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 4479,
+    "theoretical_budget": 4595,
     "wave": 40
   },
   {
@@ -937,11 +937,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 1071,
-      "child": 83,
-      "fast": 167,
-      "normal": 238,
-      "split": 286
+      "boss": 2078,
+      "child": 231,
+      "fast": 463,
+      "normal": 661,
+      "split": 793
     },
     "max_income": 165,
     "reward": {
@@ -951,7 +951,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 4644,
+    "theoretical_budget": 4760,
     "wave": 41
   },
   {
@@ -960,11 +960,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 1130,
-      "child": 88,
-      "fast": 176,
-      "normal": 251,
-      "split": 301
+      "boss": 2206,
+      "child": 247,
+      "fast": 493,
+      "normal": 705,
+      "split": 846
     },
     "max_income": 197,
     "reward": {
@@ -974,7 +974,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 4841,
+    "theoretical_budget": 4957,
     "wave": 42
   },
   {
@@ -983,11 +983,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 1193,
-      "child": 93,
-      "fast": 186,
-      "normal": 265,
-      "split": 318
+      "boss": 2344,
+      "child": 263,
+      "fast": 526,
+      "normal": 752,
+      "split": 902
     },
     "max_income": 168,
     "reward": {
@@ -997,7 +997,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 5009,
+    "theoretical_budget": 5125,
     "wave": 43
   },
   {
@@ -1006,11 +1006,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 1260,
-      "child": 98,
-      "fast": 196,
-      "normal": 280,
-      "split": 336
+      "boss": 2487,
+      "child": 280,
+      "fast": 561,
+      "normal": 801,
+      "split": 961
     },
     "max_income": 170,
     "reward": {
@@ -1020,7 +1020,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 5179,
+    "theoretical_budget": 5295,
     "wave": 44
   },
   {
@@ -1030,11 +1030,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 1328,
-      "child": 103,
-      "fast": 207,
-      "normal": 295,
-      "split": 354
+      "boss": 2638,
+      "child": 299,
+      "fast": 597,
+      "normal": 853,
+      "split": 1024
     },
     "max_income": 280,
     "reward": {
@@ -1044,7 +1044,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 5459,
+    "theoretical_budget": 5575,
     "wave": 45
   },
   {
@@ -1053,11 +1053,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 1404,
-      "child": 109,
-      "fast": 218,
-      "normal": 312,
-      "split": 374
+      "boss": 2794,
+      "child": 317,
+      "fast": 635,
+      "normal": 907,
+      "split": 1088
     },
     "max_income": 173,
     "reward": {
@@ -1067,7 +1067,7 @@
       "normal": 4,
       "split": 3
     },
-    "theoretical_budget": 5632,
+    "theoretical_budget": 5748,
     "wave": 46
   },
   {
@@ -1076,11 +1076,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 1481,
-      "child": 115,
-      "fast": 230,
-      "normal": 329,
-      "split": 395
+      "boss": 2959,
+      "child": 337,
+      "fast": 675,
+      "normal": 964,
+      "split": 1157
     },
     "max_income": 204,
     "reward": {
@@ -1090,7 +1090,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 5836,
+    "theoretical_budget": 5952,
     "wave": 47
   },
   {
@@ -1099,11 +1099,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 1562,
-      "child": 121,
-      "fast": 243,
-      "normal": 347,
-      "split": 416
+      "boss": 3133,
+      "child": 358,
+      "fast": 717,
+      "normal": 1024,
+      "split": 1229
     },
     "max_income": 236,
     "reward": {
@@ -1113,7 +1113,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 6072,
+    "theoretical_budget": 6188,
     "wave": 48
   },
   {
@@ -1122,11 +1122,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 1647,
-      "child": 128,
-      "fast": 256,
-      "normal": 366,
-      "split": 439
+      "boss": 3315,
+      "child": 380,
+      "fast": 761,
+      "normal": 1087,
+      "split": 1304
     },
     "max_income": 207,
     "reward": {
@@ -1136,7 +1136,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 6279,
+    "theoretical_budget": 6395,
     "wave": 49
   },
   {
@@ -1146,11 +1146,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 1737,
-      "child": 135,
-      "fast": 270,
-      "normal": 386,
-      "split": 463
+      "boss": 3501,
+      "child": 403,
+      "fast": 806,
+      "normal": 1152,
+      "split": 1382
     },
     "max_income": 335,
     "reward": {
@@ -1160,7 +1160,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 6614,
+    "theoretical_budget": 6730,
     "wave": 50
   },
   {
@@ -1169,11 +1169,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 1832,
-      "child": 142,
-      "fast": 285,
-      "normal": 407,
-      "split": 488
+      "boss": 3700,
+      "child": 427,
+      "fast": 855,
+      "normal": 1221,
+      "split": 1465
     },
     "max_income": 241,
     "reward": {
@@ -1183,7 +1183,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 6855,
+    "theoretical_budget": 6971,
     "wave": 51
   },
   {
@@ -1192,11 +1192,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 1935,
-      "child": 151,
-      "fast": 301,
-      "normal": 430,
-      "split": 516
+      "boss": 3906,
+      "child": 453,
+      "fast": 905,
+      "normal": 1293,
+      "split": 1552
     },
     "max_income": 212,
     "reward": {
@@ -1206,7 +1206,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 7067,
+    "theoretical_budget": 7183,
     "wave": 52
   },
   {
@@ -1215,11 +1215,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 2039,
-      "child": 159,
-      "fast": 317,
-      "normal": 453,
-      "split": 544
+      "boss": 4124,
+      "child": 479,
+      "fast": 958,
+      "normal": 1369,
+      "split": 1643
     },
     "max_income": 214,
     "reward": {
@@ -1229,7 +1229,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 7281,
+    "theoretical_budget": 7397,
     "wave": 53
   },
   {
@@ -1238,11 +1238,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 2151,
-      "child": 167,
-      "fast": 335,
-      "normal": 478,
-      "split": 574
+      "boss": 4350,
+      "child": 507,
+      "fast": 1014,
+      "normal": 1448,
+      "split": 1738
     },
     "max_income": 246,
     "reward": {
@@ -1252,7 +1252,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 7527,
+    "theoretical_budget": 7643,
     "wave": 54
   },
   {
@@ -1262,11 +1262,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 2268,
-      "child": 176,
-      "fast": 353,
-      "normal": 504,
-      "split": 605
+      "boss": 4584,
+      "child": 536,
+      "fast": 1071,
+      "normal": 1530,
+      "split": 1836
     },
     "max_income": 360,
     "reward": {
@@ -1276,7 +1276,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 7887,
+    "theoretical_budget": 8003,
     "wave": 55
   },
   {
@@ -1285,11 +1285,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 2394,
-      "child": 186,
-      "fast": 372,
-      "normal": 532,
-      "split": 638
+      "boss": 4832,
+      "child": 566,
+      "fast": 1132,
+      "normal": 1617,
+      "split": 1940
     },
     "max_income": 219,
     "reward": {
@@ -1299,7 +1299,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 8106,
+    "theoretical_budget": 8222,
     "wave": 56
   },
   {
@@ -1308,11 +1308,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 2525,
-      "child": 196,
-      "fast": 393,
-      "normal": 561,
-      "split": 673
+      "boss": 5089,
+      "child": 597,
+      "fast": 1195,
+      "normal": 1707,
+      "split": 2048
     },
     "max_income": 251,
     "reward": {
@@ -1322,7 +1322,7 @@
       "normal": 5,
       "split": 4
     },
-    "theoretical_budget": 8357,
+    "theoretical_budget": 8473,
     "wave": 57
   },
   {
@@ -1331,11 +1331,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 2664,
-      "child": 207,
-      "fast": 414,
-      "normal": 592,
-      "split": 710
+      "boss": 5353,
+      "child": 630,
+      "fast": 1260,
+      "normal": 1800,
+      "split": 2160
     },
     "max_income": 252,
     "reward": {
@@ -1345,7 +1345,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 8609,
+    "theoretical_budget": 8725,
     "wave": 58
   },
   {
@@ -1356,11 +1356,11 @@
       "split": 10
     },
     "hp": {
-      "boss": 2813,
-      "child": 219,
-      "fast": 438,
-      "normal": 625,
-      "split": 750
+      "boss": 5629,
+      "child": 664,
+      "fast": 1328,
+      "normal": 1897,
+      "split": 2276
     },
     "max_income": 264,
     "reward": {
@@ -1370,7 +1370,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 8873,
+    "theoretical_budget": 8989,
     "wave": 59
   },
   {
@@ -1380,11 +1380,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 2966,
-      "child": 231,
-      "fast": 461,
-      "normal": 659,
-      "split": 791
+      "boss": 5912,
+      "child": 699,
+      "fast": 1398,
+      "normal": 1997,
+      "split": 2396
     },
     "max_income": 417,
     "reward": {
@@ -1394,7 +1394,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 9290,
+    "theoretical_budget": 9406,
     "wave": 60
   },
   {
@@ -1403,11 +1403,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 3132,
-      "child": 244,
-      "fast": 487,
-      "normal": 696,
-      "split": 835
+      "boss": 6207,
+      "child": 735,
+      "fast": 1471,
+      "normal": 2101,
+      "split": 2521
     },
     "max_income": 258,
     "reward": {
@@ -1417,7 +1417,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 9548,
+    "theoretical_budget": 9664,
     "wave": 61
   },
   {
@@ -1426,11 +1426,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 3303,
-      "child": 257,
-      "fast": 514,
-      "normal": 734,
-      "split": 881
+      "boss": 6510,
+      "child": 773,
+      "fast": 1546,
+      "normal": 2208,
+      "split": 2650
     },
     "max_income": 260,
     "reward": {
@@ -1440,7 +1440,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 9808,
+    "theoretical_budget": 9924,
     "wave": 62
   },
   {
@@ -1449,11 +1449,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 3483,
-      "child": 271,
-      "fast": 542,
-      "normal": 774,
-      "split": 929
+      "boss": 6823,
+      "child": 812,
+      "fast": 1623,
+      "normal": 2319,
+      "split": 2783
     },
     "max_income": 291,
     "reward": {
@@ -1463,7 +1463,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 10099,
+    "theoretical_budget": 10215,
     "wave": 63
   },
   {
@@ -1472,11 +1472,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 3677,
-      "child": 286,
-      "fast": 572,
-      "normal": 817,
-      "split": 980
+      "boss": 7145,
+      "child": 852,
+      "fast": 1703,
+      "normal": 2433,
+      "split": 2920
     },
     "max_income": 263,
     "reward": {
@@ -1486,7 +1486,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 10362,
+    "theoretical_budget": 10478,
     "wave": 64
   },
   {
@@ -1496,11 +1496,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 3879,
-      "child": 302,
-      "fast": 603,
-      "normal": 862,
-      "split": 1034
+      "boss": 7478,
+      "child": 893,
+      "fast": 1786,
+      "normal": 2551,
+      "split": 3061
     },
     "max_income": 446,
     "reward": {
@@ -1510,7 +1510,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 10808,
+    "theoretical_budget": 10924,
     "wave": 65
   },
   {
@@ -1519,11 +1519,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 4091,
-      "child": 318,
-      "fast": 636,
-      "normal": 909,
-      "split": 1091
+      "boss": 7819,
+      "child": 935,
+      "fast": 1870,
+      "normal": 2672,
+      "split": 3206
     },
     "max_income": 297,
     "reward": {
@@ -1533,7 +1533,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 11105,
+    "theoretical_budget": 11221,
     "wave": 66
   },
   {
@@ -1542,11 +1542,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 4316,
-      "child": 336,
-      "fast": 671,
-      "normal": 959,
-      "split": 1151
+      "boss": 8171,
+      "child": 979,
+      "fast": 1958,
+      "normal": 2797,
+      "split": 3356
     },
     "max_income": 269,
     "reward": {
@@ -1556,7 +1556,7 @@
       "normal": 6,
       "split": 5
     },
-    "theoretical_budget": 11374,
+    "theoretical_budget": 11490,
     "wave": 67
   },
   {
@@ -1565,11 +1565,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 4554,
-      "child": 354,
-      "fast": 708,
-      "normal": 1012,
-      "split": 1214
+      "boss": 8531,
+      "child": 1024,
+      "fast": 2047,
+      "normal": 2925,
+      "split": 3510
     },
     "max_income": 301,
     "reward": {
@@ -1579,7 +1579,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 11675,
+    "theoretical_budget": 11791,
     "wave": 68
   },
   {
@@ -1588,11 +1588,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 4802,
-      "child": 373,
-      "fast": 747,
-      "normal": 1067,
-      "split": 1280
+      "boss": 8902,
+      "child": 1070,
+      "fast": 2140,
+      "normal": 3057,
+      "split": 3668
     },
     "max_income": 303,
     "reward": {
@@ -1602,7 +1602,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 11978,
+    "theoretical_budget": 12094,
     "wave": 69
   },
   {
@@ -1612,11 +1612,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 5067,
-      "child": 394,
-      "fast": 788,
-      "normal": 1126,
-      "split": 1351
+      "boss": 9284,
+      "child": 1118,
+      "fast": 2235,
+      "normal": 3193,
+      "split": 3832
     },
     "max_income": 507,
     "reward": {
@@ -1626,7 +1626,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 12485,
+    "theoretical_budget": 12601,
     "wave": 70
   },
   {
@@ -1635,11 +1635,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 5346,
-      "child": 416,
-      "fast": 832,
-      "normal": 1188,
-      "split": 1426
+      "boss": 9674,
+      "child": 1166,
+      "fast": 2332,
+      "normal": 3332,
+      "split": 3998
     },
     "max_income": 307,
     "reward": {
@@ -1649,7 +1649,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 12792,
+    "theoretical_budget": 12908,
     "wave": 71
   },
   {
@@ -1658,11 +1658,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 5639,
-      "child": 439,
-      "fast": 877,
-      "normal": 1253,
-      "split": 1504
+      "boss": 10075,
+      "child": 1216,
+      "fast": 2433,
+      "normal": 3475,
+      "split": 4170
     },
     "max_income": 309,
     "reward": {
@@ -1672,7 +1672,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 13101,
+    "theoretical_budget": 13217,
     "wave": 72
   },
   {
@@ -1681,11 +1681,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 5949,
-      "child": 463,
-      "fast": 925,
-      "normal": 1322,
-      "split": 1586
+      "boss": 10484,
+      "child": 1267,
+      "fast": 2535,
+      "normal": 3621,
+      "split": 4345
     },
     "max_income": 311,
     "reward": {
@@ -1695,7 +1695,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 13412,
+    "theoretical_budget": 13528,
     "wave": 73
   },
   {
@@ -1704,11 +1704,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 6278,
-      "child": 488,
-      "fast": 976,
-      "normal": 1395,
-      "split": 1674
+      "boss": 10902,
+      "child": 1320,
+      "fast": 2639,
+      "normal": 3770,
+      "split": 4524
     },
     "max_income": 313,
     "reward": {
@@ -1718,7 +1718,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 13725,
+    "theoretical_budget": 13841,
     "wave": 74
   },
   {
@@ -1728,11 +1728,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 6624,
-      "child": 515,
-      "fast": 1030,
-      "normal": 1472,
-      "split": 1766
+      "boss": 11330,
+      "child": 1373,
+      "fast": 2746,
+      "normal": 3923,
+      "split": 4708
     },
     "max_income": 539,
     "reward": {
@@ -1742,7 +1742,7 @@
       "normal": 7,
       "split": 5
     },
-    "theoretical_budget": 14264,
+    "theoretical_budget": 14380,
     "wave": 75
   },
   {
@@ -1751,11 +1751,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 6989,
-      "child": 544,
-      "fast": 1087,
-      "normal": 1553,
-      "split": 1864
+      "boss": 11766,
+      "child": 1428,
+      "fast": 2855,
+      "normal": 4079,
+      "split": 4895
     },
     "max_income": 347,
     "reward": {
@@ -1765,7 +1765,7 @@
       "normal": 8,
       "split": 6
     },
-    "theoretical_budget": 14611,
+    "theoretical_budget": 14727,
     "wave": 76
   },
   {
@@ -1774,11 +1774,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 7371,
-      "child": 573,
-      "fast": 1147,
-      "normal": 1638,
-      "split": 1966
+      "boss": 12214,
+      "child": 1484,
+      "fast": 2967,
+      "normal": 4239,
+      "split": 5087
     },
     "max_income": 349,
     "reward": {
@@ -1788,7 +1788,7 @@
       "normal": 8,
       "split": 6
     },
-    "theoretical_budget": 14960,
+    "theoretical_budget": 15076,
     "wave": 77
   },
   {
@@ -1797,11 +1797,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 7776,
-      "child": 605,
-      "fast": 1210,
-      "normal": 1728,
-      "split": 2074
+      "boss": 12670,
+      "child": 1541,
+      "fast": 3081,
+      "normal": 4402,
+      "split": 5282
     },
     "max_income": 412,
     "reward": {
@@ -1811,7 +1811,7 @@
       "normal": 8,
       "split": 6
     },
-    "theoretical_budget": 15372,
+    "theoretical_budget": 15488,
     "wave": 78
   },
   {
@@ -1822,11 +1822,11 @@
       "split": 10
     },
     "hp": {
-      "boss": 8204,
-      "child": 638,
-      "fast": 1276,
-      "normal": 1823,
-      "split": 2188
+      "boss": 13133,
+      "child": 1599,
+      "fast": 3198,
+      "normal": 4568,
+      "split": 5482
     },
     "max_income": 374,
     "reward": {
@@ -1836,7 +1836,7 @@
       "normal": 8,
       "split": 6
     },
-    "theoretical_budget": 15746,
+    "theoretical_budget": 15862,
     "wave": 79
   },
   {
@@ -1846,11 +1846,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 8658,
-      "child": 673,
-      "fast": 1347,
-      "normal": 1924,
-      "split": 2309
+      "boss": 13605,
+      "child": 1658,
+      "fast": 3316,
+      "normal": 4737,
+      "split": 5684
     },
     "max_income": 604,
     "reward": {
@@ -1860,7 +1860,7 @@
       "normal": 8,
       "split": 6
     },
-    "theoretical_budget": 16350,
+    "theoretical_budget": 16466,
     "wave": 80
   },
   {
@@ -1869,11 +1869,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 9131,
-      "child": 710,
-      "fast": 1420,
-      "normal": 2029,
-      "split": 2435
+      "boss": 14085,
+      "child": 1718,
+      "fast": 3436,
+      "normal": 4909,
+      "split": 5891
     },
     "max_income": 418,
     "reward": {
@@ -1883,7 +1883,7 @@
       "normal": 8,
       "split": 6
     },
-    "theoretical_budget": 16768,
+    "theoretical_budget": 16884,
     "wave": 81
   },
   {
@@ -1892,11 +1892,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 9635,
-      "child": 749,
-      "fast": 1499,
-      "normal": 2141,
-      "split": 2569
+      "boss": 14574,
+      "child": 1779,
+      "fast": 3559,
+      "normal": 5084,
+      "split": 6101
     },
     "max_income": 360,
     "reward": {
@@ -1906,7 +1906,7 @@
       "normal": 8,
       "split": 6
     },
-    "theoretical_budget": 17128,
+    "theoretical_budget": 17244,
     "wave": 82
   },
   {
@@ -1915,11 +1915,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 10166,
-      "child": 791,
-      "fast": 1581,
-      "normal": 2259,
-      "split": 2711
+      "boss": 15067,
+      "child": 1841,
+      "fast": 3683,
+      "normal": 5261,
+      "split": 6313
     },
     "max_income": 393,
     "reward": {
@@ -1929,7 +1929,7 @@
       "normal": 9,
       "split": 7
     },
-    "theoretical_budget": 17521,
+    "theoretical_budget": 17637,
     "wave": 83
   },
   {
@@ -1938,11 +1938,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 10724,
-      "child": 834,
-      "fast": 1668,
-      "normal": 2383,
-      "split": 2860
+      "boss": 15572,
+      "child": 1905,
+      "fast": 3809,
+      "normal": 5442,
+      "split": 6530
     },
     "max_income": 455,
     "reward": {
@@ -1952,7 +1952,7 @@
       "normal": 9,
       "split": 7
     },
-    "theoretical_budget": 17976,
+    "theoretical_budget": 18092,
     "wave": 84
   },
   {
@@ -1962,11 +1962,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 11313,
-      "child": 880,
-      "fast": 1760,
-      "normal": 2514,
-      "split": 3017
+      "boss": 16082,
+      "child": 1969,
+      "fast": 3937,
+      "normal": 5625,
+      "split": 6750
     },
     "max_income": 669,
     "reward": {
@@ -1976,7 +1976,7 @@
       "normal": 9,
       "split": 7
     },
-    "theoretical_budget": 18645,
+    "theoretical_budget": 18761,
     "wave": 85
   },
   {
@@ -1985,11 +1985,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 11934,
-      "child": 928,
-      "fast": 1856,
-      "normal": 2652,
-      "split": 3182
+      "boss": 16600,
+      "child": 2034,
+      "fast": 4068,
+      "normal": 5811,
+      "split": 6973
     },
     "max_income": 400,
     "reward": {
@@ -1999,7 +1999,7 @@
       "normal": 9,
       "split": 7
     },
-    "theoretical_budget": 19045,
+    "theoretical_budget": 19161,
     "wave": 86
   },
   {
@@ -2008,11 +2008,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 12591,
-      "child": 979,
-      "fast": 1959,
-      "normal": 2798,
-      "split": 3358
+      "boss": 17124,
+      "child": 2100,
+      "fast": 4199,
+      "normal": 5999,
+      "split": 7199
     },
     "max_income": 462,
     "reward": {
@@ -2022,7 +2022,7 @@
       "normal": 9,
       "split": 7
     },
-    "theoretical_budget": 19507,
+    "theoretical_budget": 19623,
     "wave": 87
   },
   {
@@ -2031,11 +2031,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 13284,
-      "child": 1033,
-      "fast": 2066,
-      "normal": 2952,
-      "split": 3542
+      "boss": 17653,
+      "child": 2166,
+      "fast": 4332,
+      "normal": 6189,
+      "split": 7427
     },
     "max_income": 404,
     "reward": {
@@ -2045,7 +2045,7 @@
       "normal": 9,
       "split": 7
     },
-    "theoretical_budget": 19911,
+    "theoretical_budget": 20027,
     "wave": 88
   },
   {
@@ -2054,11 +2054,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 14013,
-      "child": 1090,
-      "fast": 2180,
-      "normal": 3114,
-      "split": 3737
+      "boss": 18188,
+      "child": 2233,
+      "fast": 4467,
+      "normal": 6381,
+      "split": 7657
     },
     "max_income": 437,
     "reward": {
@@ -2068,7 +2068,7 @@
       "normal": 10,
       "split": 8
     },
-    "theoretical_budget": 20348,
+    "theoretical_budget": 20464,
     "wave": 89
   },
   {
@@ -2078,11 +2078,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 14787,
-      "child": 1150,
-      "fast": 2300,
-      "normal": 3286,
-      "split": 3943
+      "boss": 18731,
+      "child": 2302,
+      "fast": 4603,
+      "normal": 6576,
+      "split": 7891
     },
     "max_income": 737,
     "reward": {
@@ -2092,7 +2092,7 @@
       "normal": 10,
       "split": 8
     },
-    "theoretical_budget": 21085,
+    "theoretical_budget": 21201,
     "wave": 90
   },
   {
@@ -2101,11 +2101,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 15597,
-      "child": 1213,
-      "fast": 2426,
-      "normal": 3466,
-      "split": 4159
+      "boss": 19276,
+      "child": 2370,
+      "fast": 4740,
+      "normal": 6772,
+      "split": 8126
     },
     "max_income": 441,
     "reward": {
@@ -2115,7 +2115,7 @@
       "normal": 10,
       "split": 8
     },
-    "theoretical_budget": 21526,
+    "theoretical_budget": 21642,
     "wave": 91
   },
   {
@@ -2124,11 +2124,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 16457,
-      "child": 1280,
-      "fast": 2560,
-      "normal": 3657,
-      "split": 4388
+      "boss": 19827,
+      "child": 2440,
+      "fast": 4879,
+      "normal": 6970,
+      "split": 8364
     },
     "max_income": 444,
     "reward": {
@@ -2138,7 +2138,7 @@
       "normal": 10,
       "split": 8
     },
-    "theoretical_budget": 21970,
+    "theoretical_budget": 22086,
     "wave": 92
   },
   {
@@ -2147,11 +2147,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 17361,
-      "child": 1350,
-      "fast": 2701,
-      "normal": 3858,
-      "split": 4630
+      "boss": 20381,
+      "child": 2509,
+      "fast": 5018,
+      "normal": 7169,
+      "split": 8603
     },
     "max_income": 506,
     "reward": {
@@ -2161,7 +2161,7 @@
       "normal": 10,
       "split": 8
     },
-    "theoretical_budget": 22476,
+    "theoretical_budget": 22592,
     "wave": 93
   },
   {
@@ -2170,11 +2170,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 18315,
-      "child": 1425,
-      "fast": 2849,
-      "normal": 4070,
-      "split": 4884
+      "boss": 20940,
+      "child": 2580,
+      "fast": 5159,
+      "normal": 7370,
+      "split": 8844
     },
     "max_income": 479,
     "reward": {
@@ -2184,7 +2184,7 @@
       "normal": 11,
       "split": 8
     },
-    "theoretical_budget": 22955,
+    "theoretical_budget": 23071,
     "wave": 94
   },
   {
@@ -2194,11 +2194,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 19323,
-      "child": 1503,
-      "fast": 3006,
-      "normal": 4294,
-      "split": 5153
+      "boss": 21501,
+      "child": 2650,
+      "fast": 5300,
+      "normal": 7572,
+      "split": 9086
     },
     "max_income": 806,
     "reward": {
@@ -2208,7 +2208,7 @@
       "normal": 11,
       "split": 8
     },
-    "theoretical_budget": 23761,
+    "theoretical_budget": 23877,
     "wave": 95
   },
   {
@@ -2217,11 +2217,11 @@
       "split": 30
     },
     "hp": {
-      "boss": 20385,
-      "child": 1586,
-      "fast": 3171,
-      "normal": 4530,
-      "split": 5436
+      "boss": 22066,
+      "child": 2721,
+      "fast": 5443,
+      "normal": 7775,
+      "split": 9330
     },
     "max_income": 514,
     "reward": {
@@ -2231,7 +2231,7 @@
       "normal": 11,
       "split": 8
     },
-    "theoretical_budget": 24275,
+    "theoretical_budget": 24391,
     "wave": 96
   },
   {
@@ -2240,11 +2240,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 21510,
-      "child": 1673,
-      "fast": 3346,
-      "normal": 4780,
-      "split": 5736
+      "boss": 22633,
+      "child": 2793,
+      "fast": 5585,
+      "normal": 7979,
+      "split": 9575
     },
     "max_income": 486,
     "reward": {
@@ -2254,7 +2254,7 @@
       "normal": 11,
       "split": 8
     },
-    "theoretical_budget": 24761,
+    "theoretical_budget": 24877,
     "wave": 97
   },
   {
@@ -2263,11 +2263,11 @@
       "fast": 30
     },
     "hp": {
-      "boss": 22694,
-      "child": 1765,
-      "fast": 3530,
-      "normal": 5043,
-      "split": 6052
+      "boss": 23200,
+      "child": 2864,
+      "fast": 5728,
+      "normal": 8183,
+      "split": 9820
     },
     "max_income": 489,
     "reward": {
@@ -2277,7 +2277,7 @@
       "normal": 11,
       "split": 8
     },
-    "theoretical_budget": 25250,
+    "theoretical_budget": 25366,
     "wave": 98
   },
   {
@@ -2288,11 +2288,11 @@
       "split": 10
     },
     "hp": {
-      "boss": 23940,
-      "child": 1862,
-      "fast": 3724,
-      "normal": 5320,
-      "split": 6384
+      "boss": 23769,
+      "child": 2936,
+      "fast": 5872,
+      "normal": 8388,
+      "split": 10066
     },
     "max_income": 501,
     "reward": {
@@ -2302,7 +2302,7 @@
       "normal": 11,
       "split": 8
     },
-    "theoretical_budget": 25751,
+    "theoretical_budget": 25867,
     "wave": 99
   },
   {
@@ -2312,11 +2312,11 @@
       "normal": 30
     },
     "hp": {
-      "boss": 25254,
-      "child": 1964,
-      "fast": 3928,
-      "normal": 5612,
-      "split": 6734
+      "boss": 24342,
+      "child": 3008,
+      "fast": 6016,
+      "normal": 8594,
+      "split": 10313
     },
     "max_income": 877,
     "reward": {
@@ -2326,7 +2326,7 @@
       "normal": 12,
       "split": 9
     },
-    "theoretical_budget": 26628,
+    "theoretical_budget": 26744,
     "wave": 100
   }
 ]

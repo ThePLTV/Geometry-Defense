@@ -33,7 +33,11 @@ func run() -> void:
 		root.add_child(game)
 		await process_frame
 		game.set_process(false)
-		if view=="settings": game.show_settings()
+		if view in ["settings","difficulty","audio","economy"]:
+			game.show_settings()
+			if view!="settings":game.show_settings_page(view)
+		elif view=="countdown":
+			game.new_game(5);game.wave_mode=1;game.timer_remaining=3.4;game.update_hud()
 		elif view!="menu":
 			game.new_game(5)
 			game.sim.credits=800
@@ -59,7 +63,7 @@ func run() -> void:
 	await create_timer(.25).timeout
 	await RenderingServer.frame_post_draw
 	var picture:=root.get_texture().get_image()
-	var path:="res://../GeometryDefense-v0.3.0-%s.png"%view
+	var path:="res://../GeometryDefense-v0.4.0-%s.png"%view
 	var error:=picture.save_png(path)
 	print("CAPTURE ",view," ",picture.get_size()," ",error)
 	if game!=null:

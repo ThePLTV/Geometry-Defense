@@ -38,7 +38,7 @@ static func decode(value):
 static func capture(s, include_wave: bool) -> Dictionary:
 	return {"schema":3,"map_schema":2,"credits":s.credits,"base_hp":s.base_hp,"next_wave":s.next_wave,
 		"diagnostic_match_id":s.diagnostics.metadata.match_id,"diagnostic_actions":encode(s.diagnostics.actions),
-		"next_id":s.next_id,"towers":encode(s.towers),"tower_history":encode(s.tower_history.values()),
+		"rules":s.rules.duplicate(),"wave_rules":s.wave_rules.duplicate(),"next_id":s.next_id,"towers":encode(s.towers),"tower_history":encode(s.tower_history.values()),
 		"history":encode(s.history),"merges":encode(s.merges),"rng_state":str(s.rng.state),"rng_seed":str(s.rng.seed),
 		"total_earned":s.total_earned,"total_spent":s.total_spent,"total_kills":s.total_kills,"total_damage":s.total_damage,
 		"wave_reward_paid":s.wave_reward_paid,"balance_id":Balance.cfg.balance_id,"time":s.time,"wave_time":s.wave_time,"active":s.active if include_wave else false,
@@ -48,6 +48,12 @@ static func capture(s, include_wave: bool) -> Dictionary:
 
 static func migrate_tower(raw: Dictionary) -> Dictionary:
 	var t := raw.duplicate(true)
+	# JSON numbers are floats: identity keys must always use canonical integers.
+	t.id = int(t.id)
+	if t.has("target_id"): t.target_id = int(t.target_id)
+	if t.has("level"): t.level = int(t.level)
+	if t.has("parents"):
+		for i in t.parents.size(): t.parents[i] = int(t.parents[i])
 	if t.cell is Array:
 		t.cell = HexMap.unpack(t.cell)
 	if not t.has("level"):
@@ -124,6 +130,7 @@ static func restore(s, raw: Dictionary) -> bool:
 		if not has_keys(operation,["a","b","left","total"]): return false
 		if operation.left is not float and operation.left is not int: return false
 		if operation.left<0 or operation.left>5.00001: return false
+		operation.a=int(operation.a); operation.b=int(operation.b)
 		var a: Dictionary = ids.get(str(operation.get("a",-1)),{})
 		var b: Dictionary = ids.get(str(operation.get("b",-1)),{})
 		if a.is_empty() or b.is_empty() or a.id == b.id or a.kind != b.kind or a.job != "merge" or b.job != "merge" or merge_ids.has(a.id) or merge_ids.has(b.id):
@@ -144,6 +151,8 @@ static func restore(s, raw: Dictionary) -> bool:
 		if e.cell is not Vector2i or e.next is not Vector2i or not grid.distances.has(e.cell) or not grid.distances.has(e.next):
 			return false
 		if e.pos is not Vector2 or e.trail is not Array or e.pushes is not Array: return false
+		e.id=int(e.id)
+		if e.has("parent_id"):e.parent_id=int(e.parent_id)
 		if e.progress < 0 or e.progress > 1.00001:
 			return false
 	for projectile in data.get("projectiles",[]):
@@ -151,11 +160,18 @@ static func restore(s, raw: Dictionary) -> bool:
 		if projectile.type not in ["bullet","rocket","wave"] or projectile.pos is not Vector2: return false
 		var extra: Array = {"bullet":["target","bounced"],"rocket":["target","mini","velocity"],"wave":["radius","previous_radius","maximum","hit","reverse"]}[projectile.type]
 		if not has_keys(projectile,extra): return false
+		for key in ["id","owner_id","target"]:
+			if projectile.has(key):projectile[key]=int(projectile[key])
+		for key in ["excluded","hit"]:
+			if projectile.has(key):
+				for i in projectile[key].size():projectile[key][i]=int(projectile[key][i])
 	if data.get("active",false):
 		if not has_keys(data.get("wave_stats",{}),["wave","spawned","killed","leaked","earned","damage","hp_start","spent_start","enemy_hp","composition"]): return false
 	for item in data.get("tower_history",[]):
 		if not has_keys(item,["id","cell","kind","invested"]): return false
 		if item.cell is Array and item.cell.size()!=2: return false
+	s.rules=Simulation.clean_rules(data.get("rules",{}))
+	s.wave_rules=Simulation.clean_rules(data.get("wave_rules",s.rules))
 	s.map = grid
 	s.towers = loaded
 	s.tower_history.clear()
