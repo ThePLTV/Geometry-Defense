@@ -31,12 +31,12 @@ func run() -> void:
 	var game=load("res://main.tscn").instantiate();root.add_child(game)
 	await process_frame;await process_frame
 	game.set_process(false)
-	for index in 3:
+	for index in game.TRACKS.size():
 		game.select_music(index)
 		check(game.music.stream!=null and game.music.stream.loop,"Track loops "+str(index))
 	game.music_volume=.37;game.apply_audio();game.save_preferences()
 	game.music_index=0;game.music_volume=0;game.load_preferences()
-	check(game.music_index==2 and is_equal_approx(game.music_volume,.37),"Song and volume preferences persist")
+	check(game.music_index==3 and is_equal_approx(game.music_volume,.37),"Song and volume preferences persist")
 	game.show_settings();game.show_settings_page("difficulty")
 	await process_frame;await process_frame
 	var hp=find(game,"Setting_hp")

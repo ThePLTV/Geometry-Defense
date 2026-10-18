@@ -21,7 +21,7 @@ var fps_sum:=0.0
 var last_export:=""
 
 func _init(seed: int = 1) -> void:
-	metadata={"version":"0.4.0","build":"patch04","source_base":"d2e16443d660e05ebc939ddb0f9d15abf4db21fa","godot":Engine.get_version_info().string,
+	metadata={"version":"0.4.1","build":"patch041","source_base":"d2e16443d660e05ebc939ddb0f9d15abf4db21fa","godot":Engine.get_version_info().string,
 		"platform":OS.get_name(),"os_version":OS.get_version(),"model":OS.get_model_name(),"screen":str(DisplayServer.screen_get_size()),
 		"seed":str(seed),"match_id":"%d-%d"%[int(Time.get_unix_time_from_system()),seed],"balance_id":Balance.cfg.get("balance_id","unknown"),
 		"timestamp_utc":Time.get_datetime_string_from_system(true),"replay":"seed and player action timeline; exact deterministic replay UI is not implemented"}

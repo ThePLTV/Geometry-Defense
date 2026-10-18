@@ -1,0 +1,14 @@
+{
+  "version": "0.4.1",
+  "version_code": 5,
+  "bytes": 110099028,
+  "sha256": "02626b25a21155d9a9e387b80d265856ca41e4ebef780d12b0bb3b4f520e8310",
+  "signature_sha256": "2d12c6e4a20b7f1a8d7b69e9a40586a47e111d2af60e52e8297b6d08d685fd8b",
+  "signature_matches_previous": true,
+  "target_sdk": 36,
+  "zipalign_16kb_verified": true,
+  "tracks": 4,
+  "default_track": "jazz_noir",
+  "runtime_configs_and_new_audio_match_source": true,
+  "physical_android_tested": false
+}

@@ -6,14 +6,22 @@ var music: AudioStreamPlayer
 var music_volume := .55
 var music_index := 0
 const TRACKS = [
- {"title":"Барабанщики","path":"res://assets/audio/background.ogg"},
- {"title":"Н ворд все в адидасах","path":"res://assets/audio/adidas.ogg"},
- {"title":"Всё решено","path":"res://assets/audio/decided.ogg"}
+ {"id":"jazz_noir","title":"Just One More Drink — Jazz Noir","path":"res://assets/audio/jazz_noir.ogg"},
+ {"id":"drums","title":"Барабанщики","path":"res://assets/audio/background.ogg"},
+ {"id":"adidas","title":"Н ворд все в адидасах","path":"res://assets/audio/adidas.ogg"},
+ {"id":"decided","title":"Всё решено","path":"res://assets/audio/decided.ogg"}
 ]
 var preferred_rules: Dictionary={"pressure":1.0,"hp":1.0,"money":1.0}
 var countdown: WaveCountdown
 var settings_in_game := false
 var settings_page := ""
+var screen_name := ""
+var screen_back := Callable()
+var sheet_back := Callable()
+var sheet_page := ""
+var exit_deadline_msec := 0
+var exit_hint: Label
+const EXIT_WINDOW_MSEC := 2000
 var footer: VBoxContainer
 var action_signature := ""
 var details: PanelContainer
@@ -57,6 +65,7 @@ func _ready() -> void:
 	OS.add_logger(error_logger)
 	load_preferences()
 	get_tree().auto_accept_quit = false
+	get_tree().quit_on_go_back = false
 	RenderingServer.set_default_clear_color(Color("1b2025"))
 	theme = make_theme()
 	setup_music()
@@ -73,7 +82,12 @@ func load_preferences() -> void:
 		sound_enabled = bool(preferences.get_value("audio","enabled",true))
 		music_volume = clampf(float(preferences.get_value("audio","volume",.55)),0,1)
 		slot = clampi(int(preferences.get_value("game","last_slot",1)),1,5)
-		music_index=clampi(int(preferences.get_value("audio","track",0)),0,TRACKS.size()-1)
+		# A legacy numeric selection has no stable ID. On the first 0.4.1
+		# launch use the requested new title track; later explicit choices persist.
+		music_index=0
+		var track_id: String=str(preferences.get_value("audio","track_id","jazz_noir"))
+		for i in TRACKS.size():
+			if TRACKS[i].id==track_id:music_index=i
 		var stored: Dictionary={}
 		for key in preferred_rules:stored[key]=preferences.get_value("balance",key,1.0)
 		preferred_rules=Simulation.clean_rules(stored)
@@ -86,6 +100,7 @@ func save_preferences() -> void:
 	preferences.set_value("audio","enabled",sound_enabled)
 	preferences.set_value("audio","volume",music_volume)
 	preferences.set_value("audio","track",music_index)
+	preferences.set_value("audio","track_id",TRACKS[music_index].id)
 	for key in preferred_rules:preferences.set_value("balance",key,preferred_rules[key])
 	preferences.set_value("diagnostics","enabled",debug_enabled)
 	preferences.save(SaveStore.directory.path_join("preferences.cfg"))
@@ -122,6 +137,12 @@ func style(color: String, radius: int, border: String = "") -> StyleBoxFlat:
 	return result
 
 func clear_screen() -> void:
+	screen_name="other"
+	screen_back=Callable()
+	sheet_back=Callable()
+	sheet_page=""
+	exit_deadline_msec=0
+	exit_hint=null
 	hide_details()
 	for child in get_children():
 		if child == music:
@@ -174,6 +195,7 @@ func spacer(parent: Control, height: float = 0, expand: bool = false) -> void:
 
 func show_menu() -> void:
 	clear_screen()
+	screen_name="menu"
 	spacer(body,30,true)
 	var badge := Control.new()
 	badge.custom_minimum_size.y = 190
@@ -207,12 +229,17 @@ func show_menu() -> void:
 	body.add_child(button("Как играть",show_help))
 	body.add_child(button("Настройки",show_settings))
 	spacer(body,24,true)
-	var version := label("v0.4.0  ·  Android 16  ·  офлайн",19,"7d8b96")
+	exit_hint=label("Назад дважды — выйти",19,"7d8b96")
+	exit_hint.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	exit_hint.custom_minimum_size.y=48
+	body.add_child(exit_hint)
+	var version := label("v0.4.1  ·  Android 16  ·  офлайн",19,"7d8b96")
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(version)
 
 func show_slots(new_slot: bool) -> void:
 	clear_screen()
+	screen_back=show_menu
 	body.add_child(label("НОВАЯ ИГРА" if new_slot else "СОХРАНЕНИЯ",36))
 	body.add_child(label("Выберите один из пяти независимых слотов.",23,"a4b1bd"))
 	for i in range(1,6):
@@ -385,6 +412,9 @@ func format_number(value: int) -> String:
 	return "%.1fM" % (value/1000000.0) if value >= 1000000 else "%.1fK" % (value/1000.0) if value >= 10000 else str(value)
 
 func _process(delta: float) -> void:
+	if exit_deadline_msec>0 and Time.get_ticks_msec()>exit_deadline_msec:
+		exit_deadline_msec=0
+		if is_instance_valid(exit_hint):exit_hint.text="Назад дважды — выйти"
 	if sim!=null:
 		for error in error_logger.drain():sim.diagnostics.issue("ENGINE_ERROR",sim.time,error,error.get("stack",[]))
 	if not game_visible or sim == null:
@@ -454,6 +484,7 @@ func cycle_speed() -> void:
 
 func open_sheet(height: float) -> VBoxContainer:
 	close_sheet()
+	sheet_back=close_sheet
 	overlay = Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -485,6 +516,8 @@ func open_sheet(height: float) -> VBoxContainer:
 	return box
 
 func close_sheet() -> void:
+	sheet_back=Callable()
+	sheet_page=""
 	if overlay != null and is_instance_valid(overlay):
 		remove_child(overlay)
 		overlay.queue_free()
@@ -520,6 +553,7 @@ func show_tower(id: int) -> void:
 
 func show_game_menu() -> void:
 	var box := open_sheet(980)
+	sheet_page="game_menu"
 	box.add_child(label("Управление игрой",33))
 	box.add_child(label("Слот %d · сохранение после каждой волны" % slot,21,"a3b3be"))
 	box.add_child(button("Пауза / продолжить",func() -> void: toggle_pause(); close_sheet()))
@@ -561,6 +595,7 @@ func show_game_menu() -> void:
 
 func show_statistics() -> void:
 	var box := open_sheet(size.y-70)
+	sheet_back=show_game_menu
 	box.add_child(label("Статистика",34))
 	box.add_child(label("Убито: %d   ·   урон: %s\nПолучено: ◆ %s   ·   потрачено: ◆ %s" % [sim.total_kills,format_number(int(sim.total_damage)),format_number(sim.total_earned),format_number(sim.total_spent)],24))
 	box.add_child(label("Башни",29,"93bcd3"))
@@ -583,6 +618,7 @@ func format_composition(composition: Dictionary) -> String:
 
 func show_defeat() -> void:
 	var box := open_sheet(650)
+	sheet_back=show_menu
 	box.add_child(label("База потеряна",42,"dda3a3"))
 	box.add_child(label("Волна %d · убито %d врагов.\nПоследний успешный чекпоинт сохранён." % [sim.next_wave,sim.total_kills],26))
 	var resume := button("Восстановить чекпоинт",func() -> void: load_game(slot,true),true,90)
@@ -594,6 +630,7 @@ func show_defeat() -> void:
 
 func show_help() -> void:
 	clear_screen()
+	screen_back=show_menu
 	body.add_child(label("Как играть",38))
 	var scroll := GestureScroll.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -629,6 +666,8 @@ func show_settings_hub(in_game: bool = false) -> void:
 	settings_in_game=in_game
 	settings_page="hub"
 	var box:=settings_box("Настройки")
+	if in_game:sheet_back=show_game_menu
+	else:screen_back=show_menu
 	box.add_child(label("Для текущего слота" if in_game else "Для новых игр",23,"a6b8c8"))
 	box.add_child(button("Игра · скорость и волны",func() -> void: show_settings_page("game")))
 	box.add_child(button("Сложность · плотность и HP",func() -> void: show_settings_page("difficulty")))
@@ -677,6 +716,9 @@ func show_settings_page(page: String) -> void:
 	settings_page=page
 	var names: Dictionary={"game":"Игра","difficulty":"Сложность","economy":"Экономика","audio":"Музыка"}
 	var box:=settings_box(names[page])
+	var back_to_hub:=func() -> void:show_settings_hub(settings_in_game)
+	if settings_in_game:sheet_back=back_to_hub
+	else:screen_back=back_to_hub
 	if page=="game":
 		box.add_child(label("Скорость боя",25,"a6c8da"))
 		var speed_choice:=OptionButton.new()
@@ -722,25 +764,49 @@ func show_settings_page(page: String) -> void:
 		box.add_child(label("Изменения применяются со следующей волны и сохраняются в этом слоте." if settings_in_game else "Эти значения будут использованы в новых играх. Текущие слоты настраиваются через игровое меню.",22,"8fa8bb"))
 	box.add_child(button("Назад к разделам",func() -> void: show_settings_hub(settings_in_game)))
 
+# Returns true only for a confirmed exit from the main menu. Separating the
+# decision from quit() also lets tests exercise both gestures without exiting.
+func request_back(now_msec: int = -1) -> bool:
+	var now:=Time.get_ticks_msec() if now_msec<0 else now_msec
+	if overlay!=null and is_instance_valid(overlay):
+		var action:=sheet_back
+		if action.is_valid():action.call()
+		else:close_sheet()
+		return false
+	if screen_back.is_valid():
+		var action:=screen_back
+		action.call()
+		return false
+	if game_visible:
+		paused=true
+		save_session()
+		show_menu()
+		return false
+	if screen_name!="menu":
+		show_menu()
+		return false
+	if exit_deadline_msec>0 and now<=exit_deadline_msec:
+		exit_deadline_msec=0
+		save_session()
+		return true
+	exit_deadline_msec=now+EXIT_WINDOW_MSEC
+	if is_instance_valid(exit_hint):
+		exit_hint.text="Ещё раз «Назад» в течение 2 секунд — выйти"
+	return false
+
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST or what == NOTIFICATION_WM_CLOSE_REQUEST:
+	if what==NOTIFICATION_WM_GO_BACK_REQUEST:
+		if request_back():get_tree().quit()
+	elif what==NOTIFICATION_WM_CLOSE_REQUEST:
 		save_session()
-		if overlay != null:
-			close_sheet()
-		elif game_visible:
-			paused = true
-			show_game_menu()
-		else:
-			get_tree().quit()
-	elif what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
-		if is_instance_valid(music):
-			music.stream_paused = true
+		get_tree().quit()
+	elif what==NOTIFICATION_APPLICATION_PAUSED or what==NOTIFICATION_APPLICATION_FOCUS_OUT:
+		exit_deadline_msec=0
+		if is_instance_valid(music):music.stream_paused=true
+		if game_visible:paused=true
 		save_session()
-		if game_visible:
-			paused = true
-	elif what == NOTIFICATION_APPLICATION_RESUMED or what == NOTIFICATION_APPLICATION_FOCUS_IN:
-		if is_instance_valid(music):
-			music.stream_paused = false
+	elif what==NOTIFICATION_APPLICATION_RESUMED or what==NOTIFICATION_APPLICATION_FOCUS_IN:
+		if is_instance_valid(music):music.stream_paused=false
 
 
 func refresh_actions(force: bool = false) -> void:
@@ -939,6 +1005,8 @@ func setup_diagnostics() -> void:
 
 func show_diagnostics() -> void:
 	var box:=open_sheet(780)
+	sheet_page="diagnostics"
+	sheet_back=show_game_menu
 	box.add_child(label("Диагностика",34))
 	box.add_child(label("Отчёт содержит события боя, причины простоя, урон, баланс и ошибки. Личные данные и сохранения в архив не входят.",22,"a8bac8"))
 	var toggle:=CheckButton.new()
@@ -976,7 +1044,9 @@ func export_diagnostics() -> void:
 		toast("ZIP отчёта создан: "+path)
 
 func show_catalog() -> void:
+	var from_diagnostics:=sheet_page=="diagnostics"
 	var box:=open_sheet(940)
+	sheet_back=show_diagnostics if from_diagnostics else show_game_menu
 	box.add_child(label("Каталог башен",32))
 	box.add_child(label("Уровни 1 · 5 · 10 · MEGA",21,"a9bac6"))
 	var catalog:=TowerCatalog.new()
