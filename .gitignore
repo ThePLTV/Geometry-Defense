@@ -11,3 +11,5 @@ tools/windows/toolchain.json
 /android/build/
 /android/.build_version
 /tests/patch03-*.json
+
+/tests/patch04-*.json

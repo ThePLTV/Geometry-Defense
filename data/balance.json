@@ -1,6 +1,6 @@
 {
-  "status": "PROVISIONAL_SIMULATION_CANDIDATE",
-  "revision": 3,
+  "status": "PLAYTEST_CANDIDATE",
+  "revision": 4,
   "starting_credits": 65,
   "base_hp": 10,
   "sell_ratio": 0.7,
@@ -46,19 +46,19 @@
     "Minigun": {
       "price": 30,
       "damage": 2.8,
-      "damage_growth": 1.15,
+      "damage_growth": 1.17,
       "rate": 6.0,
       "rate_growth": 0.1,
       "range": 1.25,
-      "range_growth": 0.3055555555555556,
+      "range_growth": 0.19444444444444445,
       "color": "f4f6f8",
       "name": "Миниган",
       "ultimate_cost": 180
     },
     "Laser": {
       "price": 55,
-      "damage": 20,
-      "damage_growth": 1.15,
+      "damage": 18,
+      "damage_growth": 1.24,
       "rate": 1.0,
       "rate_growth": 0.0,
       "range": 2.5,
@@ -70,19 +70,19 @@
     "Rocket": {
       "price": 50,
       "damage": 16,
-      "damage_growth": 1.11,
+      "damage_growth": 1.07,
       "rate": 0.62,
       "rate_growth": 0.0,
       "range": 1.75,
-      "range_growth": 0.3611111111111111,
+      "range_growth": 0.25,
       "color": "f04749",
       "name": "Ракета",
       "ultimate_cost": 250
     },
     "Shockwave": {
       "price": 45,
-      "damage": 16,
-      "damage_growth": 1.2,
+      "damage": 18,
+      "damage_growth": 1.22,
       "rate": 0.9,
       "rate_growth": 0.0,
       "range": 1.45,
@@ -118,16 +118,16 @@
       "radius": 11
     }
   },
-  "balance_id": "B1.2-provisional-03",
+  "balance_id": "C1.2-04",
   "upgrade_price_fraction": 0.45,
   "base_enemy_speed": 1.0,
   "wave_formula": {
     "base_hp": 28,
-    "hp_growth": 1.055,
+    "hp_growth": 1.018,
     "triangle_hp": 0.7,
     "parent_hp": 1.2,
     "child_hp": 0.35,
-    "boss_hp": 4.5,
+    "boss_hp": 2.8,
     "reward_base": 2,
     "reward_growth": 1.018,
     "parent_reward": 0.75,
@@ -141,7 +141,15 @@
       4,
       0.6,
       0.01
-    ]
+    ],
+    "hp_linear": 0,
+    "hp_quadratic": 0.006,
+    "boss_early_bonus": 1.7,
+    "boss_bonus_decay": 25.0,
+    "hp_cubic": 1.5e-05,
+    "late_softening": 0.00018,
+    "late_start": 55,
+    "endless_growth": 1.028
   },
-  "calibration_note": "B1 baseline: white bosses leaked 65-91% HP, ordinary median death <5% path by wave 25 and 20K unused credits. B1.1 reduces Minigun/late Laser growth and late income, improves close AoE, and reduces boss multiplier 7.5 -> 4.5. Prices and exact Minigun/Rocket ranges unchanged. B1.2 improves early Rocket/Laser base damage while keeping late raw DPS close to B1.1; simulations use explicit saving for class diversity, instead of spending every spare credit on Minigun."
+  "calibration_note": "C1: smooth polynomial investment pressure times slow exponential; per-class damage growth reviewed, Rocket/Minigun range reduced by 1R. Boss multiplier tapers 4.5 to 2.83 while ordinary HP grows. See PATCH_04_REPORT.md for calibration and actual simulation results."
 }

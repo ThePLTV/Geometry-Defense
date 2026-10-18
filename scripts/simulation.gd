@@ -32,6 +32,16 @@ var migration_note := ""
 var diagnostics: CombatDiagnostics
 var wave_config: Dictionary={}
 var wave_reward_paid:=false
+var rules: Dictionary={"pressure":1.0,"hp":1.0,"money":1.0}
+var wave_rules: Dictionary=rules.duplicate()
+
+static func clean_rules(raw) -> Dictionary:
+	var result: Dictionary={"pressure":1.0,"hp":1.0,"money":1.0}
+	if raw is Dictionary:
+		for key in result:
+			if raw.get(key) is float or raw.get(key) is int:
+				result[key]=clampf(float(raw[key]),.7 if key=="hp" else .75 if key=="pressure" else .25,2.0 if key=="hp" else 1.5 if key=="pressure" else 3.0)
+	return result
 
 func _init(seed_value: int = 1) -> void:
 	Balance.load_config()
@@ -236,11 +246,12 @@ func start_wave() -> bool:
 	wave_reward_paid=false
 	wave_time=0
 	spawn_timer=0
+	wave_rules=rules.duplicate()
 	wave_config=WaveCatalog.generate(next_wave)
 	wave_stats={"wave":next_wave,"spawned":0,"killed":0,"leaked":0,"earned":0,"damage":0.0,"hp_start":base_hp,"credits_start":credits,
 		"spent_start":total_spent,"enemy_hp":0.0,"composition":{},"damage_by_tower_class":{},"damage_by_enemy_type":{},"death_fractions":[],
 		"bosses":[],"boss_exit_hp":0.0,"ttk_sum":0.0,"spawned_children":0}
-	spawn_interval=Balance.cfg.spawn_interval
+	spawn_interval=Balance.cfg.spawn_interval/wave_rules.pressure
 	spawn_queue=WaveCatalog.queue(wave_config)
 	diagnostics.emit("wave_start",time,{"wave":next_wave,"config":wave_config,"credits":credits},true)
 	return true
@@ -250,9 +261,10 @@ func spawn_enemy(kind: String, wave: int = -1) -> Dictionary:
 	var config:=WaveCatalog.generate(w)
 	var boss_data:=Balance.boss(w) if kind=="boss" else {}
 	var data: Dictionary=Balance.cfg.enemies.normal if kind=="boss" else Balance.cfg.enemies[kind]
-	var hp: float=config.hp[kind]
+	var modifiers: Dictionary=wave_rules if active else rules
+	var hp: float=maxf(1,WaveCatalog.rounded(config.hp[kind]*modifiers.hp))
 	var e:={"id":next_id,"kind":kind,"wave":w,"hp":hp,"max_hp":hp,"speed":float(Balance.cfg.boss_speed if kind=="boss" else data.speed)*Balance.cfg.base_enemy_speed,
-		"reward":int(config.reward[kind]),"cell":map.spawn,"next":map.next_cell(map.spawn),"progress":0.0,"trail":[map.spawn],
+		"hp_scale":modifiers.hp,"money_scale":modifiers.money,"reward":maxi(1,WaveCatalog.rounded(config.reward[kind]*modifiers.money)),"cell":map.spawn,"next":map.next_cell(map.spawn),"progress":0.0,"trail":[map.spawn],
 		"pos":HexMap.point(map.spawn),"previous_pos":HexMap.point(map.spawn),"dead":false,"immune":boss_data.get("immune",""),"color":boss_data.get("color",data.color),
 		"pushes":[],"last_hit":-100.0,"spawned_at":time,"damage_sources":{},"hits":0,"parent_id":-1,"reward_paid":false}
 	next_id+=1
@@ -319,7 +331,7 @@ func kill(e: Dictionary, t: Dictionary) -> void:
 			var child: Dictionary=e.duplicate(true)
 			child.id=next_id; next_id+=1
 			child.kind="child"; child.dead=false; child.reward_paid=false
-			child.max_hp=float(config.hp.child); child.hp=child.max_hp; child.reward=int(config.reward.child)
+			child.max_hp=maxf(1,WaveCatalog.rounded(config.hp.child*float(e.get("hp_scale",1.0)))); child.hp=child.max_hp; child.reward=maxi(1,WaveCatalog.rounded(config.reward.child*float(e.get("money_scale",1.0))))
 			child.speed=Balance.cfg.enemies.child.speed*Balance.cfg.base_enemy_speed
 			child.pushes=[];child.last_hit=-100.0;child.spawned_at=time;child.damage_sources={};child.hits=0;child.parent_id=e.id
 			child.progress=maxf(0,e.progress-i*.09)

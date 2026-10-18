@@ -29,7 +29,7 @@ public final class ReportShare extends GodotPlugin {
             if (!allowed || !source.isFile() || !source.getName().endsWith(".zip")) return "Invalid report file";
             File folder = new File(activity.getCacheDir(), "geometry_reports");
             if (!folder.isDirectory() && !folder.mkdirs()) return "Cannot create report cache";
-            File target = new File(folder, "GeometryDefense-03-report.zip");
+            File target = new File(folder, "GeometryDefense-04-report.zip");
             Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Uri uri = new Uri.Builder().scheme("content").authority(activity.getPackageName()+".reports")
                 .appendPath("report").appendPath(target.getName()).build();
@@ -37,7 +37,7 @@ public final class ReportShare extends GodotPlugin {
                 try {
                     Intent send = new Intent(Intent.ACTION_SEND).setType("application/zip")
                         .putExtra(Intent.EXTRA_STREAM, uri)
-                        .putExtra(Intent.EXTRA_SUBJECT, "Geometry Defense 0.3 diagnostics")
+                        .putExtra(Intent.EXTRA_SUBJECT, "Geometry Defense 0.4 diagnostics")
                         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     send.setClipData(ClipData.newRawUri("Geometry Defense report", uri));
                     activity.startActivity(Intent.createChooser(send, "Отправить отчёт Geometry Defense"));

@@ -1,0 +1,38 @@
+{
+  "apk": "GeometryDefense-Android16-v0.4.0.apk",
+  "bytes": 72184770,
+  "sha256": "d85e7d265b95aa4b3d6873553af61f4081402a9eddbf4fd08e7d61a70eae1d88",
+  "device_install_tested": false,
+  "native_libraries": [
+    {
+      "name": "lib/arm64-v8a/libc++_shared.so",
+      "minimum_load_alignment": 16384
+    },
+    {
+      "name": "lib/arm64-v8a/libgodot_android.so",
+      "minimum_load_alignment": 16384
+    },
+    {
+      "name": "lib/x86_64/libc++_shared.so",
+      "minimum_load_alignment": 16384
+    },
+    {
+      "name": "lib/x86_64/libgodot_android.so",
+      "minimum_load_alignment": 16384
+    }
+  ],
+  "native_share_classes_packaged": true,
+  "music_track_count": 3,
+  "music_packaged": true,
+  "runtime_data_matches_source": true,
+  "docs_tests_tools_excluded": true,
+  "map_sha256": "b8c98cb1f4534166fb9fb0a8fc0b173c54df2e9152113a71f75fabb861c6c700",
+  "distinct_rendered_models": 48,
+  "signature_sha256": "2d12c6e4a20b7f1a8d7b69e9a40586a47e111d2af60e52e8297b6d08d685fd8b",
+  "signature_matches_v03": true,
+  "zip_alignment_verified": true,
+  "version_code": 4,
+  "target_sdk": 36,
+  "minimum_sdk": 26,
+  "native_report_filename": "GeometryDefense-04-report.zip"
+}

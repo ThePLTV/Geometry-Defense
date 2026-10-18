@@ -21,7 +21,7 @@ var fps_sum:=0.0
 var last_export:=""
 
 func _init(seed: int = 1) -> void:
-	metadata={"version":"0.3.0","build":"patch03","source_base":"a83279afc0864655a0e17073328e959856371713","godot":Engine.get_version_info().string,
+	metadata={"version":"0.4.0","build":"patch04","source_base":"d2e16443d660e05ebc939ddb0f9d15abf4db21fa","godot":Engine.get_version_info().string,
 		"platform":OS.get_name(),"os_version":OS.get_version(),"model":OS.get_model_name(),"screen":str(DisplayServer.screen_get_size()),
 		"seed":str(seed),"match_id":"%d-%d"%[int(Time.get_unix_time_from_system()),seed],"balance_id":Balance.cfg.get("balance_id","unknown"),
 		"timestamp_utc":Time.get_datetime_string_from_system(true),"replay":"seed and player action timeline; exact deterministic replay UI is not implemented"}
@@ -121,7 +121,7 @@ func summary(s) -> Dictionary:
 	for t in s.tower_history.values(): towers.append(tower_context(t).merged({"invested":t.invested,"status":t.status,"damage_per_credit":t.damage/maxf(1,t.invested)}))
 	return {"metadata":metadata,"time":s.time,"wave":s.next_wave,"base_hp":s.base_hp,"credits":s.credits,"earned":s.total_earned,"spent":s.total_spent,
 		"damage_effective":s.total_damage,"kills":s.total_kills,"mean_fps":fps_sum/maxi(1,frames),"towers":towers,"waves":s.history,
-		"current_wave":s.wave_stats,"active_enemies":StateCodec.encode(s.enemies),
+		"rules":s.rules,"wave_rules":s.wave_rules,"current_wave":s.wave_stats,"active_enemies":StateCodec.encode(s.enemies),
 		"event_counts":counts,"warnings":warnings,"warning_top10":top_warnings(),"actions":actions,"recent_events":ring}
 
 func top_warnings() -> Array:
@@ -149,7 +149,7 @@ func export_zip(s) -> String:
 	json.store_string(JSON.stringify(StateCodec.encode(summary(s)),"  ")); json.close()
 	var out:="user://exports"
 	DirAccess.make_dir_recursive_absolute(out)
-	last_export=out.path_join("GeometryDefense-03-report.zip")
+	last_export=out.path_join("GeometryDefense-04-report.zip")
 	var pack:=ZIPPacker.new()
 	if pack.open(last_export)!=OK: return ""
 	for name in DirAccess.get_files_at(directory):

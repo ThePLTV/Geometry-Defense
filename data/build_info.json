@@ -1,7 +1,8 @@
 {
-  "version": "0.3.0",
-  "source_fingerprint_sha256": "e5c7fa8196d7f8e1db819322e4c6074bc1000a53a46d6919a1ab9acb7bc771fd",
-  "source_base_commit": "a83279afc0864655a0e17073328e959856371713",
-  "balance": "B1.2-provisional-03",
-  "build": "patch03-final"
+  "version": "0.4.0",
+  "source_fingerprint_sha256": "f601f746e2b3ea7924a74df4fee8f0a1359245c8b12287ec8dfe7b9d4e471eaa",
+  "source_base_commit": "900a0a08e51a818ced4abcb9663cc9ea5f92882c",
+  "balance": "C1.2-04",
+  "build": "patch04-final",
+  "fingerprint_scope": "scripts, assets and import settings, runtime data except this file, native plugin sources/AAR, project/export config"
 }

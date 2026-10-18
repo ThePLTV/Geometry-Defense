@@ -1,0 +1,92 @@
+[
+  {
+    "strategy": "economy",
+    "last_completed": 65,
+    "base_hp": 0,
+    "earned": 10936,
+    "spent": 10739,
+    "credits": 262,
+    "towers": 24
+  },
+  {
+    "strategy": "expansion",
+    "last_completed": 62,
+    "base_hp": 0,
+    "earned": 9922,
+    "spent": 9878,
+    "credits": 109,
+    "towers": 24
+  },
+  {
+    "strategy": "fusion",
+    "last_completed": 65,
+    "base_hp": 0,
+    "earned": 11050,
+    "spent": 10910,
+    "credits": 205,
+    "towers": 23
+  },
+  {
+    "strategy": "laser",
+    "last_completed": 53,
+    "base_hp": 0,
+    "earned": 7281,
+    "spent": 7163,
+    "credits": 183,
+    "towers": 24
+  },
+  {
+    "strategy": "minigun",
+    "last_completed": 56,
+    "base_hp": 0,
+    "earned": 8153,
+    "spent": 8077,
+    "credits": 141,
+    "towers": 24
+  },
+  {
+    "strategy": "mixed",
+    "last_completed": 62,
+    "base_hp": 0,
+    "earned": 10001,
+    "spent": 9918,
+    "credits": 148,
+    "towers": 24
+  },
+  {
+    "strategy": "rocket",
+    "last_completed": 68,
+    "base_hp": 0,
+    "earned": 11692,
+    "spent": 11632,
+    "credits": 125,
+    "towers": 24
+  },
+  {
+    "strategy": "shockwave",
+    "last_completed": 100,
+    "base_hp": 5,
+    "earned": 25294,
+    "spent": 23566,
+    "credits": 1793,
+    "towers": 24
+  },
+  {
+    "strategy": "ultimates",
+    "last_completed": 65,
+    "base_hp": 0,
+    "earned": 10984,
+    "spent": 10910,
+    "credits": 139,
+    "towers": 24
+  },
+  {
+    "strategy": "upgrades",
+    "last_completed": 62,
+    "base_hp": 0,
+    "earned": 9985,
+    "spent": 9923,
+    "credits": 127,
+    "towers": 24
+  }
+]

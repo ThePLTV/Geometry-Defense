@@ -12,8 +12,8 @@ func _init() -> void:
 		waves.append(config)
 	var file:=FileAccess.open("res://data/waves_1_100.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(waves,"  "));file.close()
-	DirAccess.make_dir_recursive_absolute("res://docs/test-results/v0.3.0")
-	var csv:=FileAccess.open("res://docs/test-results/v0.3.0/tower_levels.csv",FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute("res://docs/test-results/v0.4.0")
+	var csv:=FileAccess.open("res://docs/test-results/v0.4.0/tower_levels.csv",FileAccess.WRITE)
 	csv.store_csv_line(PackedStringArray(["class","level","damage","attacks_per_second","volley","raw_dps","range_R","upgrade_price","ultimate_price","splash_radius","projectile_speed","targeting"]))
 	for kind in Balance.KINDS:
 		for level in range(1,11):

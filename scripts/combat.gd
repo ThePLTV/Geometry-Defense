@@ -97,7 +97,10 @@ static func update_projectile(s, p: Dictionary, delta: float) -> bool:
 
 static func advance_projectile(s, p: Dictionary, delta: float) -> bool:
 	var t: Dictionary = s.owner(p.owner_id)
-	if t.is_empty() or not t.job.is_empty():
+	if t.is_empty():
+		s.diagnostics.issue("ORPHAN_PROJECTILE",s.time,{"owner_id":p.owner_id,"projectile_id":p.get("id",-1),"type":p.type})
+		return false
+	if not t.job.is_empty():
 		return false
 	p.life -= delta
 	if p.life <= 0:
